@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier", "TeamcityNotifier\TeamcityNotifier.csproj", "{5A55BC91-BEEF-401C-8DFF-BB84CA1E932E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier.Test", "TeamcityNotifier.Test\TeamcityNotifier.Test.csproj", "{5BD94848-C043-4FAD-B417-271E2FE02344}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier.Specifications", "TeamcityNotifier.Specifications\TeamcityNotifier.Specifications.csproj", "{DEA54917-630B-4727-84AA-83AA7943EA6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A55BC91-BEEF-401C-8DFF-BB84CA1E932E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A55BC91-BEEF-401C-8DFF-BB84CA1E932E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A55BC91-BEEF-401C-8DFF-BB84CA1E932E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A55BC91-BEEF-401C-8DFF-BB84CA1E932E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BD94848-C043-4FAD-B417-271E2FE02344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BD94848-C043-4FAD-B417-271E2FE02344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BD94848-C043-4FAD-B417-271E2FE02344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BD94848-C043-4FAD-B417-271E2FE02344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEA54917-630B-4727-84AA-83AA7943EA6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEA54917-630B-4727-84AA-83AA7943EA6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEA54917-630B-4727-84AA-83AA7943EA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEA54917-630B-4727-84AA-83AA7943EA6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
