@@ -7,8 +7,8 @@
     <ProjectGuid>{DEA54917-630B-4727-84AA-83AA7943EA6B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TeamcityNotifier.Specifications</RootNamespace>
-    <AssemblyName>TeamcityNotifier.Specifications</AssemblyName>
+    <RootNamespace>TeamcityNotifier.Specification</RootNamespace>
+    <AssemblyName>TeamcityNotifier.Specification</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -1,11 +1,16 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier", "TeamcityNotifier\TeamcityNotifier.csproj", "{5A55BC91-BEEF-401C-8DFF-BB84CA1E932E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier.Test", "TeamcityNotifier.Test\TeamcityNotifier.Test.csproj", "{5BD94848-C043-4FAD-B417-271E2FE02344}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier.Specifications", "TeamcityNotifier.Specifications\TeamcityNotifier.Specifications.csproj", "{DEA54917-630B-4727-84AA-83AA7943EA6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier.Specification", "TeamcityNotifier.Specification\TeamcityNotifier.Specification.csproj", "{DEA54917-630B-4727-84AA-83AA7943EA6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{60E049AA-D1DC-458D-868E-2FED8496970E}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
