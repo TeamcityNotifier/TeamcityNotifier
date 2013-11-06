@@ -26,6 +26,7 @@
                 var server = new Server(wrapperFactory.CreateUri(configuration.BaseUrl), configuration.UserName, configuration.Password);
                 server.Projects = this.CreateProjects(server);
                 server.Name = configuration.BaseUrl;
+                servers.Add(server);
             }
 
             return servers;

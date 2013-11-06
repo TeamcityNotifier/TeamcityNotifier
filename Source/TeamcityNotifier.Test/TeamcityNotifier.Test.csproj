@@ -65,6 +65,10 @@
     <Compile Include="RestFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataAbstraction\TeamcityNotifier.DataAbstraction.csproj">
+      <Project>{22b1ba54-15fa-4798-8e83-04276d26a5ec}</Project>
+      <Name>TeamcityNotifier.DataAbstraction</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TeamcityNotifier\TeamcityNotifier.csproj">
       <Project>{5a55bc91-beef-401c-8dff-bb84ca1e932e}</Project>
       <Name>TeamcityNotifier</Name>
