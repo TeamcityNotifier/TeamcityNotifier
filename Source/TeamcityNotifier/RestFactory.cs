@@ -42,7 +42,7 @@
 
             foreach (var restProject in restProjects.project)
             {
-                var projectUrl = this.wrapperFactory.CreateUri(restProject.href);
+                var projectUrl = this.wrapperFactory.CreateUri(server.Uri, restProject.href);
                 var project = this.Get<project>(projectUrl, httpClient);
 
                 if (project != null)
