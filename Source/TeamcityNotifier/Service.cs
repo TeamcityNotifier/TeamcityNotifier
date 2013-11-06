@@ -1,19 +1,18 @@
-﻿namespace TeamCityRestClient
+﻿namespace TeamcityNotifier
 {
     using System.Collections.Generic;
 
     public class Service : IService
-    {
-        private IConfiguration configuration;
+    {private IFactory factory;
 
-        public Service(IConfiguration configuration)
+        public Service(IFactory factory)
         {
-            this.configuration = configuration;
+            this.factory = factory;
         }
 
         public IEnumerable<IServer> GetServers()
         {
-            throw new System.NotImplementedException();
+            return this.factory.CreateServers();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace TeamCityRestClient
+﻿namespace TeamcityNotifier
 {
     public interface IProject
     {

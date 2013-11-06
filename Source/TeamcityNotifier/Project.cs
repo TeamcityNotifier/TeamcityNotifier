@@ -1,33 +1,20 @@
-﻿namespace TeamCityRestClient
+﻿namespace TeamcityNotifier
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     using xsdtest;
 
-  
     public class Project : IProject
     {
-        private readonly Server server;
-        private readonly string url;
+        private readonly project project;
 
-        private project project;
-
-        public Project(Server server, string url)
+        public Project(project project)
         {
-            this.server = server;
-            this.url = url;
+            this.project = project;
         }
 
         public string Name
         {
             get
             {
-                if (project == null)
-                {
-                    this.project = this.Get();
-                }
-
                 return this.project.name;
             }
         }
@@ -36,18 +23,9 @@
         {
             get
             {
-                if (project == null)
-                {
-                    this.project = this.Get();
-                }
-
                 return this.project.description;
             }
         }
 
-        private project Get()
-        {
-            return this.server.Get<project>(url);
-        }
     }
 }

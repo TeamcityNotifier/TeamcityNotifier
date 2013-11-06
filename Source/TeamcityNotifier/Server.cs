@@ -1,53 +1,27 @@
-﻿namespace TeamCityRestClient
+﻿namespace TeamcityNotifier
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Net;
-    using System.Net.Http;
-    using System.Xml.Serialization;
 
-    using xsdtest;
+    using TeamcityNotifier.Wrapper;
 
     public class Server : IServer
     {
-        private readonly Uri baseUrl;
-        private readonly HttpClient client;
-
-        public Server(string baseUrl, string username, string password)
+        public Server(IUri uri, string userName, string password)
         {
-            this.baseUrl = new Uri(baseUrl);
-
-            var handler = new HttpClientHandler
-            {
-                Credentials = new NetworkCredential(username, password),
-                UseCookies = true,
-                PreAuthenticate = true
-
-            };
-
-            this.client = new HttpClient(handler);
+            this.UserName = userName;
+            this.Password = password;
+            this.Uri = uri;
         }
 
-        public T Get<T>(string url)
-        {
-            var uri = new Uri(baseUrl, url);
+        public IEnumerable<IProject> Projects { get; internal set; }
 
-            var asyncTask = this.client.GetStringAsync(uri);
+        public string Name { get; internal set; }
 
-            var serializer = new XmlSerializer(typeof(T));
+        public string UserName { get; private set; }
 
-            using (var reader = new StringReader(asyncTask.Result))
-            {
-                var objectDto = (T)serializer.Deserialize(reader);
+        public string Password { get; private set; }
 
-                return objectDto;
-            }
-        }
-
-        public IEnumerable<IProject> GetProjects()
-        {
-            throw  new NotImplementedException();
-        }
+        public IUri Uri { get; private set; }
     }
 }

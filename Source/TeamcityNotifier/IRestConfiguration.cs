@@ -1,6 +1,6 @@
-﻿namespace TeamCityRestClient
+﻿namespace TeamcityNotifier
 {
-    public interface IConfiguration
+    public interface IRestConfiguration
     {
         string BaseUrl { get; }
 
