@@ -15,8 +15,6 @@
         {
             this.configurations = configurations;
             this.wrapperFactory = wrapperFactory;
-            //this.httoClient = wrapperFactory.CreateHttpClientHandler(configurations.UserName, configurations.Password);
-            //this.baseUrl = wrapperFactory.CreateUri(configurations.BaseUrl);
         }
 
         public IEnumerable<IServer> CreateServers()
@@ -55,9 +53,9 @@
             return projects;
         }
 
-        private T Get<T>(IUri url, IHttpClient httoClient)
+        private T Get<T>(IUri url, IHttpClient httpClient)
         {
-            var asyncTask = httoClient.GetStringAsync(url);
+            var asyncTask = httpClient.GetStringAsync(url);
 
             var serializer = this.wrapperFactory.CreateXmlSerializer(typeof(T));
 
