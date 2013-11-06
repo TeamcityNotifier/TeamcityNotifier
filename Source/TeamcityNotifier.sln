@@ -12,11 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{60E049
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier.DataAbstraction", "DataAbstraction\TeamcityNotifier.DataAbstraction.csproj", "{22B1BA54-15FA-4798-8E83-04276D26A5EC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier.Test", "TeamcityNotifier.Test\TeamcityNotifier.Test.csproj", "{5BD94848-C043-4FAD-B417-271E2FE02344}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCityNotifierWindowsStore", "TeamCityNotifierWindowsStore\TeamCityNotifierWindowsStore.csproj", "{B39840BA-0DE3-49F0-AE73-E435F72CC4DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamcityNotifier.DataAbstraction", "DataAbstraction\TeamcityNotifier.DataAbstraction.csproj", "{22B1BA54-15FA-4798-8E83-04276D26A5EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,16 +50,6 @@ Global
 		{DEA54917-630B-4727-84AA-83AA7943EA6B}.Release|ARM.ActiveCfg = Release|Any CPU
 		{DEA54917-630B-4727-84AA-83AA7943EA6B}.Release|x64.ActiveCfg = Release|Any CPU
 		{DEA54917-630B-4727-84AA-83AA7943EA6B}.Release|x86.ActiveCfg = Release|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|ARM.ActiveCfg = Release|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|x64.ActiveCfg = Release|Any CPU
-		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|x86.ActiveCfg = Release|Any CPU
 		{5BD94848-C043-4FAD-B417-271E2FE02344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5BD94848-C043-4FAD-B417-271E2FE02344}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BD94848-C043-4FAD-B417-271E2FE02344}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -94,6 +84,16 @@ Global
 		{B39840BA-0DE3-49F0-AE73-E435F72CC4DC}.Release|x86.ActiveCfg = Release|x86
 		{B39840BA-0DE3-49F0-AE73-E435F72CC4DC}.Release|x86.Build.0 = Release|x86
 		{B39840BA-0DE3-49F0-AE73-E435F72CC4DC}.Release|x86.Deploy.0 = Release|x86
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|ARM.ActiveCfg = Release|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{22B1BA54-15FA-4798-8E83-04276D26A5EC}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
