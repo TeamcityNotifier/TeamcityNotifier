@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using TeamcityNotifier.Wrapper;
+    using Wrapper;
 
     using xsdtest;
 
