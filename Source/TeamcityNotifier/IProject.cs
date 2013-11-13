@@ -1,8 +1,11 @@
 ﻿namespace TeamcityNotifier
 {
-    public interface IProject
+    using System.Collections.Generic;
+
+    public interface IProject : ILocalizable
     {
         string Name { get; }
         string Description { get; }
+        IEnumerable<IBuildDefinition> BuildDefinitions { get; }
     }
 }

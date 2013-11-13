@@ -20,18 +20,21 @@
         private IFactory testee;
 
         private IList<IRestConfiguration> restConfigurations;
-
         private IWrapperFactory mockWrapperFactory;
         private IXmlSerializer mockXmlSerializerProject;
 
+        private IProject mockProject;
+
         private project fakeProject;
         private projects1 fakeProject1;
+        private buildType fakeBuildType;
         private IRestConfiguration configuration1;
         private IRestConfiguration configuration2;
 
         [SetUp]
         public void SetUp()
         {
+            this.mockProject = A.Fake<IProject>();
             this.restConfigurations = new List<IRestConfiguration>();
             this.mockWrapperFactory = A.Fake<IWrapperFactory>();
 
@@ -45,6 +48,11 @@
             A.CallTo(() => mockXmlSerializerProject1.Deserialize(A<IStringReader>.Ignored)).Returns(fakeProject1);
             A.CallTo(() => mockWrapperFactory.CreateXmlSerializer(typeof(projects1))).Returns(mockXmlSerializerProject1);
 
+            fakeBuildType = new buildType();
+            var mockXmlSerializerBuildType = A.Fake<IXmlSerializer>();
+            A.CallTo(() => mockXmlSerializerBuildType.Deserialize(A<IStringReader>.Ignored)).Returns(fakeBuildType);
+            A.CallTo(() => mockWrapperFactory.CreateXmlSerializer(typeof(buildType))).Returns(mockXmlSerializerBuildType);
+
             this.configuration1 = A.Fake<IRestConfiguration>();
             A.CallTo(() => this.configuration1.BaseUrl).Returns("url1");
             A.CallTo(() => this.configuration1.UserName).Returns("user1");
@@ -57,7 +65,6 @@
             A.CallTo(() => this.configuration2.UserName).Returns("user2");
             A.CallTo(() => this.configuration2.Password).Returns("password2");
             restConfigurations.Add(this.configuration2);
-
 
             this.testee = new RestFactory(this.restConfigurations, this.mockWrapperFactory);
         }
@@ -140,5 +147,49 @@
 
         }
 
+        [Test]
+        public void CreateBuildDefinition_WhenNoProjectIsAvaiable_NoProjectIsReturned()
+        {
+            var mockServer = A.Fake<IServer>();
+
+            var buildDefinitions = this.testee.CreateBuildDefinitions(mockServer, this.mockProject);
+
+            var buildDefinitionCount = buildDefinitions.Count();
+            buildDefinitionCount.Should().Be(0, string.Format("No server is available but {0} server(s) are returend.", buildDefinitionCount));
+        }
+
+        [Test]
+        public void CreateBuildDefinition_WhenOneProjectIsAvaiable_ThisProjectIsReturned()
+        {
+            var buildDefinitionsNameefinitionsName = "buildDefinitionName";
+            var buildDefinitionsDescription = "buildDefinitionDescription";
+
+            this.fakeBuildType.name = buildDefinitionsNameefinitionsName;
+            this.fakeBuildType.description = buildDefinitionsDescription;
+
+            fakeProject.buildTypes.Add(new buildTyperef());
+
+            var mockServer = A.Fake<IServer>();
+
+            var buildDefinitions = this.testee.CreateBuildDefinitions(mockServer, this.mockProject);
+
+            buildDefinitions.Count().Should().Be(1, "Wrong count of build definitions set");
+            buildDefinitions.FirstOrDefault().Name.Should().Be(buildDefinitionsNameefinitionsName, "The build definitions name is wrong.");
+            buildDefinitions.FirstOrDefault().Description.Should().Be(buildDefinitionsDescription, "The build definitions description is wrong.");
+        }
+
+        [Test]
+        public void CreateBuildDefinition_WhenTwoProjectsAreAvaiable_TwoProjectsAreReturned()
+        {
+            fakeProject.buildTypes.Add(new buildTyperef());
+            fakeProject.buildTypes.Add(new buildTyperef());
+
+            var mockServer = A.Fake<IServer>();
+
+            var buildDefinitions = this.testee.CreateBuildDefinitions(mockServer, this.mockProject);
+
+            var projectCount = buildDefinitions.Count();
+            projectCount.Should().Be(2, string.Format("Two projects are available but {0} are retuned.", projectCount));
+        }
     }
 }

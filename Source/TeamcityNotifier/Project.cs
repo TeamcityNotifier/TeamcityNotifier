@@ -1,5 +1,7 @@
 ﻿namespace TeamcityNotifier
 {
+    using System.Collections.Generic;
+
     using xsdtest;
 
     public class Project : IProject
@@ -10,6 +12,8 @@
         {
             this.project = project;
         }
+
+        public IEnumerable<IBuildDefinition> BuildDefinitions { get; internal set; }
 
         public string Name
         {
@@ -27,5 +31,12 @@
             }
         }
 
+        public string Href
+        {
+            get
+            {
+                return this.project.href;
+            }
+        }
     }
 }

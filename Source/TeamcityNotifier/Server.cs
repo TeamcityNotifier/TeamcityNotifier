@@ -7,11 +7,12 @@
 
     public class Server : IServer
     {
-        public Server(IUri uri, string userName, string password)
+        public Server(IWrapperFactory factory, IRestConfiguration configuration)
         {
-            this.UserName = userName;
-            this.Password = password;
-            this.Uri = uri;
+            this.UserName = configuration.UserName;
+            this.Password = configuration.Password;
+            this.Name = configuration.BaseUrl;
+            this.Uri = factory.CreateUri(configuration.BaseUrl);
         }
 
         public IEnumerable<IProject> Projects { get; internal set; }

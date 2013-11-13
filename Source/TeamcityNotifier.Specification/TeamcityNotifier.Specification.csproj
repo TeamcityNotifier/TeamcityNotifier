@@ -62,6 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="When_User_Shows_BuildDefinitions.cs" />
+    <Compile Include="When_User_Shows_Project.cs" />
     <Compile Include="When_User_Shows_Servers.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -65,13 +65,5 @@
         server.UserName.Should().Be("user1", "Wrong username is configured");
         server.Password.Should().Be("password1", "Wrong password is configured");
     };
-
-        private It should_returne_the_available_project = () =>
-        {
-            var servers = service.GetServers();
-            servers.Count().Should().BeGreaterOrEqualTo(1, "No server retrned!");
-            var projects = servers.FirstOrDefault().Projects;
-            projects.Count().Should().Be(2, "Wrong count of projects ist returned");
-        };
     }
 }

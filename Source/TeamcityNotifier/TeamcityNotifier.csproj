@@ -35,7 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BuildDefinition.cs" />
     <Compile Include="HttpRelativeUrl.cs" />
+    <Compile Include="IBuildDefinition.cs" />
+    <Compile Include="ILocalizable.cs" />
     <Compile Include="IRestConfiguration.cs" />
     <Compile Include="IFactory.cs" />
     <Compile Include="IProject.cs" />
