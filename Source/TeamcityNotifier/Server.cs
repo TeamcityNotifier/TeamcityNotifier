@@ -11,7 +11,7 @@
         {
             this.UserName = configuration.UserName;
             this.Password = configuration.Password;
-            this.Name = configuration.BaseUrl;
+            this.Name = configuration.Name;
             this.Uri = factory.CreateUri(configuration.BaseUrl);
         }
 

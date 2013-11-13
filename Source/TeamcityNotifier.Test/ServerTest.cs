@@ -26,6 +26,7 @@
             var mockConfiguration = A.Fake<IRestConfiguration>();
             A.CallTo(() => mockConfiguration.UserName).Returns("userName");
             A.CallTo(() => mockConfiguration.Password).Returns("password");
+            A.CallTo(() => mockConfiguration.Name).Returns("servername");
 
             this.testee = new Server(this.mockWrapperFactory, mockConfiguration);
         }
@@ -36,6 +37,7 @@
             this.testee.Uri.Should().Be(this.mockUri);
             this.testee.UserName.Should().Be("userName", "wrong user name is set");
             this.testee.Password.Should().Be("password", "wrong password is set");
+            this.testee.Name.Should().Be("servername", "wrong server name is set");
         } 
     }
 }
