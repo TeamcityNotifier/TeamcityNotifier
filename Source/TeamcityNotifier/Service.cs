@@ -3,7 +3,8 @@
     using System.Collections.Generic;
 
     public class Service : IService
-    {private IFactory factory;
+    {
+        private IFactory factory;
 
         public Service(IFactory factory)
         {
