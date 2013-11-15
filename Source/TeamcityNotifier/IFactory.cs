@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using xsdtest;
+    using DataAbstraction;
 
     public interface IFactory
     {

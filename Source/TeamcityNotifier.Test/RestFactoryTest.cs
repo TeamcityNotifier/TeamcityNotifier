@@ -13,7 +13,7 @@
     using TeamcityNotifier;
     using TeamcityNotifier.Wrapper;
 
-    using xsdtest;
+    using DataAbstraction;
 
     public class RestFactoryTest
     {

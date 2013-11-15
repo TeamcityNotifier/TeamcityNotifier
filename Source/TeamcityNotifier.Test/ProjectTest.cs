@@ -6,7 +6,7 @@
 
     using NUnit.Framework;
 
-    using xsdtest;
+    using DataAbstraction;
 
     public class ProjectTest
     {

@@ -11,7 +11,7 @@
 
     using TeamcityNotifier.Wrapper;
 
-    using xsdtest;
+    using DataAbstraction;
 
     public class When_User_Shows_BuildDefinitions
     {

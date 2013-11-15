@@ -1,6 +1,6 @@
 ﻿namespace TeamcityNotifier
 {
-    using xsdtest;
+    using DataAbstraction;
 
     public class BuildDefinition : IBuildDefinition
     {

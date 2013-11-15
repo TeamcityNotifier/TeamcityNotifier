@@ -4,7 +4,7 @@
 
     using Wrapper;
 
-    using xsdtest;
+    using DataAbstraction;
 
     public class RestFactory : IFactory
     {
