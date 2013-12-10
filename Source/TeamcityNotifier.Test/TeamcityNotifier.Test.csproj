@@ -58,15 +58,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildDefinitionTest.cs" />
-    <Compile Include="ProjectTest.cs" />
+    <Compile Include="BuildDefinitionTestFixture.cs" />
+    <Compile Include="BuildRepositoryTest.cs" />
+    <Compile Include="BuildTestFixture.cs" />
+    <Compile Include="ProjectRepositoryTest.cs" />
+    <Compile Include="ProjectTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RestConsumerTest.cs" />
+    <Compile Include="RestFactoryTest.cs" />
     <Compile Include="ServerTest.cs" />
     <Compile Include="ServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Compile Include="RestFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataAbstraction\TeamcityNotifier.DataAbstraction.csproj">

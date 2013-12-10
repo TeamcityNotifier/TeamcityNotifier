@@ -13,6 +13,11 @@
             this.Password = configuration.Password;
             this.Name = configuration.Name;
             this.Uri = factory.CreateUri(configuration.BaseUrl);
+
+            this.RestConsumer = new RestConsumer(
+                this.Uri,
+                factory.CreateHttpClientHandler(this.UserName, this.Password),
+                factory);
         }
 
         public IEnumerable<IProject> Projects { get; internal set; }
@@ -24,5 +29,7 @@
         public string Password { get; private set; }
 
         public IUri Uri { get; private set; }
+
+        public IRestConsumer RestConsumer { get; private set; }
     }
 }

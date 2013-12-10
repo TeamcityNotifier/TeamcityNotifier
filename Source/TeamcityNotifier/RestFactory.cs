@@ -2,9 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using Wrapper;
-
-    using DataAbstraction;
+    using TeamcityNotifier.Wrapper;
 
     public class RestFactory : IFactory
     {
@@ -24,71 +22,35 @@
             foreach (var configuration in this.configurations)
             {
                 var server = new Server(wrapperFactory, configuration);
-                server.Projects = this.CreateProjects(server);
+
+                server.Projects = this.GetProjectRepository(server).Projects;
+
                 servers.Add(server);
             }
 
             return servers;
         }
 
-        public IEnumerable<IProject> CreateProjects(IServer server)
+        public IProjectRepository GetProjectRepository(IServer server)
         {
-            var httpClient = this.wrapperFactory.CreateHttpClientHandler(server.UserName, server.Password);
-            var url = this.wrapperFactory.CreateUri(server.Uri, HttpRelativeUrl.PROJECT_URL);
-            var restProjects = Get<projects1>(url, httpClient);
-            var projects = new List<IProject>();
+            var restConsumer = server.RestConsumer;
 
-            foreach (var projectRef in restProjects.project)
-            {
-                var projectUrl = this.wrapperFactory.CreateUri(server.Uri, projectRef.href);
-                var restProject = this.Get<project>(projectUrl, httpClient);
+            var projectRepository = new ProjectRepository(HttpRelativeUrl.PROJECT_URL);
 
-                if (restProject != null)
-                {
-                    var project = new Project(restProject);
-                    project.BuildDefinitions = this.CreateBuildDefinitions(server, project);
-                    
-                    projects.Add(project);
-                }
-            }
+            restConsumer.Load(projectRepository);
 
-            return projects;
+            return projectRepository;
         }
 
-        public IEnumerable<IBuildDefinition> CreateBuildDefinitions(IServer server, IProject project)
+        public IBuildRepository GetBuildRepository(IServer server, IBuildDefinition buildDefinition)
         {
-            var httpClient = this.wrapperFactory.CreateHttpClientHandler(server.UserName, server.Password);
-            var buildTypeUrl = this.wrapperFactory.CreateUri(server.Uri, project.Href);
-            var restProject = this.Get<project>(buildTypeUrl, httpClient); 
+            var restConsumer = server.RestConsumer;
 
-            var buildDefinitions = new List<IBuildDefinition>();
+            var buildRepository = new BuildRepository(buildDefinition.BuildRepositoryUrl);
 
-            foreach (var buildType in restProject.buildTypes)
-            {
-                buildTypeUrl = this.wrapperFactory.CreateUri(server.Uri, buildType.href);
-                var buildTypeRest = Get<buildType>(buildTypeUrl, httpClient);
+            restConsumer.Load(buildRepository);
 
-                if (buildTypeRest != null)
-                {
-                    buildDefinitions.Add(new BuildDefinition(buildTypeRest));
-                }
-            }
-
-            return buildDefinitions;
-        }
-
-        private T Get<T>(IUri url, IHttpClient httpClient)
-        {
-            var asyncTask = httpClient.GetStringAsync(url);
-
-            var serializer = this.wrapperFactory.CreateXmlSerializer(typeof(T));
-
-            using (var reader = this.wrapperFactory.CreateStringReader(asyncTask.Result))
-            {
-                var objectDto = (T)serializer.Deserialize(reader);
-
-                return objectDto;
-            }
+            return buildRepository;
         }
     }
 }

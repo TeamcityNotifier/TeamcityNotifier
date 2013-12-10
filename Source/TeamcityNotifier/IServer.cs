@@ -16,6 +16,6 @@
         string Password { get; }
 
         IUri Uri { get; }
-
+        IRestConsumer RestConsumer { get; }
     }
 }

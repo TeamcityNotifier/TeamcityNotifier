@@ -5,11 +5,11 @@
 
     using DataAbstraction;
 
-    public class BuildDefinition : IBuildDefinition
+    public class Build : IBuild
     {
         private readonly string url;
 
-        public BuildDefinition(string url)
+        public Build(string url)
         {
             this.url = url;
         }
@@ -26,7 +26,7 @@
         {
             get
             {
-                return typeof(buildType);
+                return typeof(build);
             }
         }
 
@@ -38,22 +38,25 @@
             }
         }
 
-        public string Id { get; private set; }
+        public long Id { get; set; }
 
-        public string Name { get; private set; }
+        public string Status { get; private set; }
 
-        public string Description { get; private set; }
+        public string Number { get; private set; }
 
-        public string BuildRepositoryUrl { get; private set; }
+        public string FinishDate { get; set; }
+
+        public string StartDate { get; set; }
 
         public void SetData(object obj)
         {
-            var baseObject = (buildType) obj;
+            var baseObject = (build)obj;
 
             this.Id = baseObject.id;
-            this.Name = baseObject.name;
-            this.Description = baseObject.description;
-            this.BuildRepositoryUrl = baseObject.builds.href;
+            this.Number = baseObject.number;
+            this.Status = baseObject.status;
+            this.StartDate = baseObject.startDate;
+            this.FinishDate = baseObject.finishDate;
         }
     }
 }

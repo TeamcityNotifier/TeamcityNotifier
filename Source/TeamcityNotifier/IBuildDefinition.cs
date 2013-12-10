@@ -1,8 +1,10 @@
 ﻿namespace TeamcityNotifier
 {
-    public interface IBuildDefinition : ILocalizable
+    public interface IBuildDefinition : IRestObject
     {
         string Name { get; }
         string Description { get; }
+        string Id { get; }
+        string BuildRepositoryUrl { get; }
     }
 }
