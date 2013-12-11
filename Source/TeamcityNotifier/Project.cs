@@ -3,11 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Runtime.CompilerServices;
 
     using DataAbstraction;
 
-    public class Project : IProject
+    internal class Project : IProject
     {
         private readonly string url;
 

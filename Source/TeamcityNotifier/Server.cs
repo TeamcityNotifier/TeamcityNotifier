@@ -1,11 +1,10 @@
 ﻿namespace TeamcityNotifier
 {
-    using System;
     using System.Collections.Generic;
 
     using TeamcityNotifier.Wrapper;
 
-    public class Server : IServer
+    internal class Server : IServer
     {
         public Server(IWrapperFactory factory, IRestConfiguration configuration)
         {

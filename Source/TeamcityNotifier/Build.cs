@@ -5,7 +5,7 @@
 
     using DataAbstraction;
 
-    public class Build : IBuild
+    internal class Build : IBuild
     {
         private readonly string url;
 
