@@ -29,6 +29,9 @@ namespace TeamCityNotifierWindowsStore.Data
     /// </summary>
     public sealed class DataSourceService
     {
+        static int serverCount = 1;
+        static int projectCount = 10;
+
         private static DataSourceService dataSourceService = new DataSourceService();
 
         private ObservableCollection<ServerPMod> _allGroups = new ObservableCollection<ServerPMod>();
@@ -55,42 +58,62 @@ namespace TeamCityNotifierWindowsStore.Data
         public static ProjectPMod GetProject(string uniqueId)
         {
             // Simple linear search is acceptable for small data sets
-            var matches = dataSourceService.AllGroups.SelectMany(group => group.Items).Where((item) => item.UniqueId.Equals(uniqueId));
+
+            var firstLevelProjects = dataSourceService.AllGroups.SelectMany(group => group.Items).ToList();
+            var temp = firstLevelProjects.SelectMany(items => items.Items).Union(firstLevelProjects);
+
+            var matches = temp.Where((item) => item.UniqueId.Equals(uniqueId));
+            
             if (matches.Count() == 1) return matches.First();
             return null;
         }
 
         public DataSourceService()
         {
-            String ITEM_CONTENT = String.Format("Item Content: {0}\n\n{0}\n\n{0}\n\n{0}\n\n{0}\n\n{0}\n\n{0}",
-                        "Curabitur class aliquam vestibulum nam curae maecenas sed integer cras phasellus suspendisse quisque donec dis praesent accumsan bibendum pellentesque condimentum adipiscing etiam consequat vivamus dictumst aliquam duis convallis scelerisque est parturient ullamcorper aliquet fusce suspendisse nunc hac eleifend amet blandit facilisi condimentum commodo scelerisque faucibus aenean ullamcorper ante mauris dignissim consectetuer nullam lorem vestibulum habitant conubia elementum pellentesque morbi facilisis arcu sollicitudin diam cubilia aptent vestibulum auctor eget dapibus pellentesque inceptos leo egestas interdum nulla consectetuer suspendisse adipiscing pellentesque proin lobortis sollicitudin augue elit mus congue fermentum parturient fringilla euismod feugiat");
             var configuration = new RestConfiguration("https://teamcity.bbv.ch/", "teamcitynotifier_test", "j9nufrE6", "My first Server");
+            var configuration2 = new RestConfiguration("https://teamcity.bbv.ch/", "teamcitynotifier_test", "j9nufrE6", "My first Server");
 
-            var service = new Service(new RestFactory(new List<IRestConfiguration> {configuration}, new WrapperFactory()));
+            var service = new Service(new RestFactory(new List<IRestConfiguration> {configuration, configuration2}, new WrapperFactory()));
 
             foreach (var server in service.GetServers())
             {
                 var serverPMod = new ServerPMod(
-                    server.Name,
-                    server.Name,
-                    "Group Subtitle: 1",
+                    serverCount.ToString(),
+                    server.Name + serverCount,
+                    "my server sub title",
                     "Assets/Green.png",
-                    "Group Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor scelerisque lorem in vehicula. Aliquam tincidunt, lacus ut sagittis tristique, turpis massa volutpat augue, eu rutrum ligula ante a ante");
+                    "my server description");
+
+                serverCount++;
 
                 foreach (var project in server.Projects)
                 {
-                    serverPMod.Items.Add(new ProjectPMod(
-                        project.Name,
-                        project.Name,
-                        "Project Item Subtitle: 1",
-                        "Assets/Green.png",
-                        project.Description,
-                        ITEM_CONTENT,
-                        serverPMod));
+                     serverPMod.Items.Add(CreateProjectPMod(project, serverPMod));
                 }
 
                 this.AllGroups.Add(serverPMod);
             }
+        }
+
+        private static ProjectPMod CreateProjectPMod(IProject project, SampleDataCommon serverPMod)
+        {
+            var projectPMod = new ProjectPMod(
+                projectCount.ToString(),
+                project.Name + projectCount,
+                "my project sub title",
+                "Assets/Green.png",
+                project.Description,
+                "my project content",
+                serverPMod);
+
+            projectCount++;
+
+            foreach (var childProject in project.ChildProjects)
+            {
+                projectPMod.Items.Add(CreateProjectPMod(childProject, projectPMod));
+            }
+
+            return projectPMod;
         }
     }
 }
