@@ -18,6 +18,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TeamCityNotifierWindowsStore
 {
+    using TeamCityNotifierWindowsStore.Common;
+
     /// <summary>
     /// A page that displays details for a single item within a group while allowing gestures to
     /// flip through other items belonging to the same group.
@@ -49,7 +51,17 @@ namespace TeamCityNotifierWindowsStore
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             var item = DataSourceService.GetProject((String)navigationParameter);
             this.DefaultViewModel["Group"] = item.Group;
-            this.DefaultViewModel["Items"] = item.Group.Items;
+            if (item.Group is ServerPMod)
+            {
+               this.DefaultViewModel["Items"] = ((ServerPMod)item.Group).Items; 
+            }
+            else if (item.Group is ProjectPMod)
+            {
+                this.DefaultViewModel["Items"] = ((ProjectPMod)item.Group).Items; 
+            }
+
+            this.DefaultViewModel["SubItems"] = item.Items;
+            
             this.flipView.SelectedItem = item;
         }
 
@@ -63,6 +75,21 @@ namespace TeamCityNotifierWindowsStore
         {
             var selectedItem = (ProjectPMod)this.flipView.SelectedItem;
             pageState["SelectedItem"] = selectedItem.UniqueId;
+        }
+
+        /// <summary>
+        /// Invoked when an item is clicked.
+        /// </summary>
+        /// <param name="sender">The GridView (or ListView when the application is snapped)
+        /// displaying the item clicked.</param>
+        /// <param name="e">Event data that describes the item clicked.</param>
+        void ItemView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // Navigate to the appropriate destination page, configuring the new page
+            // by passing required information as a navigation parameter
+
+            var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
+            this.Frame.Navigate(typeof(ItemDetailPage), itemId);
         }
     }
 }
