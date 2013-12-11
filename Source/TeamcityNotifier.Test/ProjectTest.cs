@@ -6,6 +6,8 @@ namespace TeamcityNotifier.Test
 
     using DataAbstraction;
 
+    using FluentAssertions;
+
     using NUnit.Framework;
 
     [TestFixture]
@@ -99,6 +101,24 @@ namespace TeamcityNotifier.Test
             this.testee.SetData(this.projectDto);
 
             Assert.That(this.testee.ParentId, Is.EqualTo(projectDto.parentProject.id));
+        }
+
+        [Test]
+        public void SetData_WhenParentIdIsSet_HasParent()
+        {
+            this.testee.SetData(this.projectDto);
+
+            this.testee.HasParent.Should().BeTrue();
+        }
+
+        [Test]
+        public void SetData_WhenParentIdIsNotSet_HasNoParent()
+        {
+            this.projectDto.parentProject.id = string.Empty;
+
+            this.testee.SetData(this.projectDto);
+
+            this.testee.HasParent.Should().BeFalse();
         }
 
         [Test]

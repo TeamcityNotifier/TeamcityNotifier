@@ -112,6 +112,14 @@
             }
         }
 
+        public bool HasParent
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(ParentId);
+            }
+        }
+
         public string ParentId
         {
             get
