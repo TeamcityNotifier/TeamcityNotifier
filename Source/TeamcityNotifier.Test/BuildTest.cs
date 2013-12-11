@@ -2,6 +2,8 @@
 {
     using DataAbstraction;
 
+    using FluentAssertions;
+
     using NUnit.Framework;
 
     [TestFixture]
@@ -48,14 +50,6 @@
         }
 
         [Test]
-        public void SetData_WhenSettingDto_StatusIsSet()
-        {
-            this.testee.SetData(this.buildDto);
-
-            Assert.That(this.testee.Status, Is.EqualTo(this.buildDto.status));
-        }
-
-        [Test]
         public void SetData_WhenSettingDto_NumberIsSet()
         {
             this.testee.SetData(this.buildDto);
@@ -85,6 +79,33 @@
             this.testee.SetData(this.buildDto);
 
             Assert.That(this.testee.Dependencies, Is.Empty);
+        }
+
+        [Test]
+        public void SetData_WhenSettingDtoStatusToError_StatusIdSetToError()
+        {
+            this.buildDto.status = "ERROR";
+            this.testee.SetData(this.buildDto);
+
+            this.testee.Status.Should().Be(Status.Error);
+        }
+
+        [Test]
+        public void SetData_WhenSettingDtoStatusToFailure_StatusIdSetToFailure()
+        {
+            this.buildDto.status = "FAILURE";
+            this.testee.SetData(this.buildDto);
+
+            this.testee.Status.Should().Be(Status.Failure);
+        }
+
+        [Test]
+        public void SetData_WhenSettingDtoStatusToSuccess_StatusIdSetToSuccess()
+        {
+            this.buildDto.status = "SUCCESS";
+            this.testee.SetData(this.buildDto);
+
+            this.testee.Status.Should().Be(Status.Success);
         }
     }
 }

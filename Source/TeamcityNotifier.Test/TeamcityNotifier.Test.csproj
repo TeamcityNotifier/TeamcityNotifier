@@ -61,6 +61,7 @@
     <Compile Include="BuildDefinitionTest.cs" />
     <Compile Include="BuildRepositoryTest.cs" />
     <Compile Include="BuildTest.cs" />
+    <Compile Include="EnumParserTest.cs" />
     <Compile Include="ProjectRepositoryTest.cs" />
     <Compile Include="ProjectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

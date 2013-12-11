@@ -38,6 +38,7 @@
     <Compile Include="Build.cs" />
     <Compile Include="BuildDefinition.cs" />
     <Compile Include="BuildRepository.cs" />
+    <Compile Include="EnumParser.cs" />
     <Compile Include="HttpRelativeUrl.cs" />
     <Compile Include="IBuild.cs" />
     <Compile Include="IBuildDefinition.cs" />
@@ -52,11 +53,13 @@
     <Compile Include="IService.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectRepository.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestConsumer.cs" />
     <Compile Include="RestFactory.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Service.cs" />
+    <Compile Include="Status.cs" />
     <Compile Include="Wrapper\WrapperFactory.cs" />
     <Compile Include="Wrapper\HttpClientWrapper.cs" />
     <Compile Include="Wrapper\IWrapperFactory.cs" />
