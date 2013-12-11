@@ -12,7 +12,7 @@
 
         private IBuild lastBuild;
 
-        private string buildRepositoryUrl;
+        private IBuildRepository buildRepository;
 
         private string description;
 
@@ -47,7 +47,7 @@
         {
             get
             {
-                return new List<IRestObject>();
+                return new List<IRestObject> { this.BuildRepository };
             }
         }
 
@@ -105,21 +105,21 @@
             }
         }
 
-        public string BuildRepositoryUrl
+        public IBuildRepository BuildRepository
         {
             get
             {
-                return this.buildRepositoryUrl;
+                return this.buildRepository;
             }
             private set
             {
-                if (this.buildRepositoryUrl == value)
+                if (this.buildRepository == value)
                 {
                     return;
                 }
 
-                this.buildRepositoryUrl = value;
-                this.OnPropertyChanged("BuildRepositoryUrl");
+                this.buildRepository = value;
+                this.OnPropertyChanged("BuildRepository");
             }
         }
 
@@ -149,7 +149,8 @@
             this.Id = baseObject.id;
             this.Name = baseObject.name;
             this.Description = baseObject.description;
-            this.BuildRepositoryUrl = baseObject.builds.href + "?locator=count:1";
+            this.BuildRepository = new BuildRepository(baseObject.builds.href + "?locator=count:1");
+            
         }
 
         protected virtual void OnPropertyChanged(string propertyName = null)

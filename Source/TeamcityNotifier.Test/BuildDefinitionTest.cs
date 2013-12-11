@@ -1,6 +1,10 @@
 ﻿namespace TeamcityNotifier.Test
 {
+    using System.Linq;
+
     using DataAbstraction;
+
+    using FluentAssertions;
 
     using NUnit.Framework;
 
@@ -70,7 +74,8 @@
         {
             this.testee.SetData(this.buildTypeDto);
 
-            Assert.That(this.testee.Dependencies, Is.Empty);
+            this.testee.Dependencies.Should().NotBeEmpty();
+            this.testee.Dependencies.FirstOrDefault().Should().BeAssignableTo<IBuildRepository>();
         }
     }
 }

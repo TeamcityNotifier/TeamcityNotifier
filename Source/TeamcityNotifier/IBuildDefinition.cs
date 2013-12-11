@@ -7,7 +7,7 @@
         string Name { get; }
         string Description { get; }
         string Id { get; }
-        string BuildRepositoryUrl { get; }
+        IBuildRepository BuildRepository { get; }
         IBuild LastBuild { get;  set; }
     }
 }

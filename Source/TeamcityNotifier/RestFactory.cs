@@ -40,35 +40,8 @@
 
             restConsumer.Load(projectRepository);
 
-            foreach (var project in projectRepository.Projects)
-            {
-                LoadBuilds(server, project);
-                foreach (var childProject in project.ChildProjects)
-                {
-                    LoadBuilds(server, childProject);
-                }
-            }
-
             return projectRepository;
         }
 
-        private void LoadBuilds(IServer server, IProject project)
-        {
-            foreach (var buildDefinition in project.BuildDefinitions)
-            {
-                buildDefinition.LastBuild = GetBuildRepository(server, buildDefinition).Builds.FirstOrDefault();
-            }
-        }
-
-        public IBuildRepository GetBuildRepository(IServer server, IBuildDefinition buildDefinition)
-        {
-            var restConsumer = server.RestConsumer;
-
-            var buildRepository = new BuildRepository(buildDefinition.BuildRepositoryUrl);
-
-            restConsumer.Load(buildRepository);
-
-            return buildRepository;
-        }
     }
 }

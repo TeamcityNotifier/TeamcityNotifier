@@ -7,7 +7,5 @@
         IEnumerable<IServer> CreateServers();
 
         IProjectRepository GetProjectRepository(IServer server);
-
-        IBuildRepository GetBuildRepository(IServer server, IBuildDefinition buildDefinition);
     }
 }
