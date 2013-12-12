@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface IFactory
+    public interface IRestFactory
     {
         IEnumerable<IServer> CreateServers();
 

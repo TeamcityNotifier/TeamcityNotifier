@@ -46,7 +46,7 @@
     <Compile Include="IProject.cs" />
     <Compile Include="IProjectRepository.cs" />
     <Compile Include="IRestConfiguration.cs" />
-    <Compile Include="IFactory.cs" />
+    <Compile Include="IRestFactory.cs" />
     <Compile Include="IRestConsumer.cs" />
     <Compile Include="IRestObject.cs" />
     <Compile Include="IServer.cs" />

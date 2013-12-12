@@ -5,7 +5,7 @@
 
     using TeamcityNotifier.Wrapper;
 
-    public class RestFactory : IFactory
+    public class RestFactory : IRestFactory
     {
         private readonly IEnumerable<IRestConfiguration> configurations;
         private readonly IWrapperFactory wrapperFactory;

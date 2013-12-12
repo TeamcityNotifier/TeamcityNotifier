@@ -17,7 +17,7 @@
 
     public class RestFactoryTest
     {
-        private IFactory testee;
+        private IRestFactory testee;
 
         private IList<IRestConfiguration> restConfigurations;
         private IWrapperFactory mockWrapperFactory;

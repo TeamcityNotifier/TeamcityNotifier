@@ -4,16 +4,16 @@
 
     public class Service : IService
     {
-        private IFactory factory;
+        private IRestFactory restFactory;
 
-        public Service(IFactory factory)
+        public Service(IRestFactory restFactory)
         {
-            this.factory = factory;
+            this.restFactory = restFactory;
         }
 
         public IEnumerable<IServer> GetServers()
         {
-            return this.factory.CreateServers();
+            return this.restFactory.CreateServers();
         }
     }
 }

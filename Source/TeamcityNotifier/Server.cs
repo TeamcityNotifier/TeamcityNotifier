@@ -30,7 +30,7 @@
             }
         }
 
-        public string Name { get; internal set; }
+        public string Name { get; private set; }
 
         public string UserName { get; private set; }
 
