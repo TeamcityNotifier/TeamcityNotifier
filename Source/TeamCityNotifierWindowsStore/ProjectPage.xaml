@@ -11,6 +11,22 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <!-- Grid-appropriate 500 by 130 pixel item template as seen in the GroupDetailPage -->
+        <DataTemplate x:Key="BuildDefinitionsTemplate500x130">
+            <Grid Height="110" Width="480" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="110" Height="110">
+                    <Image Source="{Binding Image}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
+                    <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextStyle}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" MaxHeight="60"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
@@ -23,7 +39,13 @@
             x:Name="subItemsViewSource"
             Source="{Binding SubItems}"
             d:Source="{Binding AllGroups[0].Items[0].Items, Source={d:DesignInstance Type=data:DataSourceService, IsDesignTimeCreatable=True}}"/>
-        
+
+        <!-- Collection of items displayed by this page -->
+        <CollectionViewSource
+            x:Name="buildDefinitionsViewSource"
+            Source="{Binding BuildDefinitions}"
+            d:Source="{Binding AllGroups[0].Items[0].BuildDefinitions, Source={d:DesignInstance Type=data:DataSourceService, IsDesignTimeCreatable=True}}"/>
+
     </Page.Resources>
 
     <!--
@@ -40,7 +62,7 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        
         <!--
             The remainder of the page is one large FlipView that displays details for
             one item at a time, allowing the user to flip through all items in the chosen
@@ -62,34 +84,93 @@
 
             <FlipView.ItemTemplate>
                 <DataTemplate>
-                    <GridView
-                        x:Name="itemGridView"
-                        AutomationProperties.AutomationId="ItemGridView"
-                        AutomationProperties.Name="Items In Group"
-                        TabIndex="1"
-                        Grid.RowSpan="2"
-                        Padding="120,126,120,50"
-                        ItemsSource="{Binding Source={StaticResource subItemsViewSource}}"
-                        ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
-                        SelectionMode="None"
-                        IsSwipeEnabled="false"
-                        IsItemClickEnabled="True"
-                        ItemClick="ItemView_ItemClick">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="500"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <GridView.Header>
-                            <StackPanel Width="480" Margin="0,4,14,0">
-                                <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}"/>
-                                <TextBlock Text="{Binding Subtitle}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
-                                <Image Source="{Binding Image}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
-                                <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
-                            </StackPanel>
-                        </GridView.Header>
-                        <GridView.ItemContainerStyle>
-                            <Style TargetType="FrameworkElement">
-                                <Setter Property="Margin" Value="52,0,0,10"/>
-                            </Style>
-                        </GridView.ItemContainerStyle>
-                    </GridView>
+                        <TextBlock 
+                            Text="Selected Project" 
+                            Grid.Row="0" 
+                            Grid.Column="0" 
+                            Margin="120,0,18,20" 
+                            Style="{StaticResource SubheaderTextStyle}" 
+                            MaxHeight="60"/>
+
+                        <TextBlock 
+                            Text="Subprojects" 
+                            Grid.Row="0" 
+                            Grid.Column="1" 
+                            Margin="172,0,18,20" 
+                            Style="{StaticResource SubheaderTextStyle}" 
+                            MaxHeight="60"/>
+
+                        <TextBlock 
+                            Text="Build Definitions" 
+                            Grid.Row="0" 
+                            Grid.Column="2" 
+                            Margin="182,0,18,20" 
+                            Style="{StaticResource SubheaderTextStyle}" 
+                            MaxHeight="60"/>
+
+                        <GridView
+                            x:Name="itemGridView"
+                            AutomationProperties.AutomationId="ItemGridView"
+                            AutomationProperties.Name="Items In Group"
+                            TabIndex="1"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Padding="120,15,120,50"
+                            ItemsSource="{Binding Source={StaticResource subItemsViewSource}}"
+                            ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
+                            SelectionMode="None"
+                            IsSwipeEnabled="false"
+                            IsItemClickEnabled="True"
+                            ItemClick="ItemView_ProjectItemClick">
+                            <GridView.Header>
+                                <StackPanel Width="480" Margin="0,4,14,0">
+                                    <TextBlock Text="{Binding Title}" Margin="0,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}"/>
+                                    <TextBlock Text="{Binding Subtitle}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
+                                    <Image Source="{Binding Image}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+                                    <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
+                                </StackPanel>
+                            </GridView.Header>
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="FrameworkElement">
+                                    <Setter Property="Margin" Value="52,0,0,10"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                        </GridView>
+
+                        <GridView
+                            x:Name="buildDefinitionsGridView"
+                            AutomationProperties.AutomationId="ItemGridView"
+                            AutomationProperties.Name="Items In Group"
+                            TabIndex="1"
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Padding="120,15,120,50"
+                            ItemsSource="{Binding Source={StaticResource buildDefinitionsViewSource}}"
+                            ItemTemplate="{StaticResource BuildDefinitionsTemplate500x130}"
+                            SelectionMode="None"
+                            IsSwipeEnabled="false"
+                            IsItemClickEnabled="True"
+                            ItemClick="ItemView_BuildDefinitionItemClick">
+
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="FrameworkElement">
+                                    <Setter Property="Margin" Value="52,0,0,10"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                        </GridView>
+                    </Grid>
                 </DataTemplate>
             </FlipView.ItemTemplate>
         </FlipView>

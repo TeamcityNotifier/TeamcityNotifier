@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Navigation;
 namespace TeamCityNotifierWindowsStore
 {
     using TeamCityNotifierWindowsStore.Common;
+    using TeamCityNotifierWindowsStore.DataModel;
 
     /// <summary>
     /// A page that displays details for a single item within a group while allowing gestures to
@@ -61,7 +62,9 @@ namespace TeamCityNotifierWindowsStore
             }
 
             this.DefaultViewModel["SubItems"] = item.Items;
-            
+
+            this.DefaultViewModel["BuildDefinitions"] = item.BuildDefinitions;
+
             this.flipView.SelectedItem = item;
         }
 
@@ -83,7 +86,7 @@ namespace TeamCityNotifierWindowsStore
         /// <param name="sender">The GridView (or ListView when the application is snapped)
         /// displaying the item clicked.</param>
         /// <param name="e">Event data that describes the item clicked.</param>
-        void ItemView_ItemClick(object sender, ItemClickEventArgs e)
+        void ItemView_ProjectItemClick(object sender, ItemClickEventArgs e)
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
@@ -91,5 +94,14 @@ namespace TeamCityNotifierWindowsStore
             var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
             this.Frame.Navigate(typeof(ItemDetailPage), itemId);
         }
+
+        private void ItemView_BuildDefinitionItemClick(object sender, ItemClickEventArgs e)
+        {
+            var buildRepositoryUrl = ((BuildDefinitionPMod)e.ClickedItem).BuildRepositoryUrl;
+
+            this.Frame.Navigate(typeof(BuildDefinitionPage), buildRepositoryUrl);
+        }
+
+
     }
 }

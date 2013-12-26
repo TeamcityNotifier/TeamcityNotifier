@@ -26,7 +26,7 @@ namespace TeamCityNotifierWindowsStore.Common
     /// <description>Mouse and keyboard shortcuts for navigation</description>
     /// </item>
     /// <item>
-    /// <description>State management for navigation and process lifetime management</description>
+    /// <description>buildSuccessful management for navigation and process lifetime management</description>
     /// </item>
     /// <item>
     /// <description>A default view model</description>

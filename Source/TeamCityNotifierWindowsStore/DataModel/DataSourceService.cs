@@ -18,6 +18,8 @@ using Windows.UI.Xaml.Data;
 
 namespace TeamCityNotifierWindowsStore.Data
 {
+    using TeamCityNotifierWindowsStore.DataModel;
+
     using TeamcityNotifier;
     using TeamcityNotifier.Wrapper;
 
@@ -31,6 +33,7 @@ namespace TeamCityNotifierWindowsStore.Data
     {
         static int serverCount = 1;
         static int projectCount = 10;
+        private static bool succeedToggler = false;
 
         private static DataSourceService dataSourceService = new DataSourceService();
 
@@ -97,14 +100,58 @@ namespace TeamCityNotifierWindowsStore.Data
 
         private static ProjectPMod CreateProjectPMod(IProject project, SampleDataCommon serverPMod)
         {
-            var projectPMod = new ProjectPMod(
-                projectCount.ToString(),
-                project.Name + projectCount,
-                "my project sub title",
-                "Assets/Green.png",
-                project.Description,
-                "my project content",
-                serverPMod);
+            ProjectPMod projectPMod;
+
+            if (succeedToggler)
+            {
+                projectPMod = new ProjectPMod(
+                    projectCount.ToString(),
+                    project.Name + projectCount,
+                    "my project sub title",
+                    "Assets/Green.png",
+                    project.Description,
+                    "my project content",
+                    serverPMod,
+                    succeedToggler);
+
+                foreach (var buildDefinition in project.BuildDefinitions)
+                {
+                    projectPMod.BuildDefinitions.Add(new BuildDefinitionPMod(
+                        buildDefinition.Id, 
+                        buildDefinition.Name, 
+                        "subtitel builddefinition",
+                        "Assets/Green.png",
+                        buildDefinition.Description,
+                        buildDefinition.BuildRepositoryUrl));
+                }
+
+                succeedToggler = false;
+            }
+            else
+            {
+                projectPMod = new ProjectPMod(
+                    projectCount.ToString(),
+                    project.Name + projectCount,
+                    "my project sub title",
+                    "Assets/Red.png",
+                    project.Description,
+                    "my project content",
+                    serverPMod,
+                    succeedToggler);
+
+                foreach (var buildDefinition in project.BuildDefinitions)
+                {
+                    projectPMod.BuildDefinitions.Add(new BuildDefinitionPMod(
+                        buildDefinition.Id,
+                        buildDefinition.Name,
+                        "subtitel builddefinition",
+                        "Assets/Green.png",
+                        buildDefinition.Description, 
+                        buildDefinition.BuildRepositoryUrl));
+                }
+
+                succeedToggler = true;
+            }
 
             projectCount++;
 

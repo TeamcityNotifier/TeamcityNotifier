@@ -112,6 +112,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BuildDefinitionPage.xaml.cs">
+      <DependentUpon>BuildDefinitionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\BuildDefinitionPMod.cs" />
     <Compile Include="DataModel\RestConfiguration.cs" />
     <Compile Include="DataModel\SampleDataCommon.cs" />
     <Compile Include="DataModel\ServerPMod.cs" />
@@ -156,6 +160,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="BuildDefinitionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -32,17 +32,34 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
         <!-- Horizontal scrolling grid used in most view states -->
+
+        <TextBlock 
+            Text="Projects" 
+            Grid.Row="1" 
+            Grid.Column="1" 
+            Margin="172,0,18,20" 
+            Style="{StaticResource SubheaderTextStyle}" 
+            MaxHeight="60"/>
+
         <GridView
             x:Name="itemGridView"
             AutomationProperties.AutomationId="ItemGridView"
             AutomationProperties.Name="Items In Group"
             TabIndex="1"
-            Grid.RowSpan="2"
-            Padding="120,126,120,50"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Padding="120,15,120,50"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
             ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
             SelectionMode="None"
@@ -90,7 +107,7 @@
         </ListView>
 
         <!-- Back button and page title -->
-        <Grid>
+        <Grid Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>

@@ -3,16 +3,20 @@
     using System;
     using System.Collections.ObjectModel;
 
+    using TeamCityNotifierWindowsStore.DataModel;
+
     /// <summary>
     /// Generic item data model.
     /// </summary>
     public class ProjectPMod : SampleDataCommon
     {
-        public ProjectPMod(String uniqueId, String title, String subtitle, String imagePath, String description, String content, SampleDataCommon group)
+        public ProjectPMod(String uniqueId, String title, String subtitle, String imagePath, 
+            String description, String content, SampleDataCommon group, bool buildSuccessful)
             : base(uniqueId, title, subtitle, imagePath, description)
         {
             this._content = content;
             this._group = group;
+            this.buildSuccessful = buildSuccessful;
         }
 
         private string _content = string.Empty;
@@ -39,6 +43,23 @@
         public ObservableCollection<ProjectPMod> TopItems
         {
             get { return this._topItem; }
+        }
+
+        private ObservableCollection<BuildDefinitionPMod> buildDefinitions = new ObservableCollection<BuildDefinitionPMod>();
+        public ObservableCollection<BuildDefinitionPMod> BuildDefinitions
+        {
+            get
+            {
+                return this.buildDefinitions;
+            }
+        }
+
+
+        private bool buildSuccessful = false;
+        public bool BuildSuccessful
+        {
+            get { return this.buildSuccessful; }
+            set { this.SetProperty(ref this.buildSuccessful, value); }
         }
     }
 }

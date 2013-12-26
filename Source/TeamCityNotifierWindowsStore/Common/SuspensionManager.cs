@@ -109,7 +109,7 @@ namespace TeamCityNotifierWindowsStore.Common
                 StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(sessionStateFilename);
                 using (IInputStream inStream = await file.OpenSequentialReadAsync())
                 {
-                    // Deserialize the Session State
+                    // Deserialize the Session buildSuccessful
                     DataContractSerializer serializer = new DataContractSerializer(typeof(Dictionary<string, object>), _knownTypes);
                     _sessionState = (Dictionary<string, object>)serializer.ReadObject(inStream.AsStreamForRead());
                 }
