@@ -122,7 +122,7 @@ namespace TeamCityNotifierWindowsStore.Data
                         "subtitel builddefinition",
                         "Assets/Green.png",
                         buildDefinition.Description,
-                        buildDefinition.BuildRepositoryUrl));
+                        buildDefinition.Url));
                 }
 
                 succeedToggler = false;
@@ -147,7 +147,7 @@ namespace TeamCityNotifierWindowsStore.Data
                         "subtitel builddefinition",
                         "Assets/Green.png",
                         buildDefinition.Description, 
-                        buildDefinition.BuildRepositoryUrl));
+                        buildDefinition.Url));
                 }
 
                 succeedToggler = true;
