@@ -9,15 +9,22 @@
 
     public class DummyData
     {
+        public DummyData()
+        {
+            this.allGroups = new ObservableCollection<ServerPMod> { GetDummyServerPMod() };
+        }
+
+        private readonly ObservableCollection<ServerPMod> allGroups;
+
         public ObservableCollection<ServerPMod> AllGroups
         {
             get
             {
-                return new ObservableCollection<ServerPMod> { this.GetDummyServerPMod() };
+                return this.allGroups;
             }
         }
 
-        public BuildDefinitionPMod GetDummyBuildDefinitionPMod()
+        public static BuildDefinitionPMod GetDummyBuildDefinitionPMod()
         {
             return new BuildDefinitionPMod(
                 Guid.NewGuid().ToString(),
@@ -27,7 +34,7 @@
                 "url build defintion");
         }
 
-        public ProjectPMod GetDummyProjectPMod(SampleDataCommon serverPMod)
+        public static ProjectPMod GetDummyProjectPMod(SampleDataCommon serverPMod)
         {
             var projectPMod = new ProjectPMod(
                 Guid.NewGuid().ToString(),
@@ -37,14 +44,14 @@
                 "url project",
                 serverPMod);
             
-            projectPMod.BuildDefinitions.Add(this.GetDummyBuildDefinitionPMod());
-            projectPMod.BuildDefinitions.Add(this.GetDummyBuildDefinitionPMod());
-            projectPMod.BuildDefinitions.Add(this.GetDummyBuildDefinitionPMod());
+            projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
+            projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
+            projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
 
             return projectPMod;
         }
 
-        public ServerPMod GetDummyServerPMod()
+        public static ServerPMod GetDummyServerPMod()
         {
             var serverPMod  = new ServerPMod(
                 Guid.NewGuid().ToString(), 
@@ -52,10 +59,10 @@
                 DataSourceService.PathSuccessfulPicture, 
                 "description server");
 
-            serverPMod.Items.Add(this.GetDummyProjectPMod(serverPMod));
-            serverPMod.Items.Add(this.GetDummyProjectPMod(serverPMod));
-            serverPMod.Items.Add(this.GetDummyProjectPMod(serverPMod));
-            serverPMod.Items.First().Items.Add(this.GetDummyProjectPMod(serverPMod.Items.First()));
+            serverPMod.Items.Add(GetDummyProjectPMod(serverPMod));
+            serverPMod.Items.Add(GetDummyProjectPMod(serverPMod));
+            serverPMod.Items.Add(GetDummyProjectPMod(serverPMod));
+            serverPMod.Items.First().Items.Add(GetDummyProjectPMod(serverPMod.Items.First()));
 
             return serverPMod;
         }
