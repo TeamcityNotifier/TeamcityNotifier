@@ -1,29 +1,21 @@
-﻿using TeamCityNotifierWindowsStore.Data;
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Grouped Items Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234231
+﻿// The Grouped Projects Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234231
 
 namespace TeamCityNotifierWindowsStore
 {
+    using System;
+    using System.Collections.Generic;
+
+    using TeamCityNotifierWindowsStore.DataModel;
+
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+
     /// <summary>
     /// A page that displays a grouped collection of items.
     /// </summary>
-    public sealed partial class GroupedItemsPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
+    public sealed partial class ServerPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
     {
-        public GroupedItemsPage()
+        public ServerPage()
         {
             this.InitializeComponent();
         }
@@ -40,8 +32,8 @@ namespace TeamCityNotifierWindowsStore
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var sampleDataGroups = DataSourceService.GetGroups((String)navigationParameter);
-            this.DefaultViewModel["Groups"] = sampleDataGroups;
+            var servers = DataService.GetServers((String)navigationParameter);
+            this.DefaultViewModel["Servers"] = servers;
         }
 
         /// <summary>
@@ -49,14 +41,14 @@ namespace TeamCityNotifierWindowsStore
         /// </summary>
         /// <param name="sender">The Button used as a group header for the selected group.</param>
         /// <param name="e">Event data that describes how the click was initiated.</param>
-        void Header_Click(object sender, RoutedEventArgs e)
+        void ServerHeader_Click(object sender, RoutedEventArgs e)
         {
             // Determine what group the Button instance represents
-            var group = (sender as FrameworkElement).DataContext;
+            var server = (sender as FrameworkElement).DataContext;
 
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            this.Frame.Navigate(typeof(GroupDetailPage), ((ServerPMod)group).UniqueId);
+            this.Frame.Navigate(typeof(ServerDetailPage), ((ServerPMod)server).UniqueId);
         }
 
         /// <summary>
@@ -65,12 +57,12 @@ namespace TeamCityNotifierWindowsStore
         /// <param name="sender">The GridView (or ListView when the application is snapped)
         /// displaying the item clicked.</param>
         /// <param name="e">Event data that describes the item clicked.</param>
-        void ItemView_ItemClick(object sender, ItemClickEventArgs e)
+        void ItemView_ProjectClick(object sender, ItemClickEventArgs e)
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
-            this.Frame.Navigate(typeof(ItemDetailPage), itemId);
+            var projectId = ((ProjectPMod)e.ClickedItem).UniqueId;
+            this.Frame.Navigate(typeof(ItemDetailPage), projectId);
         }
     }
 }

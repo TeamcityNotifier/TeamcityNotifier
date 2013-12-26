@@ -116,8 +116,8 @@
       <DependentUpon>BuildDefinitionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataModel\BuildDefinitionPMod.cs" />
-    <Compile Include="DataModel\RestConfiguration.cs" />
-    <Compile Include="DataModel\SampleDataCommon.cs" />
+    <Compile Include="DataModel\RestConfigurationPMod.cs" />
+    <Compile Include="DataModel\PModBase.cs" />
     <Compile Include="DataModel\ServerPMod.cs" />
     <Compile Include="DataModel\ProjectPMod.cs" />
     <Compile Include="DummyData\DummyData.cs" />
@@ -131,7 +131,7 @@
       <DependentUpon>ProjectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataModel\DataSourceService.cs" />
+    <Compile Include="DataModel\DataService.cs" />
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />

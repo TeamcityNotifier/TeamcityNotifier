@@ -1,60 +1,45 @@
-﻿namespace TeamCityNotifierWindowsStore.Data
+﻿namespace TeamCityNotifierWindowsStore.DataModel
 {
     using System;
     using System.Collections.ObjectModel;
 
-    using TeamCityNotifierWindowsStore.DataModel;
-
     /// <summary>
     /// Generic item data model.
     /// </summary>
-    public class ProjectPMod : SampleDataCommon
+    public class ProjectPMod : PModBase
     {
-        public ProjectPMod(String uniqueId, String title, String imagePath, 
-            String description, String content, SampleDataCommon group)
+        public ProjectPMod(
+            String uniqueId, String title, String imagePath, String description, String content, PModBase parent)
             : base(uniqueId, title, imagePath, description)
         {
-            this._content = content;
-            this._group = group;
+            BuildDefinitions = new ObservableCollection<BuildDefinitionPMod>();
+            TopProjects = new ObservableCollection<ProjectPMod>();
+            Projects = new ObservableCollection<ProjectPMod>();
+            this.content = content;
+            this.parent = parent;
         }
 
-        private string _content = string.Empty;
+        private string content = string.Empty;
         public string Content
         {
-            get { return this._content; }
-            set { this.SetProperty(ref this._content, value); }
+            get { return this.content; }
+            set { this.SetProperty(ref this.content, value); }
         }
 
-        private SampleDataCommon _group;
-        public SampleDataCommon Group
+        private PModBase parent;
+        public PModBase Parent
         {
-            get { return this._group; }
-            set { this.SetProperty(ref this._group, value); }
+            get { return this.parent; }
+            set { this.SetProperty(ref this.parent, value); }
         }
 
-        private ObservableCollection<ProjectPMod> _items = new ObservableCollection<ProjectPMod>();
-        public ObservableCollection<ProjectPMod> Items
-        {
-            get { return this._items; }
-        }
+        public ObservableCollection<ProjectPMod> Projects { get; private set; }
 
-        private ObservableCollection<ProjectPMod> _topItem = new ObservableCollection<ProjectPMod>();
-        public ObservableCollection<ProjectPMod> TopItems
-        {
-            get { return this._topItem; }
-        }
+        public ObservableCollection<ProjectPMod> TopProjects { get; private set; }
 
-        private ObservableCollection<BuildDefinitionPMod> buildDefinitions = new ObservableCollection<BuildDefinitionPMod>();
-        public ObservableCollection<BuildDefinitionPMod> BuildDefinitions
-        {
-            get
-            {
-                return this.buildDefinitions;
-            }
-        }
+        public ObservableCollection<BuildDefinitionPMod> BuildDefinitions { get; private set; }
 
-
-        private bool buildSuccessful = false;
+        private bool buildSuccessful;
         public bool BuildSuccessful
         {
             get { return this.buildSuccessful; }

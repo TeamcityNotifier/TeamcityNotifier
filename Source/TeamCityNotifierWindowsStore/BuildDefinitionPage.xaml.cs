@@ -1,13 +1,8 @@
-﻿using System.Collections.Generic;
-
-using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
+﻿// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace TeamCityNotifierWindowsStore
 {
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

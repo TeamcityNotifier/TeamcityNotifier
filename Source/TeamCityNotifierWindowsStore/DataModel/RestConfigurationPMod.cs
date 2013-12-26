@@ -2,9 +2,9 @@
 {
     using TeamcityNotifier;
 
-    public class RestConfiguration : IRestConfiguration
+    public class RestConfigurationPMod : IRestConfiguration
     {
-        public RestConfiguration(string baseUrl, string userName, string password, string serverName)
+        public RestConfigurationPMod(string baseUrl, string userName, string password, string serverName)
         {
             this.BaseUrl = baseUrl;
             this.UserName = userName;

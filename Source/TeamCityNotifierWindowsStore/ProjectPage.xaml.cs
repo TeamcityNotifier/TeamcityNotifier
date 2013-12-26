@@ -1,29 +1,18 @@
-﻿using TeamCityNotifierWindowsStore.Data;
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
+﻿// The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
 
 namespace TeamCityNotifierWindowsStore
 {
+    using System;
+    using System.Collections.Generic;
+
     using TeamCityNotifierWindowsStore.Common;
     using TeamCityNotifierWindowsStore.DataModel;
 
+    using Windows.UI.Xaml.Controls;
+
     /// <summary>
-    /// A page that displays details for a single item within a group while allowing gestures to
-    /// flip through other items belonging to the same group.
+    /// A page that displays details for a single item within a Parent while allowing gestures to
+    /// flip through other items belonging to the same Parent.
     /// </summary>
     public sealed partial class ItemDetailPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
     {
@@ -50,18 +39,18 @@ namespace TeamCityNotifierWindowsStore
             }
 
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var project = DataSourceService.GetProject((String)navigationParameter);
-            this.DefaultViewModel["Group"] = project.Group;
-            if (project.Group is ServerPMod)
+            var project = DataService.GetProject((String)navigationParameter);
+            this.DefaultViewModel["Parent"] = project.Parent;
+            if (project.Parent is ServerPMod)
             {
-               this.DefaultViewModel["Items"] = ((ServerPMod)project.Group).Items; 
+               this.DefaultViewModel["Projects"] = ((ServerPMod)project.Parent).Projects; 
             }
-            else if (project.Group is ProjectPMod)
+            else if (project.Parent is ProjectPMod)
             {
-                this.DefaultViewModel["Items"] = ((ProjectPMod)project.Group).Items; 
+                this.DefaultViewModel["Projects"] = ((ProjectPMod)project.Parent).Projects; 
             }
 
-            this.DefaultViewModel["SubItems"] = project.Items;
+            this.DefaultViewModel["SubProjects"] = project.Projects;
 
             this.DefaultViewModel["BuildDefinitions"] = project.BuildDefinitions;
 
@@ -90,7 +79,6 @@ namespace TeamCityNotifierWindowsStore
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-
             var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
             this.Frame.Navigate(typeof(ItemDetailPage), itemId);
         }
@@ -106,16 +94,16 @@ namespace TeamCityNotifierWindowsStore
         {
             var selectedProject = (ProjectPMod)((FlipView)sender).SelectedItem;
 
-            if (selectedProject.Group is ServerPMod)
+            if (selectedProject.Parent is ServerPMod)
             {
-                this.DefaultViewModel["Items"] = ((ServerPMod)selectedProject.Group).Items; 
+                this.DefaultViewModel["Projects"] = ((ServerPMod)selectedProject.Parent).Projects; 
             }
-            else if (selectedProject.Group is ProjectPMod)
+            else if (selectedProject.Parent is ProjectPMod)
             {
-                this.DefaultViewModel["Items"] = ((ProjectPMod)selectedProject.Group).Items; 
+                this.DefaultViewModel["Projects"] = ((ProjectPMod)selectedProject.Parent).Projects; 
             }
 
-            this.DefaultViewModel["SubItems"] = selectedProject.Items;
+            this.DefaultViewModel["SubItems"] = selectedProject.Projects;
 
             this.DefaultViewModel["BuildDefinitions"] = selectedProject.BuildDefinitions;
         }

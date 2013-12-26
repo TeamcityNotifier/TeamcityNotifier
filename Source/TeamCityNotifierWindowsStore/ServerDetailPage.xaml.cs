@@ -1,30 +1,21 @@
-﻿using TeamCityNotifierWindowsStore.Data;
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Group Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234229
+﻿// The Parent Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234229
 
 namespace TeamCityNotifierWindowsStore
 {
+    using System;
+    using System.Collections.Generic;
+
+    using TeamCityNotifierWindowsStore.DataModel;
+
+    using Windows.UI.Xaml.Controls;
+
     /// <summary>
     /// A page that displays an overview of a single group, including a preview of the items
     /// within the group.
     /// </summary>
-    public sealed partial class GroupDetailPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
+    public sealed partial class ServerDetailPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
     {
-        public GroupDetailPage()
+        public ServerDetailPage()
         {
             this.InitializeComponent();
         }
@@ -41,9 +32,9 @@ namespace TeamCityNotifierWindowsStore
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var group = DataSourceService.GetServer((String)navigationParameter);
-            this.DefaultViewModel["Group"] = group;
-            this.DefaultViewModel["Items"] = group.Items;
+            var server = DataService.GetServer((String)navigationParameter);
+            this.DefaultViewModel["Server"] = server;
+            this.DefaultViewModel["Projects"] = server.Projects;
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿<common:LayoutAwarePage
-    x:Name="pageRoot"
+    x:Name="PageRoot"
     x:Class="TeamCityNotifierWindowsStore.ItemDetailPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -31,20 +31,20 @@
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="itemsViewSource"
-            Source="{Binding Items}"
-            d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
+            Source="{Binding Projects}"
+            d:Source="{Binding AllGroups[0].Projects, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="subItemsViewSource"
-            Source="{Binding SubItems}"
-            d:Source="{Binding AllGroups[0].Items[0].Items, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
+            Source="{Binding SubProjects}"
+            d:Source="{Binding AllGroups[0].Projects[0].Projects, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="buildDefinitionsViewSource"
             Source="{Binding BuildDefinitions}"
-            d:Source="{Binding AllGroups[0].Items[0].BuildDefinitions, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].Projects[0].BuildDefinitions, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
 
     </Page.Resources>
 
@@ -55,7 +55,7 @@
     -->
     <Grid
         Style="{StaticResource LayoutRootStyle}"
-        DataContext="{Binding Group}"
+        DataContext="{Binding Parent}"
         d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}">
 
         <Grid.RowDefinitions>
@@ -181,7 +181,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=PageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
         </Grid>
 

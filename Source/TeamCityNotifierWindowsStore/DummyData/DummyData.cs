@@ -9,12 +9,12 @@
 
     public class DummyData
     {
+        private readonly ObservableCollection<ServerPMod> allGroups;
+
         public DummyData()
         {
             this.allGroups = new ObservableCollection<ServerPMod> { GetDummyServerPMod() };
         }
-
-        private readonly ObservableCollection<ServerPMod> allGroups;
 
         public ObservableCollection<ServerPMod> AllGroups
         {
@@ -29,17 +29,17 @@
             return new BuildDefinitionPMod(
                 Guid.NewGuid().ToString(),
                 "title build definition",
-                DataSourceService.PathSuccessfulPicture,
+                DataService.PathSuccessfulPicture,
                 "description build definition",
                 "url build defintion");
         }
 
-        public static ProjectPMod GetDummyProjectPMod(SampleDataCommon serverPMod)
+        public static ProjectPMod GetDummyProjectPMod(PModBase serverPMod)
         {
             var projectPMod = new ProjectPMod(
                 Guid.NewGuid().ToString(),
                 "title project",
-                DataSourceService.PathSuccessfulPicture,
+                DataService.PathSuccessfulPicture,
                 "description project",
                 "url project",
                 serverPMod);
@@ -56,13 +56,13 @@
             var serverPMod  = new ServerPMod(
                 Guid.NewGuid().ToString(), 
                 "title server", 
-                DataSourceService.PathSuccessfulPicture, 
+                DataService.PathSuccessfulPicture, 
                 "description server");
 
-            serverPMod.Items.Add(GetDummyProjectPMod(serverPMod));
-            serverPMod.Items.Add(GetDummyProjectPMod(serverPMod));
-            serverPMod.Items.Add(GetDummyProjectPMod(serverPMod));
-            serverPMod.Items.First().Items.Add(GetDummyProjectPMod(serverPMod.Items.First()));
+            serverPMod.Projects.Add(GetDummyProjectPMod(serverPMod));
+            serverPMod.Projects.Add(GetDummyProjectPMod(serverPMod));
+            serverPMod.Projects.Add(GetDummyProjectPMod(serverPMod));
+            serverPMod.Projects.First().Projects.Add(GetDummyProjectPMod(serverPMod.Projects.First()));
 
             return serverPMod;
         }

@@ -1,17 +1,16 @@
 ﻿namespace TeamCityNotifierWindowsStore.DataModel
 {
-    using TeamCityNotifierWindowsStore.Data;
-
-    public class BuildDefinitionPMod : SampleDataCommon
+    public class BuildDefinitionPMod : PModBase
     {
-        public BuildDefinitionPMod(string uniqueId, string title,
-            string imagePath, string description, string buildRepositoryUrl)
+        private string buildRepositoryUrl;
+
+        public BuildDefinitionPMod(
+            string uniqueId, string title, string imagePath, string description, string buildRepositoryUrl)
             : base(uniqueId, title, imagePath, description)
         {
             this.BuildRepositoryUrl = buildRepositoryUrl;
         }
 
-        private string buildRepositoryUrl;
         public string BuildRepositoryUrl
         {
             get { return this.buildRepositoryUrl; }
