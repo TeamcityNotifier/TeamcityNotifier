@@ -29,45 +29,59 @@ namespace TeamCityNotifierWindowsStore.DataModel
 
         private static readonly DataService dataService = new DataService();
 
-        private readonly ObservableCollection<ServerPMod> allGroups = new ObservableCollection<ServerPMod>();
-
-        public ObservableCollection<ServerPMod> AllGroups
-        {
-            get { return this.allGroups; }
-        }
+        public ObservableCollection<ServerPMod> AllServers { get; private set; }
 
         public static IEnumerable<ServerPMod> GetServers(string uniqueId)
         {
-            if (!uniqueId.Equals("AllGroups"))
+            if (!uniqueId.Equals("AllServers"))
             {
-                throw new ArgumentException("Only 'AllGroups' is supported as a collection of groups");
+                throw new ArgumentException("Only 'AllServers' is supported as a collection of groups");
             }
 
-            return dataService.AllGroups;
+            return dataService.AllServers;
         }
 
         public static ServerPMod GetServer(string uniqueId)
         {
-            // Simple linear search is acceptable for small data sets
-            var matches = dataService.AllGroups.Where((group) => group.UniqueId.Equals(uniqueId));
-            if (matches.Count() == 1) return matches.First();
-            return null;
+            return dataService.AllServers.Single(server => server.UniqueId.Equals(uniqueId));
         }
 
         public static ProjectPMod GetProject(string uniqueId)
         {
-            // Simple linear search is acceptable for small data sets
-            var firstLevelProjects = dataService.AllGroups.SelectMany(group => group.Projects).ToList();
-            var temp = firstLevelProjects.SelectMany(items => items.Projects).Union(firstLevelProjects);
+            var allProjects = new List<ProjectPMod>();
 
-            var matches = temp.Where((item) => item.UniqueId.Equals(uniqueId));
-            
-            if (matches.Count() == 1) return matches.First();
-            return null;
+            var firstLevelProjects = dataService.AllServers.SelectMany(group => group.Projects).ToList();
+            allProjects.AddRange(firstLevelProjects);
+
+            var allSubProjects = GetSubProjects(firstLevelProjects);
+            if (allSubProjects != null)
+            {
+                allProjects.AddRange(allSubProjects);
+            }
+
+            return allProjects.Single((item) => item.UniqueId.Equals(uniqueId));
+        }
+
+        private static IEnumerable<ProjectPMod> GetSubProjects(IEnumerable<ProjectPMod> projects)
+        {
+            var subProjects = new List<ProjectPMod>();
+
+            foreach (var project in projects.Where(project => project.Projects != null))
+            {
+                subProjects.AddRange(project.Projects);
+                var subSubProjects = GetSubProjects(project.Projects);
+                if (subSubProjects != null)
+                {
+                    subProjects.AddRange(subSubProjects);
+                }
+            }
+
+            return subProjects;
         }
 
         public DataService()
         {
+            AllServers = new ObservableCollection<ServerPMod>();
             var configuration = new RestConfigurationPMod("https://teamcity.bbv.ch/", "teamcitynotifier_test", "j9nufrE6", "My first Server");
             var configuration2 = new RestConfigurationPMod("https://teamcity.bbv.ch/", "teamcitynotifier_test", "j9nufrE6", "My first Server");
 
@@ -86,7 +100,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
                      serverPMod.Projects.Add(CreateProjectPMod(project, serverPMod));
                 }
 
-                this.AllGroups.Add(serverPMod);
+                this.AllServers.Add(serverPMod);
             }
         }
 
