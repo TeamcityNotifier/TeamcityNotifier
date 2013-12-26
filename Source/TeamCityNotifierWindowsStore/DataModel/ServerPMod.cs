@@ -9,8 +9,8 @@
     /// </summary>
     public class ServerPMod : SampleDataCommon
     {
-        public ServerPMod(String uniqueId, String title, String subtitle, String imagePath, String description)
-            : base(uniqueId, title, subtitle, imagePath, description)
+        public ServerPMod(String uniqueId, String title, String imagePath, String description)
+            : base(uniqueId, title, imagePath, description)
         {
             this.Items.CollectionChanged += this.ItemsCollectionChanged;
         }

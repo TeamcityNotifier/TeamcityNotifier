@@ -4,9 +4,9 @@
 
     public class BuildDefinitionPMod : SampleDataCommon
     {
-        public BuildDefinitionPMod(string uniqueId, string title, string subtitle, 
+        public BuildDefinitionPMod(string uniqueId, string title,
             string imagePath, string description, string buildRepositoryUrl)
-            : base(uniqueId, title, subtitle, imagePath, description)
+            : base(uniqueId, title, imagePath, description)
         {
             this.BuildRepositoryUrl = buildRepositoryUrl;
         }

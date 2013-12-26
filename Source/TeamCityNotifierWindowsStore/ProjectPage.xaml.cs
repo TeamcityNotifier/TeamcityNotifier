@@ -50,22 +50,22 @@ namespace TeamCityNotifierWindowsStore
             }
 
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var item = DataSourceService.GetProject((String)navigationParameter);
-            this.DefaultViewModel["Group"] = item.Group;
-            if (item.Group is ServerPMod)
+            var project = DataSourceService.GetProject((String)navigationParameter);
+            this.DefaultViewModel["Group"] = project.Group;
+            if (project.Group is ServerPMod)
             {
-               this.DefaultViewModel["Items"] = ((ServerPMod)item.Group).Items; 
+               this.DefaultViewModel["Items"] = ((ServerPMod)project.Group).Items; 
             }
-            else if (item.Group is ProjectPMod)
+            else if (project.Group is ProjectPMod)
             {
-                this.DefaultViewModel["Items"] = ((ProjectPMod)item.Group).Items; 
+                this.DefaultViewModel["Items"] = ((ProjectPMod)project.Group).Items; 
             }
 
-            this.DefaultViewModel["SubItems"] = item.Items;
+            this.DefaultViewModel["SubItems"] = project.Items;
 
-            this.DefaultViewModel["BuildDefinitions"] = item.BuildDefinitions;
+            this.DefaultViewModel["BuildDefinitions"] = project.BuildDefinitions;
 
-            this.flipView.SelectedItem = item;
+            this.flipView.SelectedItem = project;
         }
 
         /// <summary>
@@ -102,6 +102,22 @@ namespace TeamCityNotifierWindowsStore
             this.Frame.Navigate(typeof(BuildDefinitionPage), buildRepositoryUrl);
         }
 
+        private void FlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedProject = (ProjectPMod)((FlipView)sender).SelectedItem;
 
+            if (selectedProject.Group is ServerPMod)
+            {
+                this.DefaultViewModel["Items"] = ((ServerPMod)selectedProject.Group).Items; 
+            }
+            else if (selectedProject.Group is ProjectPMod)
+            {
+                this.DefaultViewModel["Items"] = ((ProjectPMod)selectedProject.Group).Items; 
+            }
+
+            this.DefaultViewModel["SubItems"] = selectedProject.Items;
+
+            this.DefaultViewModel["BuildDefinitions"] = selectedProject.BuildDefinitions;
+        }
     }
 }

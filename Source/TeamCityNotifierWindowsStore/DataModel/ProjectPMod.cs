@@ -10,13 +10,12 @@
     /// </summary>
     public class ProjectPMod : SampleDataCommon
     {
-        public ProjectPMod(String uniqueId, String title, String subtitle, String imagePath, 
-            String description, String content, SampleDataCommon group, bool buildSuccessful)
-            : base(uniqueId, title, subtitle, imagePath, description)
+        public ProjectPMod(String uniqueId, String title, String imagePath, 
+            String description, String content, SampleDataCommon group)
+            : base(uniqueId, title, imagePath, description)
         {
             this._content = content;
             this._group = group;
-            this.buildSuccessful = buildSuccessful;
         }
 
         private string _content = string.Empty;

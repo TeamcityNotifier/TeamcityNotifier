@@ -74,7 +74,8 @@
             AutomationProperties.Name="Item Details"
             TabIndex="1"
             Grid.RowSpan="2"
-            ItemsSource="{Binding Source={StaticResource itemsViewSource}}">
+            ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+            SelectionChanged="FlipView_OnSelectionChanged">
 
             <FlipView.ItemContainerStyle>
                 <Style TargetType="FlipViewItem">
@@ -137,7 +138,6 @@
                             <GridView.Header>
                                 <StackPanel Width="480" Margin="0,4,14,0">
                                     <TextBlock Text="{Binding Title}" Margin="0,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}"/>
-                                    <TextBlock Text="{Binding Subtitle}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
                                     <Image Source="{Binding Image}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
                                     <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
                                 </StackPanel>

@@ -31,9 +31,8 @@ namespace TeamCityNotifierWindowsStore.Data
     /// </summary>
     public sealed class DataSourceService
     {
-        static int serverCount = 1;
-        static int projectCount = 10;
-        private static bool succeedToggler = false;
+        public const string PathFailedPicture = "Assets/Red.png";
+        public const string PathSuccessfulPicture = "Assets/Green.png";
 
         private static DataSourceService dataSourceService = new DataSourceService();
 
@@ -81,13 +80,10 @@ namespace TeamCityNotifierWindowsStore.Data
             foreach (var server in service.GetServers())
             {
                 var serverPMod = new ServerPMod(
-                    serverCount.ToString(),
-                    server.Name + serverCount,
-                    "my server sub title",
-                    "Assets/Green.png",
-                    "my server description");
-
-                serverCount++;
+                    Guid.NewGuid().ToString(),
+                    server.Name,
+                    PathSuccessfulPicture,
+                    string.Empty);
 
                 foreach (var project in server.RootProject.ChildProjects)
                 {
@@ -102,58 +98,50 @@ namespace TeamCityNotifierWindowsStore.Data
         {
             ProjectPMod projectPMod;
 
-            if (succeedToggler)
-            {
                 projectPMod = new ProjectPMod(
-                    projectCount.ToString(),
-                    project.Name + projectCount,
-                    "my project sub title",
-                    "Assets/Green.png",
+                    Guid.NewGuid().ToString(),
+                    project.Name,
+                    PathSuccessfulPicture,
                     project.Description,
-                    "my project content",
-                    serverPMod,
-                    succeedToggler);
+                    string.Empty,
+                    serverPMod);
 
                 foreach (var buildDefinition in project.BuildDefinitions)
                 {
-                    projectPMod.BuildDefinitions.Add(new BuildDefinitionPMod(
-                        buildDefinition.Id, 
-                        buildDefinition.Name, 
-                        "subtitel builddefinition",
-                        "Assets/Green.png",
-                        buildDefinition.Description,
-                        buildDefinition.Url));
-                }
-
-                succeedToggler = false;
-            }
-            else
-            {
-                projectPMod = new ProjectPMod(
-                    projectCount.ToString(),
-                    project.Name + projectCount,
-                    "my project sub title",
-                    "Assets/Red.png",
-                    project.Description,
-                    "my project content",
-                    serverPMod,
-                    succeedToggler);
-
-                foreach (var buildDefinition in project.BuildDefinitions)
-                {
-                    projectPMod.BuildDefinitions.Add(new BuildDefinitionPMod(
+                    var buildDefinitionPMod = new BuildDefinitionPMod(
                         buildDefinition.Id,
                         buildDefinition.Name,
-                        "subtitel builddefinition",
-                        "Assets/Green.png",
-                        buildDefinition.Description, 
-                        buildDefinition.Url));
+                        PathSuccessfulPicture,
+                        buildDefinition.Description,
+                        buildDefinition.Url);
+
+                    if (buildDefinition.LastBuild != null)
+                    {
+                        switch (buildDefinition.LastBuild.Status)
+                        {
+                            case Status.Success:
+                                {
+                                    break;
+                                }
+                            
+                            case Status.Error:
+                            case Status.Failure:
+                                {
+                                    serverPMod.SetImage(PathFailedPicture);
+                                    projectPMod.SetImage(PathFailedPicture);
+                                    buildDefinitionPMod.SetImage(PathFailedPicture);
+                                    break;
+                                }
+
+                            default:
+                                {
+                                    throw new Exception("Build has an unknown state");
+                                }
+                        }
+                    }
+
+                    projectPMod.BuildDefinitions.Add(buildDefinitionPMod);
                 }
-
-                succeedToggler = true;
-            }
-
-            projectCount++;
 
             foreach (var childProject in project.ChildProjects)
             {

@@ -14,11 +14,10 @@
     {
         private static Uri _baseUri = new Uri("ms-appx:///");
 
-        public SampleDataCommon(String uniqueId, String title, String subtitle, String imagePath, String description)
+        public SampleDataCommon(String uniqueId, String title, String imagePath, String description)
         {
             this._uniqueId = uniqueId;
             this._title = title;
-            this._subtitle = subtitle;
             this._description = description;
             this._imagePath = imagePath;
         }
@@ -35,13 +34,6 @@
         {
             get { return this._title; }
             set { this.SetProperty(ref this._title, value); }
-        }
-
-        private string _subtitle = string.Empty;
-        public string Subtitle
-        {
-            get { return this._subtitle; }
-            set { this.SetProperty(ref this._subtitle, value); }
         }
 
         private string _description = string.Empty;

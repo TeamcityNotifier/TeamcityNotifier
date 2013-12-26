@@ -120,6 +120,7 @@
     <Compile Include="DataModel\SampleDataCommon.cs" />
     <Compile Include="DataModel\ServerPMod.cs" />
     <Compile Include="DataModel\ProjectPMod.cs" />
+    <Compile Include="DummyData\DummyData.cs" />
     <Compile Include="ServerPage.xaml.cs">
       <DependentUpon>ServerPage.xaml</DependentUpon>
     </Compile>
@@ -189,6 +190,7 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.2.15\lib\win8\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
