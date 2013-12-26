@@ -1,12 +1,10 @@
 ﻿namespace TeamcityNotifier
 {
     using System;
-    using System.IO;
-    using System.Xml.Serialization;
 
     using TeamcityNotifier.Wrapper;
 
-    public class RestConsumer : IRestConsumer
+    internal class RestConsumer : IRestConsumer
     {
         private readonly IUri baseUrl;
         private readonly IHttpClient httpClient;

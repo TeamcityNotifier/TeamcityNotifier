@@ -1,11 +1,11 @@
 ﻿namespace TeamcityNotifier
 {
-    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using TeamcityNotifier.Wrapper;
 
-    public class Server : IServer
+    internal class Server : IServer
     {
         public Server(IWrapperFactory factory, IRestConfiguration configuration)
         {
@@ -22,7 +22,15 @@
 
         public IEnumerable<IProject> Projects { get; internal set; }
 
-        public string Name { get; internal set; }
+        public IProject RootProject
+        {
+            get
+            {
+                return Projects.FirstOrDefault(x => !x.HasParent);
+            }
+        }
+
+        public string Name { get; private set; }
 
         public string UserName { get; private set; }
 

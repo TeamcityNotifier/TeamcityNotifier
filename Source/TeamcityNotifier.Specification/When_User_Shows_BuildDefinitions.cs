@@ -40,6 +40,12 @@
             A.CallTo(() => mockWrapperFactory.CreateXmlSerializer(typeof(projects1)))
                 .Returns(mockXmlSerializerProject1);
 
+            var build = new builds();
+            var mockXmlSerializerbuild = A.Fake<IXmlSerializer>();
+            A.CallTo(() => mockXmlSerializerbuild.Deserialize(A<IStringReader>.Ignored)).Returns(build);
+            A.CallTo(() => mockWrapperFactory.CreateXmlSerializer(typeof(builds)))
+                .Returns(mockXmlSerializerbuild);
+
             fakeProject1.project.Add(new projectref());
             fakeProject1.project.Add(new projectref());
 

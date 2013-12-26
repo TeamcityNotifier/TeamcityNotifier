@@ -1,6 +1,6 @@
 ﻿namespace TeamcityNotifier
 {
-    public static class HttpRelativeUrl
+    internal static class HttpRelativeUrl
     {
         public const string PROJECT_URL = "/httpAuth/app/rest/projects"; 
     }

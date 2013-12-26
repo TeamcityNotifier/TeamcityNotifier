@@ -1,10 +1,11 @@
 ﻿namespace TeamcityNotifier
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using TeamcityNotifier.Wrapper;
 
-    public class RestFactory : IFactory
+    public class RestFactory : IRestFactory
     {
         private readonly IEnumerable<IRestConfiguration> configurations;
         private readonly IWrapperFactory wrapperFactory;
@@ -42,15 +43,5 @@
             return projectRepository;
         }
 
-        public IBuildRepository GetBuildRepository(IServer server, IBuildDefinition buildDefinition)
-        {
-            var restConsumer = server.RestConsumer;
-
-            var buildRepository = new BuildRepository(buildDefinition.BuildRepositoryUrl);
-
-            restConsumer.Load(buildRepository);
-
-            return buildRepository;
-        }
     }
 }

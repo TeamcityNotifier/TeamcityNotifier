@@ -8,14 +8,14 @@
     {
         private IService testee;
 
-        private IFactory mockFactory;
+        private IRestFactory mockRestFactory;
 
         [SetUp]
         public void SetUp()
         {
-            this.mockFactory = A.Fake<IFactory>();
+            this.mockRestFactory = A.Fake<IRestFactory>();
 
-            this.testee = new Service(this.mockFactory);
+            this.testee = new Service(this.mockRestFactory);
         }
 
         [Test]
@@ -23,7 +23,7 @@
         {
             this.testee.GetServers();
 
-            A.CallTo(()=> this.mockFactory.CreateServers()).MustHaveHappened();
+            A.CallTo(()=> this.mockRestFactory.CreateServers()).MustHaveHappened();
         }
 
     }

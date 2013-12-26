@@ -89,7 +89,7 @@ namespace TeamCityNotifierWindowsStore.Data
 
                 serverCount++;
 
-                foreach (var project in server.Projects)
+                foreach (var project in server.RootProject.ChildProjects)
                 {
                      serverPMod.Items.Add(CreateProjectPMod(project, serverPMod));
                 }

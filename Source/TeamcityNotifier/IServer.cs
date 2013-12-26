@@ -1,7 +1,6 @@
 ﻿namespace TeamcityNotifier
 {
     using System.Collections.Generic;
-    using System.Runtime.CompilerServices;
 
     using TeamcityNotifier.Wrapper;
 
@@ -15,7 +14,10 @@
 
         string Password { get; }
 
+        IProject RootProject { get; }
+
         IUri Uri { get; }
+
         IRestConsumer RestConsumer { get; }
     }
 }

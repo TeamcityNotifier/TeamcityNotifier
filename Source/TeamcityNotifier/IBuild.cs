@@ -1,9 +1,11 @@
 ﻿namespace TeamcityNotifier
 {
-    public interface IBuild : IRestObject
+    using System.ComponentModel;
+
+    public interface IBuild : IRestObject, INotifyPropertyChanged
     {
         long Id { get; set; }
-        string Status { get; }
+        Status Status { get; }
         string Number { get; }
         string FinishDate { get; set; }
         string StartDate { get; set; }

@@ -8,6 +8,7 @@
         string Id { get; }
         string Name { get; }
         string Description { get; }
+        bool HasParent { get; }
         IEnumerable<IProject> ChildProjects { get; }
         IEnumerable<IBuildDefinition> BuildDefinitions { get; }
         void AddChild(IProject childProject);

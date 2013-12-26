@@ -7,7 +7,7 @@
 
     using DataAbstraction;
 
-    public class ProjectRepository : IProjectRepository
+    internal class ProjectRepository : IProjectRepository
     {
         private readonly string url;
 
