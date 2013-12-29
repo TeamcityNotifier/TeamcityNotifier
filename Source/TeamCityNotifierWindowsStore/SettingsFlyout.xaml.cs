@@ -37,7 +37,7 @@ namespace TeamCityNotifierWindowsStore
             });
 
             var allServers = DataService.GetServerConfiguration();
-            this.scrollViewer.DataContext = allServers;
+            this.DataContext = allServers;
         }
 
         /// <summary>
@@ -59,28 +59,6 @@ namespace TeamCityNotifierWindowsStore
             {
                 SettingsPane.Show();
             }
-        }
-
-        /// <summary>
-        /// This is the a common click handler for the buttons on the Flyout.  You would replace this with your own handler
-        /// if you have a button or buttons on this page.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void FlyoutButton_ClickSave(object sender, RoutedEventArgs e)
-        {
-            var baseUrl = this.TextBoxBaseUrl.Text;
-            var userName = this.TextBoxUserName.Text;
-            var password = this.TextBoxPassword.Text;
-            var serverName = this.TextBoxServerName.Text;
-            var serverOnOff = this.ToggleSwitchServerOnOff.IsOn;
-
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["BaseUrl"] = baseUrl;
-            localSettings.Values["UserName"] = userName;
-            localSettings.Values["Password"] = password;
-            localSettings.Values["ServerName"] = serverName;
-            localSettings.Values["ServerOnOff"] = serverOnOff;
         }
     }
 }

@@ -44,8 +44,16 @@ namespace TeamCityNotifierWindowsStore
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             this.navigationParameter = (String)navigationParameter;
             var project = DataService.GetProject(this.navigationParameter);
-            this.SetData(project);
-            this.flipView.SelectedItem = project;
+
+            if (project != null)
+            {
+                this.SetData(project);
+                this.flipView.SelectedItem = project;
+            }
+            else
+            {
+                this.Frame.Navigate(typeof(ServerPage), "AllServers");
+            }
         }
 
         private void SetData(ProjectPMod project)
@@ -89,7 +97,10 @@ namespace TeamCityNotifierWindowsStore
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
             var selectedItem = (ProjectPMod)this.flipView.SelectedItem;
-            pageState["SelectedItem"] = selectedItem.UniqueId;
+            if (selectedItem != null)
+            {
+               pageState["SelectedItem"] = selectedItem.UniqueId; 
+            }
         }
 
         /// <summary>
@@ -109,7 +120,6 @@ namespace TeamCityNotifierWindowsStore
         private void ItemView_BuildDefinitionItemClick(object sender, ItemClickEventArgs e)
         {
             var buildRepositoryUrl = ((BuildDefinitionPMod)e.ClickedItem).BuildRepositoryUrl;
-
             this.Frame.Navigate(typeof(BuildDefinitionPage), buildRepositoryUrl);
         }
 

@@ -4,6 +4,7 @@ namespace TeamCityNotifierWindowsStore
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using TeamCityNotifierWindowsStore.DataModel;
 
@@ -21,7 +22,6 @@ namespace TeamCityNotifierWindowsStore
         {
             this.InitializeComponent();
             this.AddServerSettingsToServerPane();
-            DataService.LoadData();
         }
 
         /// <summary>
@@ -38,7 +38,16 @@ namespace TeamCityNotifierWindowsStore
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             this.navigationParameter = (String)navigationParameter;
             var servers = DataService.GetServers(this.navigationParameter);
-            this.DefaultViewModel["Servers"] = servers;
+
+            if (servers.Any())
+            {
+               this.DefaultViewModel["Servers"] = servers; 
+            }
+            else
+            {
+                this.backButton.IsEnabled = false;
+            }
+            
         }
 
         public override void ReloadData()

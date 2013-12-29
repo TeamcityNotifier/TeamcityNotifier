@@ -15,6 +15,7 @@ namespace TeamCityNotifierWindowsStore.Common
 {
     using TeamCityNotifierWindowsStore.DataModel;
 
+    using Windows.Storage;
     using Windows.UI.ApplicationSettings;
     using Windows.UI.Popups;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -337,8 +338,6 @@ namespace TeamCityNotifierWindowsStore.Common
 
         #endregion
 
-        #region Process lifetime management
-
         private String _pageKey;
 
         /// <summary>
@@ -417,7 +416,6 @@ namespace TeamCityNotifierWindowsStore.Common
 
         public virtual void ReloadData()
         {
-            DataService.LoadData();
         }
 
         public void AddServerSettingsToServerPane()
@@ -517,7 +515,80 @@ namespace TeamCityNotifierWindowsStore.Common
         private void OnPopupClosed(object sender, object e)
         {
             Window.Current.Activated -= OnWindowActivated;
+            SaveSettingsFlyoutChanges(sender);
             UpdatePageContent();
+        }
+
+        private static void SaveSettingsFlyoutChanges(object sender)
+        {
+            var popup = (Popup)sender;
+            if(popup.Child is SettingsFlyout)
+            {
+                bool hasToReloadData = false;
+                var settingsFlyout = (SettingsFlyout)popup.Child;
+                var serverConfiguration = (ServerConfiguration)settingsFlyout.DataContext;
+                var localSettings = ApplicationData.Current.LocalSettings;
+
+                string oldBaseUrl = string.Empty;
+                string oldUserName = string.Empty;
+                string oldPassword = string.Empty;
+                string oldServerName = string.Empty;
+                bool oldIsServerOn = false;
+
+                var newBaseUrl = serverConfiguration.BaseUrl;
+                var newUserName = serverConfiguration.UserName;
+                var newPassword = serverConfiguration.Password;
+                var newServerName = serverConfiguration.Name;
+                var newIsServerOn = serverConfiguration.IsServerOn;
+
+                if (localSettings.Values.ContainsKey(DataService.BaseUrlKey)
+                    && localSettings.Values.ContainsKey(DataService.UserNameKey)
+                    && localSettings.Values.ContainsKey(DataService.PasswordKey)
+                    && localSettings.Values.ContainsKey(DataService.ServerNameKey)
+                    && localSettings.Values.ContainsKey(DataService.IsServerOnKey))
+                {
+                    oldBaseUrl = localSettings.Values[DataService.BaseUrlKey].ToString();
+                    oldUserName = localSettings.Values[DataService.UserNameKey].ToString();
+                    oldPassword = localSettings.Values[DataService.PasswordKey].ToString();
+                    oldServerName = localSettings.Values[DataService.ServerNameKey].ToString();
+                    oldIsServerOn = (bool)localSettings.Values[DataService.IsServerOnKey];
+                }
+
+                if (!oldBaseUrl.Equals(newBaseUrl))
+                {
+                    localSettings.Values[DataService.BaseUrlKey] = newBaseUrl;
+                    hasToReloadData = true;
+                }
+
+                if (!oldUserName.Equals(newUserName))
+                {
+                    localSettings.Values[DataService.UserNameKey] = newUserName;
+                    hasToReloadData = true;
+                }
+
+                if (!oldPassword.Equals(newPassword))
+                {
+                    localSettings.Values[DataService.PasswordKey] = newPassword;
+                    hasToReloadData = true;
+                }
+
+                if (!oldServerName.Equals(newServerName))
+                {
+                    localSettings.Values[DataService.ServerNameKey] = newServerName;
+                    hasToReloadData = true;
+                }
+
+                if (!oldIsServerOn.Equals(newIsServerOn))
+                {
+                    localSettings.Values[DataService.IsServerOnKey] = newIsServerOn;
+                    hasToReloadData = true;
+                }
+
+                if (hasToReloadData)
+                {
+                    DataService.LoadData();
+                }
+            }
         }
 
         private static void UpdatePageContent()
@@ -529,8 +600,6 @@ namespace TeamCityNotifierWindowsStore.Common
                 page.ReloadData();
             }
         }
-
-        #endregion
 
         /// <summary>
         /// Implementation of IObservableMap that supports reentrancy for use as a default view

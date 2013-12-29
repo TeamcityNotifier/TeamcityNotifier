@@ -23,10 +23,20 @@ namespace TeamCityNotifierWindowsStore.DataModel
     public static class DataService
     {
         public const string PathFailedPicture = "Assets/Red.png";
+
         public const string PathSuccessfulPicture = "Assets/Green.png";
 
-        public static ObservableCollection<ServerPMod> AllServers { get; private set; }
+        public static string BaseUrlKey = "BaseUrlKey";
 
+        public static string UserNameKey = "UserNameKey";
+
+        public static string PasswordKey = "Password";
+
+        public static string ServerNameKey = "ServerName";
+
+        public static string IsServerOnKey = "IsServerOn";
+
+        public static ObservableCollection<ServerPMod> AllServers { get; private set; }
 
         public static IEnumerable<ServerPMod> GetServers(string uniqueId)
         {
@@ -97,36 +107,41 @@ namespace TeamCityNotifierWindowsStore.DataModel
 
             foreach (var server in servers)
             {
-                var serverPMod = new ServerPMod(Guid.NewGuid().ToString(), server.Name, PathSuccessfulPicture, string.Empty);
+                var serverCongiuration = serverConfiguration;
 
-                foreach (var project in server.RootProject.ChildProjects)
+                if (serverCongiuration.IsServerOn)
                 {
-                    serverPMod.Projects.Add(CreateProjectPMod(project, serverPMod));
-                }
+                    var serverPMod = new ServerPMod(Guid.NewGuid().ToString(), server.Name, PathSuccessfulPicture, string.Empty);
 
-                AllServers.Add(serverPMod);
+                    foreach (var project in server.RootProject.ChildProjects)
+                    {
+                        serverPMod.Projects.Add(CreateProjectPMod(project, serverPMod));
+                    }
+
+                    AllServers.Add(serverPMod);
+                }
             }
         }
 
         public static ServerConfiguration GetServerConfiguration()
         {
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            if (localSettings.Values.ContainsKey("BaseUrl") 
-                && localSettings.Values.ContainsKey("UserName") 
-                && localSettings.Values.ContainsKey("Password") 
-                && localSettings.Values.ContainsKey("ServerName")
-                && localSettings.Values.ContainsKey("ServerOnOff"))
+            if (localSettings.Values.ContainsKey(BaseUrlKey) 
+                && localSettings.Values.ContainsKey(UserNameKey) 
+                && localSettings.Values.ContainsKey(PasswordKey) 
+                && localSettings.Values.ContainsKey(ServerNameKey)
+                && localSettings.Values.ContainsKey(IsServerOnKey))
             {
-                var baseUrl = localSettings.Values["BaseUrl"].ToString();
-                var userName = localSettings.Values["UserName"].ToString();
-                var password = localSettings.Values["Password"].ToString();
-                var serverName = localSettings.Values["ServerName"].ToString();
-                var serverOnOff = (bool)localSettings.Values["ServerOnOff"];
+                var baseUrl = localSettings.Values[BaseUrlKey].ToString();
+                var userName = localSettings.Values[UserNameKey].ToString();
+                var password = localSettings.Values[PasswordKey].ToString();
+                var serverName = localSettings.Values[ServerNameKey].ToString();
+                var isServerOn = (bool)localSettings.Values[IsServerOnKey];
 
-                return new ServerConfiguration(baseUrl, userName, password, serverName, serverOnOff);
+                return new ServerConfiguration(baseUrl, userName, password, serverName, isServerOn);
             }
 
-            return null;
+            return new ServerConfiguration(string.Empty, string.Empty, string.Empty, string.Empty, false);
         }
 
         private static ProjectPMod CreateProjectPMod(IProject project, PModBase serverPMod)

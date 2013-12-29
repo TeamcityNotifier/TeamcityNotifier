@@ -130,40 +130,36 @@
             </Grid>
 
             <!-- Settings Panel Content -->
-            <ScrollViewer Name ="scrollViewer" 
-                          VerticalScrollBarVisibility="Auto" 
+            <ScrollViewer VerticalScrollBarVisibility="Auto" 
                           Grid.Row="1"
                           d:DataContext="{Binding ServerConfiguration, Source={d:DesignInstance Type=data:DummyServerConfigurationData, IsDesignTimeCreatable=True}}">
                 <Grid Margin="40,33,40,39" VerticalAlignment="Top" Grid.RowSpan="3">
-
                     <StackPanel x:Name="FlyoutContent">
                         <TextBlock FontWeight="Bold" Text="Configuration Server 1" TextWrapping="Wrap" Style="{StaticResource BasicTextStyle}" HorizontalAlignment="Left"/>
                         <TextBlock Text="Please add server configuration for server 1." TextWrapping="Wrap" Style="{StaticResource BasicTextStyle}" HorizontalAlignment="Left"/>
 
                         <TextBlock Margin="0,25, 0, 0" Text="Base url" TextWrapping="Wrap" Style="{StaticResource BasicTextStyle}" HorizontalAlignment="Left"/>
                         <StackPanel Margin="0, 7, 0, 0" Orientation="Horizontal">
-                            <TextBox Name="TextBoxBaseUrl" HorizontalAlignment="Left" Width="300" Text="{Binding BaseUrl}"/>
+                            <TextBox HorizontalAlignment="Left" Width="300" Text="{Binding BaseUrl, Mode=TwoWay}"/>
                         </StackPanel>
 
                         <TextBlock Margin="0,25, 0, 0" Text="Server name" TextWrapping="Wrap" Style="{StaticResource BasicTextStyle}" HorizontalAlignment="Left"/>
                         <StackPanel Margin="0, 7, 0, 0" Orientation="Horizontal">
-                            <TextBox Name="TextBoxServerName" HorizontalAlignment="Left" Width="300" Text="{Binding Name}"/>
+                            <TextBox HorizontalAlignment="Left" Width="300" Text="{Binding Name, Mode=TwoWay}"/>
                         </StackPanel>
 
                         <TextBlock Margin="0,25, 0, 0" Text="User name" TextWrapping="Wrap" Style="{StaticResource BasicTextStyle}" HorizontalAlignment="Left"/>
                         <StackPanel Margin="0, 7, 0, 0" Orientation="Horizontal">
-                            <TextBox Name="TextBoxUserName" HorizontalAlignment="Left" Width="300" Text="{Binding UserName}"/>
+                            <TextBox HorizontalAlignment="Left" Width="300" Text="{Binding UserName, Mode=TwoWay}"/>
                         </StackPanel>
 
                         <TextBlock Margin="0,25, 0, 0" Text="password" TextWrapping="Wrap" Style="{StaticResource BasicTextStyle}" HorizontalAlignment="Left"/>
                         <StackPanel Margin="0, 7, 0, 0" Orientation="Horizontal">
-                            <TextBox Name="TextBoxPassword" HorizontalAlignment="Left" Width="300" Text="{Binding Password}"/>
+                            <TextBox HorizontalAlignment="Left" Width="300" Text="{Binding Password, Mode=TwoWay}"/>
                         </StackPanel>
 
-                        <ToggleSwitch Name="ToggleSwitchServerOnOff" Margin="-6,25, 0, 0" Header = "Turn server 1 on/off." HorizontalAlignment="Left" HorizontalContentAlignment="Left" IsOn="{Binding IsServerOn}"/>
-                        <TextBlock Margin="0, 25, 0, 0" Text="Save server configuration for server 1." TextWrapping="Wrap" Style="{StaticResource BasicTextStyle}" HorizontalAlignment="Left"/>
-                        <Button Margin="-3, 0, 0, 0" Content="Save" Click="FlyoutButton_ClickSave"/>
-
+                        <ToggleSwitch Margin="-6,25, 0, 0" Header = "Turn server 1 on/off." 
+                                      HorizontalAlignment="Left" HorizontalContentAlignment="Left" IsOn="{Binding IsServerOn, Mode=TwoWay}"/>
                     </StackPanel>
                 </Grid>
             </ScrollViewer>
