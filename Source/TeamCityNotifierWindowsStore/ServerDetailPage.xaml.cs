@@ -15,9 +15,12 @@ namespace TeamCityNotifierWindowsStore
     /// </summary>
     public sealed partial class ServerDetailPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
     {
+        private string navigationParameter;
+
         public ServerDetailPage()
         {
             this.InitializeComponent();
+            this.AddServerSettingsToServerPane();
         }
 
         /// <summary>
@@ -32,7 +35,8 @@ namespace TeamCityNotifierWindowsStore
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var server = DataService.GetServer((String)navigationParameter);
+            this.navigationParameter = navigationParameter.ToString();
+            var server = DataService.GetServer(this.navigationParameter);
             this.DefaultViewModel["Server"] = server;
             this.DefaultViewModel["Projects"] = server.Projects;
         }
@@ -48,7 +52,22 @@ namespace TeamCityNotifierWindowsStore
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
             var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
-            this.Frame.Navigate(typeof(ItemDetailPage), itemId);
+            this.Frame.Navigate(typeof(ProjectDetailPage), itemId);
+        }
+
+        public override void ReloadData()
+        {
+            base.ReloadData();
+            var server = DataService.GetServer(this.navigationParameter);
+            if (server != null)
+            {
+                this.DefaultViewModel["Server"] = server;
+                this.DefaultViewModel["Projects"] = server.Projects;
+            }
+            else
+            {
+                this.Frame.Navigate(typeof(ServerPage), "AllServers");
+            }
         }
     }
 }

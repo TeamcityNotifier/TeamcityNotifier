@@ -24,5 +24,10 @@ namespace TeamCityNotifierWindowsStore
             this.WebView.NavigateToString((string)e.Parameter);
             base.OnNavigatedTo(e);
         }
+
+        public override void ReloadData()
+        {
+            this.Frame.Navigate(typeof(ServerPage), "AllServers");
+        }
     }
 }

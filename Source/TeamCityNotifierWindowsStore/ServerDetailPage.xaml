@@ -33,7 +33,7 @@
         <CollectionViewSource
             x:Name="itemsViewSource"
             Source="{Binding Projects}"
-            d:Source="{Binding AllGroups[0].Projects, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].Projects, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
     </Page.Resources>
 
     <!--
@@ -44,7 +44,7 @@
     <Grid
         Style="{StaticResource LayoutRootStyle}"
         DataContext="{Binding Server}"
-        d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}">
+        d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>

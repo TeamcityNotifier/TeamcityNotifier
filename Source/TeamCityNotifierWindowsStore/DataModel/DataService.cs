@@ -14,22 +14,19 @@ namespace TeamCityNotifierWindowsStore.DataModel
     using TeamcityNotifier;
     using TeamcityNotifier.Wrapper;
 
-    using TeamCityNotifierWindowsStore.Data;
-
     /// <summary>
     /// Creates a collection of groups and items with hard-coded content.
     /// 
     /// DataService initializes with placeholder data rather than live production
     /// data so that sample data is provided at both design-time and run-time.
     /// </summary>
-    public sealed class DataService
+    public static class DataService
     {
         public const string PathFailedPicture = "Assets/Red.png";
         public const string PathSuccessfulPicture = "Assets/Green.png";
 
-        private static readonly DataService dataService = new DataService();
+        public static ObservableCollection<ServerPMod> AllServers { get; private set; }
 
-        public ObservableCollection<ServerPMod> AllServers { get; private set; }
 
         public static IEnumerable<ServerPMod> GetServers(string uniqueId)
         {
@@ -38,19 +35,19 @@ namespace TeamCityNotifierWindowsStore.DataModel
                 throw new ArgumentException("Only 'AllServers' is supported as a collection of groups");
             }
 
-            return dataService.AllServers;
+            return AllServers;
         }
 
         public static ServerPMod GetServer(string uniqueId)
         {
-            return dataService.AllServers.Single(server => server.UniqueId.Equals(uniqueId));
+            return AllServers.SingleOrDefault(server => server.UniqueId.Equals(uniqueId));
         }
 
         public static ProjectPMod GetProject(string uniqueId)
         {
             var allProjects = new List<ProjectPMod>();
 
-            var firstLevelProjects = dataService.AllServers.SelectMany(group => group.Projects).ToList();
+            var firstLevelProjects = AllServers.SelectMany(group => group.Projects).ToList();
             allProjects.AddRange(firstLevelProjects);
 
             var allSubProjects = GetSubProjects(firstLevelProjects);
@@ -59,7 +56,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
                 allProjects.AddRange(allSubProjects);
             }
 
-            return allProjects.Single((item) => item.UniqueId.Equals(uniqueId));
+            return allProjects.SingleOrDefault((item) => item.UniqueId.Equals(uniqueId));
         }
 
         private static IEnumerable<ProjectPMod> GetSubProjects(IEnumerable<ProjectPMod> projects)
@@ -79,29 +76,57 @@ namespace TeamCityNotifierWindowsStore.DataModel
             return subProjects;
         }
 
-        public DataService()
+        public static void LoadData()
         {
             AllServers = new ObservableCollection<ServerPMod>();
-            var configuration = new RestConfigurationPMod("https://teamcity.bbv.ch/", "teamcitynotifier_test", "j9nufrE6", "My first Server");
-            var configuration2 = new RestConfigurationPMod("https://teamcity.bbv.ch/", "teamcitynotifier_test", "j9nufrE6", "My first Server");
+            var serverConfiguration = GetServerConfiguration();
 
-            var service = new Service(new RestFactory(new List<IRestConfiguration> {configuration, configuration2}, new WrapperFactory()));
+            var service =
+                new Service(new RestFactory(new List<IRestConfiguration> { serverConfiguration }, new WrapperFactory()));
 
-            foreach (var server in service.GetServers())
+            IEnumerable<IServer> servers = new List<IServer>();
+
+            try
             {
-                var serverPMod = new ServerPMod(
-                    Guid.NewGuid().ToString(),
-                    server.Name,
-                    PathSuccessfulPicture,
-                    string.Empty);
+                servers = service.GetServers();
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            foreach (var server in servers)
+            {
+                var serverPMod = new ServerPMod(Guid.NewGuid().ToString(), server.Name, PathSuccessfulPicture, string.Empty);
 
                 foreach (var project in server.RootProject.ChildProjects)
                 {
-                     serverPMod.Projects.Add(CreateProjectPMod(project, serverPMod));
+                    serverPMod.Projects.Add(CreateProjectPMod(project, serverPMod));
                 }
 
-                this.AllServers.Add(serverPMod);
+                AllServers.Add(serverPMod);
             }
+        }
+
+        public static ServerConfiguration GetServerConfiguration()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.ContainsKey("BaseUrl") 
+                && localSettings.Values.ContainsKey("UserName") 
+                && localSettings.Values.ContainsKey("Password") 
+                && localSettings.Values.ContainsKey("ServerName")
+                && localSettings.Values.ContainsKey("ServerOnOff"))
+            {
+                var baseUrl = localSettings.Values["BaseUrl"].ToString();
+                var userName = localSettings.Values["UserName"].ToString();
+                var password = localSettings.Values["Password"].ToString();
+                var serverName = localSettings.Values["ServerName"].ToString();
+                var serverOnOff = (bool)localSettings.Values["ServerOnOff"];
+
+                return new ServerConfiguration(baseUrl, userName, password, serverName, serverOnOff);
+            }
+
+            return null;
         }
 
         private static ProjectPMod CreateProjectPMod(IProject project, PModBase serverPMod)
