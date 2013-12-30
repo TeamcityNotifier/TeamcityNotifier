@@ -1,4 +1,6 @@
-﻿namespace TeamcityNotifier
+﻿using System.ComponentModel;
+
+namespace TeamcityNotifier
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,6 +9,10 @@
 
     internal class Server : IServer
     {
+        private Status status;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public Server(IWrapperFactory factory, IRestConfiguration configuration)
         {
             this.UserName = configuration.UserName;
@@ -30,6 +36,24 @@
             }
         }
 
+        public Status Status
+        {
+            get
+            {
+                return this.status;
+            }
+            private set
+            {
+                if (this.status == value)
+                {
+                    return;
+                }
+
+                this.status = value;
+                this.OnPropertyChanged("Status");
+            }
+        }
+
         public string Name { get; private set; }
 
         public string UserName { get; private set; }
@@ -39,5 +63,15 @@
         public IUri Uri { get; private set; }
 
         public IRestConsumer RestConsumer { get; private set; }
+
+
+
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }
