@@ -1,30 +1,33 @@
 ﻿namespace TeamCityNotifierWindowsStore.DummyData
 {
-    using System;
     using System.Collections.ObjectModel;
-    using System.Linq;
 
     using TeamCityNotifierWindowsStore.DataModel;
 
     public class DummyServerConfigurationData
     {
-        private readonly ServerConfiguration serverConfiguration;
+        private readonly ObservableCollection<ServerConfigurationPMod> serverConfigurationPMods;
 
         public DummyServerConfigurationData()
         {
-            this.serverConfiguration = new ServerConfiguration(
-                "https://teamcity.bbv.ch/", 
-                "teamcitynotifier_test", 
-                "j9nufrE6", 
-                "My first Server", 
-                true);
+            this.serverConfigurationPMods = new ObservableCollection<ServerConfigurationPMod>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                this.serverConfigurationPMods.Add(new ServerConfigurationPMod(
+                    "https://teamcity.bbv.ch/",
+                    "teamcitynotifier_test",
+                    "j9nufrE6",
+                    "My first Server",
+                    true));
+            }
         }
 
-        public ServerConfiguration ServerConfiguration
+        public ObservableCollection<ServerConfigurationPMod> ServerConfigurationPMods
         {
             get
             {
-                return this.serverConfiguration;
+                return this.serverConfigurationPMods;
             }
         }
     }

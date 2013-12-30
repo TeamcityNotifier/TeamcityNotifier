@@ -116,8 +116,8 @@
       <DependentUpon>BuildDefinitionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataModel\BuildDefinitionPMod.cs" />
-    <Compile Include="DataModel\ServerConfiguration.cs" />
-    <Compile Include="DataModel\PModBase.cs" />
+    <Compile Include="DataModel\ServerConfigurationPMod.cs" />
+    <Compile Include="DataModel\ServerEntityBase.cs" />
     <Compile Include="DataModel\ServerPMod.cs" />
     <Compile Include="DataModel\ProjectPMod.cs" />
     <Compile Include="DummyData\DummyServerConfigurationData.cs" />

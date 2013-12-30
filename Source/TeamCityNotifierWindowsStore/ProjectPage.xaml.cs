@@ -14,11 +14,11 @@ namespace TeamCityNotifierWindowsStore
     /// A page that displays details for a single item within a Parent while allowing gestures to
     /// flip through other items belonging to the same Parent.
     /// </summary>
-    public sealed partial class ProjectDetailPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
+    public sealed partial class ProjectPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
     {
         private string navigationParameter;
 
-        public ProjectDetailPage()
+        public ProjectPage()
         {
             this.InitializeComponent();
             this.AddServerSettingsToServerPane();
@@ -114,7 +114,7 @@ namespace TeamCityNotifierWindowsStore
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
             var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
-            this.Frame.Navigate(typeof(ProjectDetailPage), itemId);
+            this.Frame.Navigate(typeof(ProjectPage), itemId);
         }
 
         private void ItemView_BuildDefinitionItemClick(object sender, ItemClickEventArgs e)

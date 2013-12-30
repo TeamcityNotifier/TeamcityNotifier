@@ -6,10 +6,10 @@
     /// <summary>
     /// Generic item data model.
     /// </summary>
-    public class ProjectPMod : PModBase
+    public class ProjectPMod : ServerEntityBase
     {
         public ProjectPMod(
-            String uniqueId, String title, String imagePath, String description, String content, PModBase parent)
+            String uniqueId, String title, String imagePath, String description, String content, ServerEntityBase parent)
             : base(uniqueId, title, imagePath, description)
         {
             BuildDefinitions = new ObservableCollection<BuildDefinitionPMod>();
@@ -26,8 +26,8 @@
             set { this.SetProperty(ref this.content, value); }
         }
 
-        private PModBase parent;
-        public PModBase Parent
+        private ServerEntityBase parent;
+        public ServerEntityBase Parent
         {
             get { return this.parent; }
             set { this.SetProperty(ref this.parent, value); }

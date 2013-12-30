@@ -52,7 +52,7 @@ namespace TeamCityNotifierWindowsStore
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
             var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
-            this.Frame.Navigate(typeof(ProjectDetailPage), itemId);
+            this.Frame.Navigate(typeof(ProjectPage), itemId);
         }
 
         public override void ReloadData()

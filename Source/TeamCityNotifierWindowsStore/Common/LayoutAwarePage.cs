@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TeamCityNotifierWindowsStore.Common
 {
+    using System.Collections.ObjectModel;
+
     using TeamCityNotifierWindowsStore.DataModel;
 
     using Windows.Storage;
@@ -524,71 +526,48 @@ namespace TeamCityNotifierWindowsStore.Common
             var popup = (Popup)sender;
             if(popup.Child is SettingsFlyout)
             {
-                bool hasToReloadData = false;
+                bool valueChanged = false;
                 var settingsFlyout = (SettingsFlyout)popup.Child;
-                var serverConfiguration = (ServerConfiguration)settingsFlyout.DataContext;
+                var serverConfigurations = (ObservableCollection<ServerConfigurationPMod>)settingsFlyout.DataContext;
                 var localSettings = ApplicationData.Current.LocalSettings;
 
-                string oldBaseUrl = string.Empty;
-                string oldUserName = string.Empty;
-                string oldPassword = string.Empty;
-                string oldServerName = string.Empty;
-                bool oldIsServerOn = false;
-
-                var newBaseUrl = serverConfiguration.BaseUrl;
-                var newUserName = serverConfiguration.UserName;
-                var newPassword = serverConfiguration.Password;
-                var newServerName = serverConfiguration.Name;
-                var newIsServerOn = serverConfiguration.IsServerOn;
-
-                if (localSettings.Values.ContainsKey(DataService.BaseUrlKey)
-                    && localSettings.Values.ContainsKey(DataService.UserNameKey)
-                    && localSettings.Values.ContainsKey(DataService.PasswordKey)
-                    && localSettings.Values.ContainsKey(DataService.ServerNameKey)
-                    && localSettings.Values.ContainsKey(DataService.IsServerOnKey))
+                for (int i = 0; i < serverConfigurations.Count; i++)
                 {
-                    oldBaseUrl = localSettings.Values[DataService.BaseUrlKey].ToString();
-                    oldUserName = localSettings.Values[DataService.UserNameKey].ToString();
-                    oldPassword = localSettings.Values[DataService.PasswordKey].ToString();
-                    oldServerName = localSettings.Values[DataService.ServerNameKey].ToString();
-                    oldIsServerOn = (bool)localSettings.Values[DataService.IsServerOnKey];
+                    var serverConfiguration = serverConfigurations[i];
+                    var serverContainerKey = DataService.ServerContainerKeyPrefix + i;
+                    localSettings.CreateContainer(serverContainerKey, ApplicationDataCreateDisposition.Always);
+
+                    valueChanged |= SaveValueIfChanged(localSettings, serverContainerKey, DataService.BaseUrlKey, serverConfiguration.BaseUrl);
+                    valueChanged |= SaveValueIfChanged(localSettings, serverContainerKey, DataService.UserNameKey, serverConfiguration.UserName);
+                    valueChanged |= SaveValueIfChanged(localSettings, serverContainerKey, DataService.PasswordKey, serverConfiguration.Password);
+                    valueChanged |= SaveValueIfChanged(localSettings, serverContainerKey, DataService.ServerNameKey, serverConfiguration.Name);
+                    valueChanged |= SaveValueIfChanged(localSettings, serverContainerKey, DataService.IsServerOnKey, serverConfiguration.IsServerOn);
                 }
 
-                if (!oldBaseUrl.Equals(newBaseUrl))
-                {
-                    localSettings.Values[DataService.BaseUrlKey] = newBaseUrl;
-                    hasToReloadData = true;
-                }
-
-                if (!oldUserName.Equals(newUserName))
-                {
-                    localSettings.Values[DataService.UserNameKey] = newUserName;
-                    hasToReloadData = true;
-                }
-
-                if (!oldPassword.Equals(newPassword))
-                {
-                    localSettings.Values[DataService.PasswordKey] = newPassword;
-                    hasToReloadData = true;
-                }
-
-                if (!oldServerName.Equals(newServerName))
-                {
-                    localSettings.Values[DataService.ServerNameKey] = newServerName;
-                    hasToReloadData = true;
-                }
-
-                if (!oldIsServerOn.Equals(newIsServerOn))
-                {
-                    localSettings.Values[DataService.IsServerOnKey] = newIsServerOn;
-                    hasToReloadData = true;
-                }
-
-                if (hasToReloadData)
+                if (valueChanged)
                 {
                     DataService.LoadData();
                 }
             }
+        }
+
+        private static bool SaveValueIfChanged(ApplicationDataContainer localSettings, string serverContainerKey, string fieldName, object newValue)
+        {
+            var oldValue = new object();
+
+            if (localSettings.Containers.ContainsKey(serverContainerKey) && 
+                localSettings.Containers[serverContainerKey].Values.ContainsKey(fieldName))
+            {
+                oldValue = localSettings.Containers[serverContainerKey].Values[fieldName];
+            }
+
+            if (!oldValue.Equals(newValue))
+            {
+                localSettings.Containers[serverContainerKey].Values[fieldName] = newValue;
+                return true;
+            }
+
+            return false;
         }
 
         private static void UpdatePageContent()

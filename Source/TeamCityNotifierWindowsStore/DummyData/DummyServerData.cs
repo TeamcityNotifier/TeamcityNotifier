@@ -33,7 +33,7 @@
                 "url build defintion");
         }
 
-        public static ProjectPMod GetDummyProjectPMod(PModBase serverPMod)
+        public static ProjectPMod GetDummyProjectPMod(ServerEntityBase serverServerEntity)
         {
             var projectPMod = new ProjectPMod(
                 Guid.NewGuid().ToString(),
@@ -41,7 +41,7 @@
                 DataService.PathSuccessfulPicture,
                 "description project",
                 "url project",
-                serverPMod);
+                serverServerEntity);
             
             projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
             projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());

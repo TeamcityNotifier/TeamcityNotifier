@@ -6,7 +6,7 @@
     /// <summary>
     /// Generic Parent data model.
     /// </summary>
-    public class ServerPMod : PModBase
+    public class ServerPMod : ServerEntityBase
     {
         public ServerPMod(string uniqueId, string title, string imagePath, string description)
             : base(uniqueId, title, imagePath, description)

@@ -36,6 +36,8 @@ namespace TeamCityNotifierWindowsStore.DataModel
 
         public static string IsServerOnKey = "IsServerOn";
 
+        public static string ServerContainerKeyPrefix = "Server ";
+
         public static ObservableCollection<ServerPMod> AllServers { get; private set; }
 
         public static IEnumerable<ServerPMod> GetServers(string uniqueId)
@@ -89,10 +91,9 @@ namespace TeamCityNotifierWindowsStore.DataModel
         public static void LoadData()
         {
             AllServers = new ObservableCollection<ServerPMod>();
-            var serverConfiguration = GetServerConfiguration();
+            var serverConfigurations = GetServerConfigurations();
 
-            var service =
-                new Service(new RestFactory(new List<IRestConfiguration> { serverConfiguration }, new WrapperFactory()));
+            var service = new Service(new RestFactory(serverConfigurations , new WrapperFactory()));
 
             IEnumerable<IServer> servers = new List<IServer>();
 
@@ -105,11 +106,11 @@ namespace TeamCityNotifierWindowsStore.DataModel
                 return;
             }
 
-            foreach (var server in servers)
+            for (int i = 0; i < servers.Count(); i++)
             {
-                var serverCongiuration = serverConfiguration;
+                var server = servers.ToList()[i];
 
-                if (serverCongiuration.IsServerOn)
+                if (serverConfigurations[i].IsServerOn)
                 {
                     var serverPMod = new ServerPMod(Guid.NewGuid().ToString(), server.Name, PathSuccessfulPicture, string.Empty);
 
@@ -123,28 +124,71 @@ namespace TeamCityNotifierWindowsStore.DataModel
             }
         }
 
-        public static ServerConfiguration GetServerConfiguration()
+        public static ObservableCollection<ServerConfigurationPMod> GetServerConfigurations()
         {
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            if (localSettings.Values.ContainsKey(BaseUrlKey) 
-                && localSettings.Values.ContainsKey(UserNameKey) 
-                && localSettings.Values.ContainsKey(PasswordKey) 
-                && localSettings.Values.ContainsKey(ServerNameKey)
-                && localSettings.Values.ContainsKey(IsServerOnKey))
-            {
-                var baseUrl = localSettings.Values[BaseUrlKey].ToString();
-                var userName = localSettings.Values[UserNameKey].ToString();
-                var password = localSettings.Values[PasswordKey].ToString();
-                var serverName = localSettings.Values[ServerNameKey].ToString();
-                var isServerOn = (bool)localSettings.Values[IsServerOnKey];
+            var serverConfigurations = new ObservableCollection<ServerConfigurationPMod>();
 
-                return new ServerConfiguration(baseUrl, userName, password, serverName, isServerOn);
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+            for (int i = 0; i < localSettings.Containers.Count; i++)
+            {
+                var serverContainerKey = ServerContainerKeyPrefix + i;
+
+                if (localSettings.Containers.ContainsKey(serverContainerKey))
+                {
+                    string baseUrl = string.Empty;
+                    string userName = string.Empty;
+                    string password = string.Empty;
+                    string serverName = string.Empty;
+                    bool isServerOn = false;
+
+                    var container = localSettings.Containers[serverContainerKey];
+
+
+                    if (container.Values.ContainsKey(BaseUrlKey))
+                    {
+                        baseUrl = container.Values[BaseUrlKey].ToString();
+                    }
+
+                    if (container.Values.ContainsKey(UserNameKey))
+                    {
+                        userName = container.Values[UserNameKey].ToString();
+                    }
+                        
+                    if (container.Values.ContainsKey(PasswordKey))
+                    {
+                        password = container.Values[PasswordKey].ToString();
+                    }
+                        
+                    if (container.Values.ContainsKey(ServerNameKey))
+                    {
+                        serverName = container.Values[ServerNameKey].ToString(); 
+                    }
+                        
+                    if(container.Values.ContainsKey(IsServerOnKey))
+                    {
+                        isServerOn = (bool)container.Values[IsServerOnKey];
+                    }
+                        
+                    serverConfigurations.Add(
+                        new ServerConfigurationPMod(baseUrl, userName, password, serverName, isServerOn));
+                }
             }
 
-            return new ServerConfiguration(string.Empty, string.Empty, string.Empty, string.Empty, false);
+            if (serverConfigurations.Count < 3)
+            {
+                var emptyServerConfigurations = 3 - serverConfigurations.Count;
+
+                for (int i = 0; i < emptyServerConfigurations; i++)
+                {
+                    serverConfigurations.Add(new ServerConfigurationPMod(string.Empty, string.Empty, string.Empty, string.Empty, false));
+                }
+            }
+
+            return serverConfigurations;
         }
 
-        private static ProjectPMod CreateProjectPMod(IProject project, PModBase serverPMod)
+        private static ProjectPMod CreateProjectPMod(IProject project, ServerEntityBase serverServerEntity)
         {
             var projectPMod = new ProjectPMod(
                 Guid.NewGuid().ToString(),
@@ -152,7 +196,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
                 PathSuccessfulPicture,
                 project.Description,
                 string.Empty,
-                serverPMod);
+                serverServerEntity);
 
                 foreach (var buildDefinition in project.BuildDefinitions)
                 {
@@ -175,7 +219,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
                             case Status.Error:
                             case Status.Failure:
                                 {
-                                    serverPMod.SetImage(PathFailedPicture);
+                                    serverServerEntity.SetImage(PathFailedPicture);
                                     projectPMod.SetImage(PathFailedPicture);
                                     buildDefinitionPMod.SetImage(PathFailedPicture);
                                     break;

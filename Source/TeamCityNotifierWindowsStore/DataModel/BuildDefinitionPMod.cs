@@ -1,6 +1,6 @@
 ﻿namespace TeamCityNotifierWindowsStore.DataModel
 {
-    public class BuildDefinitionPMod : PModBase
+    public class BuildDefinitionPMod : ServerEntityBase
     {
         private string buildRepositoryUrl;
 

@@ -12,6 +12,8 @@
 
 namespace TeamCityNotifierWindowsStore
 {
+    using System.Collections.ObjectModel;
+
     using TeamCityNotifierWindowsStore.DataModel;
 
     using Windows.UI.ApplicationSettings;
@@ -30,14 +32,13 @@ namespace TeamCityNotifierWindowsStore
         public SettingsFlyout()
         {
             this.InitializeComponent();
-            this.FlyoutContent.Transitions = new TransitionCollection();
-            this.FlyoutContent.Transitions.Add(new EntranceThemeTransition()
+            this.ListView.Transitions = new TransitionCollection();
+            this.ListView.Transitions.Add(new EntranceThemeTransition()
             {
                 FromHorizontalOffset = (SettingsPane.Edge == SettingsEdgeLocation.Right) ? ContentAnimationOffset : (ContentAnimationOffset * -1)
             });
 
-            var allServers = DataService.GetServerConfiguration();
-            this.DataContext = allServers;
+            this.DataContext = DataService.GetServerConfigurations();
         }
 
         /// <summary>

@@ -10,11 +10,11 @@
     /// defines properties common to both.
     /// </summary>
     [Windows.Foundation.Metadata.WebHostHidden]
-    public abstract class PModBase : Common.BindableBase
+    public abstract class ServerEntityBase : Common.BindableBase
     {
         private static readonly Uri baseUri = new Uri("ms-appx:///");
 
-        protected PModBase(string uniqueId, string title, string imagePath, string description)
+        protected ServerEntityBase(string uniqueId, string title, string imagePath, string description)
         {
             this.uniqueId = uniqueId;
             this.title = title;
