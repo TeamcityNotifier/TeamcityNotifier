@@ -20,6 +20,8 @@
 
         private string id;
 
+        private Status status;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public BuildDefinition(string url)
@@ -40,6 +42,24 @@
             get
             {
                 return typeof(buildType);
+            }
+        }
+
+        public Status Status
+        {
+            get
+            {
+                return this.status;
+            }
+            private set
+            {
+                if (this.status == value)
+                {
+                    return;
+                }
+
+                this.status = value;
+                this.OnPropertyChanged("Status");
             }
         }
 
@@ -138,6 +158,7 @@
                 }
 
                 this.lastBuild = value;
+                this.Status = value.Status;
                 this.OnPropertyChanged("LastBuild");
             }
         }

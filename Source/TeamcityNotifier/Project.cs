@@ -14,6 +14,8 @@
 
         private readonly HashSet<IProject> childProjects;
 
+        private Status status;
+
         private string id;
 
         private string name;
@@ -44,6 +46,24 @@
             get
             {
                 return typeof(project);
+            }
+        }
+
+        public Status Status
+        {
+            get
+            {
+                return this.status;
+            }
+            private set
+            {
+                if (this.status == value)
+                {
+                    return;
+                }
+
+                this.status = value;
+                this.OnPropertyChanged("Status");
             }
         }
 

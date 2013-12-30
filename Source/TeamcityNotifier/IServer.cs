@@ -1,10 +1,12 @@
-﻿namespace TeamcityNotifier
+﻿using System.ComponentModel;
+
+namespace TeamcityNotifier
 {
     using System.Collections.Generic;
 
     using TeamcityNotifier.Wrapper;
 
-    public interface IServer
+    public interface IServer : INotifyPropertyChanged
     {
         IEnumerable<IProject> Projects { get; }
 
@@ -13,6 +15,8 @@
         string UserName { get; }
 
         string Password { get; }
+
+        Status Status { get; }
 
         IProject RootProject { get; }
 
