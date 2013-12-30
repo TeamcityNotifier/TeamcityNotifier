@@ -4,6 +4,16 @@
 
     public class ServerConfigurationPMod : Common.BindableBase, IRestConfiguration
     {
+        private string baseUrl;
+
+        private string password;
+
+        private string name;
+
+        private string userName;
+
+        private bool isServerOn;
+
         public ServerConfigurationPMod(string baseUrl, string userName, string password, string serverName, bool isServerOn)
         {
             this.BaseUrl = baseUrl;
@@ -13,23 +23,11 @@
             this.IsServerOn = isServerOn;
         }
 
-        private string baseUrl;
-
-        public string BaseUrl
+        public string Name
         {
-            get { return this.baseUrl; }
-            set { this.SetProperty(ref this.baseUrl, value); }
+            get { return this.name; }
+            set { this.SetProperty(ref this.name, value); }
         }
-
-        private string userName;
-
-        public string UserName
-        {
-            get { return this.userName; }
-            set { this.SetProperty(ref this.userName, value); }
-        }
-
-        private string password;
 
         public string Password
         {
@@ -37,15 +35,17 @@
             set { this.SetProperty(ref this.password, value); }
         }
 
-        private string name;
-
-        public string Name
+        public string BaseUrl
         {
-            get { return this.name; }
-            set { this.SetProperty(ref this.name, value); }
+            get { return this.baseUrl; }
+            set { this.SetProperty(ref this.baseUrl, value); }
         }
 
-        private bool isServerOn;
+        public string UserName
+        {
+            get { return this.userName; }
+            set { this.SetProperty(ref this.userName, value); }
+        }
 
         public bool IsServerOn
         {

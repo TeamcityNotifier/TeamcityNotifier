@@ -67,23 +67,6 @@ namespace TeamCityNotifierWindowsStore.DataModel
             return allProjects.SingleOrDefault((item) => item.UniqueId.Equals(uniqueId));
         }
 
-        private static IEnumerable<ProjectPMod> GetSubProjects(IEnumerable<ProjectPMod> projects)
-        {
-            var subProjects = new List<ProjectPMod>();
-
-            foreach (var project in projects.Where(project => project.Projects != null))
-            {
-                subProjects.AddRange(project.Projects);
-                var subSubProjects = GetSubProjects(project.Projects);
-                if (subSubProjects != null)
-                {
-                    subProjects.AddRange(subSubProjects);
-                }
-            }
-
-            return subProjects;
-        }
-
         public static void LoadData()
         {
             AllServers = new ObservableCollection<ServerPMod>();
@@ -161,7 +144,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
                         serverName = container.Values[ServerNameKey].ToString(); 
                     }
                         
-                    if(container.Values.ContainsKey(IsServerOnKey))
+                    if (container.Values.ContainsKey(IsServerOnKey))
                     {
                         isServerOn = (bool)container.Values[IsServerOnKey];
                     }
@@ -171,12 +154,29 @@ namespace TeamCityNotifierWindowsStore.DataModel
                 }
             }
 
-            FillUpEmptyServersIfLessThenThree(serverConfigurations);
+            FillUpWithEmptyServersIfLessThenThree(serverConfigurations);
 
             return serverConfigurations;
         }
 
-        private static void FillUpEmptyServersIfLessThenThree(ObservableCollection<ServerConfigurationPMod> serverConfigurations)
+        private static IEnumerable<ProjectPMod> GetSubProjects(IEnumerable<ProjectPMod> projects)
+        {
+            var subProjects = new List<ProjectPMod>();
+
+            foreach (var project in projects.Where(project => project.Projects != null))
+            {
+                subProjects.AddRange(project.Projects);
+                var subSubProjects = GetSubProjects(project.Projects);
+                if (subSubProjects != null)
+                {
+                    subProjects.AddRange(subSubProjects);
+                }
+            }
+
+            return subProjects;
+        }
+
+        private static void FillUpWithEmptyServersIfLessThenThree(ObservableCollection<ServerConfigurationPMod> serverConfigurations)
         {
             if (serverConfigurations.Count < 3)
             {

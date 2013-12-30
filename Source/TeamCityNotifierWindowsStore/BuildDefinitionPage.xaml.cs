@@ -14,6 +14,11 @@ namespace TeamCityNotifierWindowsStore
             this.InitializeComponent();
         }
 
+        public override void ReloadData()
+        {
+            this.Frame.Navigate(typeof(ServerPage), "AllServers");
+        }
+
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
         /// </summary>
@@ -23,11 +28,6 @@ namespace TeamCityNotifierWindowsStore
         {
             this.WebView.NavigateToString((string)e.Parameter);
             base.OnNavigatedTo(e);
-        }
-
-        public override void ReloadData()
-        {
-            this.Frame.Navigate(typeof(ServerPage), "AllServers");
         }
     }
 }

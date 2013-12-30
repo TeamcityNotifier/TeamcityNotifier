@@ -12,8 +12,6 @@
 
 namespace TeamCityNotifierWindowsStore
 {
-    using System.Collections.ObjectModel;
-
     using TeamCityNotifierWindowsStore.DataModel;
 
     using Windows.UI.ApplicationSettings;

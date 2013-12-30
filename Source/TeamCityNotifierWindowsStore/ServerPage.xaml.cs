@@ -35,7 +35,6 @@ namespace TeamCityNotifierWindowsStore
         /// session.  This will be null the first time a page is visited.</param>
         protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
             this.navigationParameter = (String)navigationParameter;
             var servers = DataService.GetServers(this.navigationParameter);
 
@@ -62,7 +61,7 @@ namespace TeamCityNotifierWindowsStore
         /// </summary>
         /// <param name="sender">The Button used as a group header for the selected group.</param>
         /// <param name="e">Event data that describes how the click was initiated.</param>
-        void ServerHeader_Click(object sender, RoutedEventArgs e)
+        private void ServerHeader_Click(object sender, RoutedEventArgs e)
         {
             // Determine what group the Button instance represents
             var server = (sender as FrameworkElement).DataContext;
@@ -78,7 +77,7 @@ namespace TeamCityNotifierWindowsStore
         /// <param name="sender">The GridView (or ListView when the application is snapped)
         /// displaying the item clicked.</param>
         /// <param name="e">Event data that describes the item clicked.</param>
-        void ItemView_ProjectClick(object sender, ItemClickEventArgs e)
+        private void ItemView_ProjectClick(object sender, ItemClickEventArgs e)
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter

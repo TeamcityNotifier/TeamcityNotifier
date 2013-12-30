@@ -14,11 +14,23 @@
     [Windows.Foundation.Metadata.WebHostHidden]
     public abstract class ServerEntityBase : Common.BindableBase
     {
-        private static readonly Uri baseUri = new Uri("ms-appx:///");
-
         private const string PathFailedPicture = "Assets/Red.png";
 
         private const string PathSuccessfulPicture = "Assets/Green.png";
+
+        private static readonly Uri BaseUri = new Uri("ms-appx:///");
+
+        private string uniqueId = string.Empty;
+
+        private string title = string.Empty;
+
+        private string description = string.Empty;
+
+        private Status status;
+
+        private ImageSource image;
+
+        private string imagePath;
 
         protected ServerEntityBase(string uniqueId, string title, string description, Status status)
         {
@@ -28,15 +40,11 @@
             this.status = status;
         }
 
-        private string uniqueId = string.Empty;
-
         public string UniqueId
         {
             get { return this.uniqueId; }
             set { this.SetProperty(ref this.uniqueId, value); }
         }
-
-        private string title = string.Empty;
 
         public string Title
         {
@@ -44,18 +52,19 @@
             set { this.SetProperty(ref this.title, value); }
         }
 
-        private string description = string.Empty;
-
         public string Description
         {
             get { return this.description; }
             set { this.SetProperty(ref this.description, value); }
         }
 
-        private Status status;
         public Status Status
         {
-            get { return this.status; }
+            get
+            {
+                return this.status;
+            }
+
             set
             {
                 this.SetProperty(ref this.status, value);
@@ -70,17 +79,13 @@
             }
         }
 
-        private ImageSource image;
-
-        private string imagePath;
-
         public ImageSource Image
         {
             get
             {
                 if (this.image == null && this.imagePath != null)
                 {
-                    this.image = new BitmapImage(new Uri(baseUri, this.imagePath));
+                    this.image = new BitmapImage(new Uri(BaseUri, this.imagePath));
                 }
                 return this.image;
             }

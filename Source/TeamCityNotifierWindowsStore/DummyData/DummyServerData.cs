@@ -4,9 +4,9 @@
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    using TeamCityNotifierWindowsStore.DataModel;
-
     using TeamcityNotifier;
+
+    using TeamCityNotifierWindowsStore.DataModel;
 
     public class DummyServerData
     {

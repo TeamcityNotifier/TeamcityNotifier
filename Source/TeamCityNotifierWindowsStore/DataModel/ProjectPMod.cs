@@ -1,6 +1,5 @@
 ﻿namespace TeamCityNotifierWindowsStore.DataModel
 {
-    using System;
     using System.Collections.ObjectModel;
 
     using TeamcityNotifier;
@@ -10,25 +9,27 @@
     /// </summary>
     public class ProjectPMod : ServerEntityBase
     {
+        private string content = string.Empty;
+
+        private ServerEntityBase parent;
+
         public ProjectPMod(
-            String uniqueId, String title, String description, String content, ServerEntityBase parent, Status status)
+            string uniqueId, string title, string description, string content, ServerEntityBase parent, Status status)
             : base(uniqueId, title, description, status)
         {
-            BuildDefinitions = new ObservableCollection<BuildDefinitionPMod>();
-            TopProjects = new ObservableCollection<ProjectPMod>();
-            Projects = new ObservableCollection<ProjectPMod>();
+            this.BuildDefinitions = new ObservableCollection<BuildDefinitionPMod>();
+            this.TopProjects = new ObservableCollection<ProjectPMod>();
+            this.Projects = new ObservableCollection<ProjectPMod>();
             this.content = content;
             this.parent = parent;
         }
 
-        private string content = string.Empty;
         public string Content
         {
             get { return this.content; }
             set { this.SetProperty(ref this.content, value); }
         }
 
-        private ServerEntityBase parent;
         public ServerEntityBase Parent
         {
             get { return this.parent; }

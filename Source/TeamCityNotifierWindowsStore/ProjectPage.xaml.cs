@@ -24,6 +24,21 @@ namespace TeamCityNotifierWindowsStore
             this.AddServerSettingsToServerPane();
         }
 
+        public override void ReloadData()
+        {
+            base.ReloadData();
+            var project = DataService.GetProject(this.navigationParameter);
+            if (project != null)
+            {
+                this.SetData(project);
+                this.flipView.SelectedItem = project;
+            }
+            else
+            {
+                this.Frame.Navigate(typeof(ServerPage), "AllServers");
+            }
+        }
+
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -41,42 +56,9 @@ namespace TeamCityNotifierWindowsStore
                 navigationParameter = pageState["SelectedItem"];
             }
 
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
             this.navigationParameter = (String)navigationParameter;
             var project = DataService.GetProject(this.navigationParameter);
 
-            if (project != null)
-            {
-                this.SetData(project);
-                this.flipView.SelectedItem = project;
-            }
-            else
-            {
-                this.Frame.Navigate(typeof(ServerPage), "AllServers");
-            }
-        }
-
-        private void SetData(ProjectPMod project)
-        {
-            this.DefaultViewModel["Parent"] = project.Parent;
-            if (project.Parent is ServerPMod)
-            {
-                this.DefaultViewModel["Projects"] = ((ServerPMod)project.Parent).Projects;
-            }
-            else if (project.Parent is ProjectPMod)
-            {
-                this.DefaultViewModel["Projects"] = ((ProjectPMod)project.Parent).Projects;
-            }
-
-            this.DefaultViewModel["SubProjects"] = project.Projects;
-
-            this.DefaultViewModel["BuildDefinitions"] = project.BuildDefinitions;
-        }
-
-        public override void ReloadData()
-        {
-            base.ReloadData();
-            var project = DataService.GetProject(this.navigationParameter);
             if (project != null)
             {
                 this.SetData(project);
@@ -103,13 +85,30 @@ namespace TeamCityNotifierWindowsStore
             }
         }
 
+        private void SetData(ProjectPMod project)
+        {
+            this.DefaultViewModel["Parent"] = project.Parent;
+            if (project.Parent is ServerPMod)
+            {
+                this.DefaultViewModel["Projects"] = ((ServerPMod)project.Parent).Projects;
+            }
+            else if (project.Parent is ProjectPMod)
+            {
+                this.DefaultViewModel["Projects"] = ((ProjectPMod)project.Parent).Projects;
+            }
+
+            this.DefaultViewModel["SubProjects"] = project.Projects;
+
+            this.DefaultViewModel["BuildDefinitions"] = project.BuildDefinitions;
+        }
+
         /// <summary>
         /// Invoked when an item is clicked.
         /// </summary>
         /// <param name="sender">The GridView (or ListView when the application is snapped)
         /// displaying the item clicked.</param>
         /// <param name="e">Event data that describes the item clicked.</param>
-        void ItemView_ProjectItemClick(object sender, ItemClickEventArgs e)
+        private void ItemView_ProjectItemClick(object sender, ItemClickEventArgs e)
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter

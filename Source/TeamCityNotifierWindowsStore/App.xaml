@@ -1,9 +1,7 @@
 ﻿<Application
     x:Class="TeamCityNotifierWindowsStore.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:TeamCityNotifierWindowsStore"
-    xmlns:localData="using:TeamCityNotifierWindowsStore.Data">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Application.Resources>
         <ResourceDictionary>
