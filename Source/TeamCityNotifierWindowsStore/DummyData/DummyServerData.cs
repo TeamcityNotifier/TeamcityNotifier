@@ -6,6 +6,8 @@
 
     using TeamCityNotifierWindowsStore.DataModel;
 
+    using TeamcityNotifier;
+
     public class DummyServerData
     {
         private readonly ObservableCollection<ServerPMod> allGroups;
@@ -28,9 +30,9 @@
             return new BuildDefinitionPMod(
                 Guid.NewGuid().ToString(),
                 "title build definition",
-                DataService.PathSuccessfulPicture,
                 "description build definition",
-                "url build defintion");
+                "url build defintion", 
+                Status.Success);
         }
 
         public static ProjectPMod GetDummyProjectPMod(ServerEntityBase serverServerEntity)
@@ -38,10 +40,10 @@
             var projectPMod = new ProjectPMod(
                 Guid.NewGuid().ToString(),
                 "title project",
-                DataService.PathSuccessfulPicture,
                 "description project",
                 "url project",
-                serverServerEntity);
+                serverServerEntity, 
+                Status.Success);
             
             projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
             projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
@@ -55,8 +57,8 @@
             var serverPMod  = new ServerPMod(
                 Guid.NewGuid().ToString(), 
                 "title server", 
-                DataService.PathSuccessfulPicture, 
-                "description server");
+                "description server", 
+                Status.Success);
 
             serverPMod.Projects.Add(GetDummyProjectPMod(serverPMod));
             serverPMod.Projects.Add(GetDummyProjectPMod(serverPMod));

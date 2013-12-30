@@ -3,13 +3,15 @@
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
 
+    using TeamcityNotifier;
+
     /// <summary>
     /// Generic Parent data model.
     /// </summary>
     public class ServerPMod : ServerEntityBase
     {
-        public ServerPMod(string uniqueId, string title, string imagePath, string description)
-            : base(uniqueId, title, imagePath, description)
+        public ServerPMod(string uniqueId, string title, string description, Status status)
+            : base(uniqueId, title, description, status)
         {
             this.TopProjects = new ObservableCollection<ProjectPMod>();
             this.Projects = new ObservableCollection<ProjectPMod>();

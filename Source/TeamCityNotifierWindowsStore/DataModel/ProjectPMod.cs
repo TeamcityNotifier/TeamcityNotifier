@@ -3,14 +3,16 @@
     using System;
     using System.Collections.ObjectModel;
 
+    using TeamcityNotifier;
+
     /// <summary>
     /// Generic item data model.
     /// </summary>
     public class ProjectPMod : ServerEntityBase
     {
         public ProjectPMod(
-            String uniqueId, String title, String imagePath, String description, String content, ServerEntityBase parent)
-            : base(uniqueId, title, imagePath, description)
+            String uniqueId, String title, String description, String content, ServerEntityBase parent, Status status)
+            : base(uniqueId, title, description, status)
         {
             BuildDefinitions = new ObservableCollection<BuildDefinitionPMod>();
             TopProjects = new ObservableCollection<ProjectPMod>();
@@ -38,12 +40,5 @@
         public ObservableCollection<ProjectPMod> TopProjects { get; private set; }
 
         public ObservableCollection<BuildDefinitionPMod> BuildDefinitions { get; private set; }
-
-        private bool buildSuccessful;
-        public bool BuildSuccessful
-        {
-            get { return this.buildSuccessful; }
-            set { this.SetProperty(ref this.buildSuccessful, value); }
-        }
     }
 }

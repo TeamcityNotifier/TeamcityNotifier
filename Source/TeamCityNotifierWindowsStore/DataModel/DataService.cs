@@ -22,10 +22,6 @@ namespace TeamCityNotifierWindowsStore.DataModel
     /// </summary>
     public static class DataService
     {
-        public const string PathFailedPicture = "Assets/Red.png";
-
-        public const string PathSuccessfulPicture = "Assets/Green.png";
-
         public static string BaseUrlKey = "BaseUrlKey";
 
         public static string UserNameKey = "UserNameKey";
@@ -112,7 +108,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
 
                 if (serverConfigurations[i].IsServerOn)
                 {
-                    var serverPMod = new ServerPMod(Guid.NewGuid().ToString(), server.Name, PathSuccessfulPicture, string.Empty);
+                    var serverPMod = new ServerPMod(Guid.NewGuid().ToString(), server.Name, string.Empty, server.Status);
 
                     foreach (var project in server.RootProject.ChildProjects)
                     {
@@ -175,62 +171,43 @@ namespace TeamCityNotifierWindowsStore.DataModel
                 }
             }
 
+            FillUpEmptyServersIfLessThenThree(serverConfigurations);
+
+            return serverConfigurations;
+        }
+
+        private static void FillUpEmptyServersIfLessThenThree(ObservableCollection<ServerConfigurationPMod> serverConfigurations)
+        {
             if (serverConfigurations.Count < 3)
             {
                 var emptyServerConfigurations = 3 - serverConfigurations.Count;
 
                 for (int i = 0; i < emptyServerConfigurations; i++)
                 {
-                    serverConfigurations.Add(new ServerConfigurationPMod(string.Empty, string.Empty, string.Empty, string.Empty, false));
+                    serverConfigurations.Add(
+                        new ServerConfigurationPMod(string.Empty, string.Empty, string.Empty, string.Empty, false));
                 }
             }
-
-            return serverConfigurations;
         }
 
-        private static ProjectPMod CreateProjectPMod(IProject project, ServerEntityBase serverServerEntity)
+        private static ProjectPMod CreateProjectPMod(IProject project, ServerEntityBase serverEntity)
         {
             var projectPMod = new ProjectPMod(
                 Guid.NewGuid().ToString(),
                 project.Name,
-                PathSuccessfulPicture,
                 project.Description,
                 string.Empty,
-                serverServerEntity);
+                serverEntity, 
+                project.Status);
 
                 foreach (var buildDefinition in project.BuildDefinitions)
                 {
                     var buildDefinitionPMod = new BuildDefinitionPMod(
                         buildDefinition.Id,
                         buildDefinition.Name,
-                        PathSuccessfulPicture,
                         buildDefinition.Description,
-                        buildDefinition.Url);
-
-                    if (buildDefinition.LastBuild != null)
-                    {
-                        switch (buildDefinition.LastBuild.Status)
-                        {
-                            case Status.Success:
-                                {
-                                    break;
-                                }
-                            
-                            case Status.Error:
-                            case Status.Failure:
-                                {
-                                    serverServerEntity.SetImage(PathFailedPicture);
-                                    projectPMod.SetImage(PathFailedPicture);
-                                    buildDefinitionPMod.SetImage(PathFailedPicture);
-                                    break;
-                                }
-
-                            default:
-                                {
-                                    throw new Exception("Build has an unknown state");
-                                }
-                        }
-                    }
+                        buildDefinition.Url,
+                        buildDefinition.Status);
 
                     projectPMod.BuildDefinitions.Add(buildDefinitionPMod);
                 }

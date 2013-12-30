@@ -2,6 +2,8 @@
 {
     using System;
 
+    using TeamcityNotifier;
+
     using Windows.UI.Xaml.Media;
     using Windows.UI.Xaml.Media.Imaging;
 
@@ -14,12 +16,16 @@
     {
         private static readonly Uri baseUri = new Uri("ms-appx:///");
 
-        protected ServerEntityBase(string uniqueId, string title, string imagePath, string description)
+        private const string PathFailedPicture = "Assets/Red.png";
+
+        private const string PathSuccessfulPicture = "Assets/Green.png";
+
+        protected ServerEntityBase(string uniqueId, string title, string description, Status status)
         {
             this.uniqueId = uniqueId;
             this.title = title;
             this.description = description;
-            this.imagePath = imagePath;
+            this.status = status;
         }
 
         private string uniqueId = string.Empty;
@@ -46,7 +52,26 @@
             set { this.SetProperty(ref this.description, value); }
         }
 
+        private Status status;
+        public Status Status
+        {
+            get { return this.status; }
+            set
+            {
+                this.SetProperty(ref this.status, value);
+                if (value == Status.Success)
+                {
+                    this.SetImage(PathSuccessfulPicture);
+                }
+                else
+                {
+                    this.SetImage(PathFailedPicture);
+                }
+            }
+        }
+
         private ImageSource image;
+
         private string imagePath;
 
         public ImageSource Image
