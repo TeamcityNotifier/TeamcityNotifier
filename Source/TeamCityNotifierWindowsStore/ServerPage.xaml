@@ -22,7 +22,7 @@
             Source="{Binding Servers}"
             IsSourceGrouped="true"
             ItemsPath="TopProjects"
-            d:Source="{Binding AllGroups, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
     </Page.Resources>
 
     <!--

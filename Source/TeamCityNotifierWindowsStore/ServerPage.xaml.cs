@@ -4,6 +4,7 @@ namespace TeamCityNotifierWindowsStore
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using TeamCityNotifierWindowsStore.DataModel;
 
@@ -15,9 +16,12 @@ namespace TeamCityNotifierWindowsStore
     /// </summary>
     public sealed partial class ServerPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
     {
+        private string navigationParameter;
+
         public ServerPage()
         {
             this.InitializeComponent();
+            this.AddServerSettingsToServerPane();
         }
 
         /// <summary>
@@ -29,10 +33,27 @@ namespace TeamCityNotifierWindowsStore
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+        protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var servers = DataService.GetServers((String)navigationParameter);
+            this.navigationParameter = (String)navigationParameter;
+            var servers = DataService.GetServers(this.navigationParameter);
+
+            if (servers.Any())
+            {
+               this.DefaultViewModel["Servers"] = servers; 
+            }
+            else
+            {
+                this.backButton.IsEnabled = false;
+            }
+            
+        }
+
+        public override void ReloadData()
+        {
+            base.ReloadData();
+            var servers = DataService.GetServers(this.navigationParameter);
             this.DefaultViewModel["Servers"] = servers;
         }
 
@@ -62,7 +83,7 @@ namespace TeamCityNotifierWindowsStore
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
             var projectId = ((ProjectPMod)e.ClickedItem).UniqueId;
-            this.Frame.Navigate(typeof(ItemDetailPage), projectId);
+            this.Frame.Navigate(typeof(ProjectDetailPage), projectId);
         }
     }
 }

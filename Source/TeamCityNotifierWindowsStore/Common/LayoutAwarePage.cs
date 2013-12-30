@@ -13,6 +13,14 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TeamCityNotifierWindowsStore.Common
 {
+    using TeamCityNotifierWindowsStore.DataModel;
+
+    using Windows.Storage;
+    using Windows.UI.ApplicationSettings;
+    using Windows.UI.Popups;
+    using Windows.UI.Xaml.Controls.Primitives;
+    using Windows.UI.Xaml.Media.Animation;
+
     /// <summary>
     /// Typical implementation of Page that provides several important conveniences:
     /// <list type="bullet">
@@ -36,6 +44,17 @@ namespace TeamCityNotifierWindowsStore.Common
     [Windows.Foundation.Metadata.WebHostHidden]
     public class LayoutAwarePage : Page
     {
+        private bool isEventRegistered;
+
+        // Used to determine the correct height to ensure our custom UI fills the screen.
+        private Rect windowBounds;
+
+        // Desired width for the settings UI. UI guidelines specify this should be 346 or 646 depending on your needs.
+        private double settingsWidth = 646;
+
+        // This is the container that will hold our custom content.
+        private Popup settingsPopup;
+
         /// <summary>
         /// Identifies the <see cref="DefaultViewModel"/> dependency property.
         /// </summary>
@@ -319,8 +338,6 @@ namespace TeamCityNotifierWindowsStore.Common
 
         #endregion
 
-        #region Process lifetime management
-
         private String _pageKey;
 
         /// <summary>
@@ -371,6 +388,7 @@ namespace TeamCityNotifierWindowsStore.Common
             var pageState = new Dictionary<String, Object>();
             this.SaveState(pageState);
             frameState[_pageKey] = pageState;
+            RemoveSettingsToServerPane();
         }
 
         /// <summary>
@@ -396,7 +414,192 @@ namespace TeamCityNotifierWindowsStore.Common
         {
         }
 
-        #endregion
+        public virtual void ReloadData()
+        {
+        }
+
+        public void AddServerSettingsToServerPane()
+        {
+            this.windowBounds = Window.Current.Bounds;
+
+            if (!this.isEventRegistered)
+            {
+                // Listening for this event lets the app initialize the settings commands and pause its UI until the user closes the pane.
+                // To ensure your settings are available at all times in your app, place your CommandsRequested handler in the overridden
+                // OnWindowCreated of App.xaml.cs
+                SettingsPane.GetForCurrentView().CommandsRequested += onCommandsRequested;
+                this.isEventRegistered = true;
+            }
+        }
+
+        public void RemoveSettingsToServerPane()
+        {
+            SettingsPane.GetForCurrentView().CommandsRequested -= onCommandsRequested;
+            this.isEventRegistered = false;
+        }
+
+        /// <summary>
+        /// This event is generated when the user opens the settings pane. During this event, append your
+        /// SettingsCommand objects to the available ApplicationCommands vector to make them available to the
+        /// SettingsPange UI.
+        /// </summary>
+        /// <param name="settingsPane">Instance that triggered the event.</param>
+        /// <param name="eventArgs">Event data describing the conditions that led to the event.</param>
+        private void onCommandsRequested(SettingsPane settingsPane, SettingsPaneCommandsRequestedEventArgs eventArgs)
+        {
+            var handler = new UICommandInvokedHandler(onSettingsCommand);
+            var generalCommand = new SettingsCommand("ServerSettingsId", "Server Settings", handler);
+            eventArgs.Request.ApplicationCommands.Add(generalCommand);
+        }
+
+        /// <summary>
+        /// This the event handler for the "Server Settings" button added to the settings charm. This method
+        /// is responsible for creating the Popup window will use as the container for our settings Flyout.
+        /// The reason we use a Popup is that it gives us the "light dismiss" behavior that when a user clicks away 
+        /// from our custom UI it just dismisses.  This is a principle in the Settings experience and you see the
+        /// same behavior in other experiences like AppBar. 
+        /// </summary>
+        /// <param name="command"></param>
+        private void onSettingsCommand(IUICommand command)
+        {
+            // Create a Popup window which will contain our flyout.
+            settingsPopup = new Popup();
+            settingsPopup.Closed += OnPopupClosed;
+            Window.Current.Activated += OnWindowActivated;
+            settingsPopup.IsLightDismissEnabled = true;
+            settingsPopup.Width = settingsWidth;
+            settingsPopup.Height = windowBounds.Height;
+
+            // Add the proper animation for the panel.
+            settingsPopup.ChildTransitions = new TransitionCollection();
+            settingsPopup.ChildTransitions.Add(new PaneThemeTransition()
+            {
+                Edge = (SettingsPane.Edge == SettingsEdgeLocation.Right) ?
+                       EdgeTransitionLocation.Right :
+                       EdgeTransitionLocation.Left
+            });
+
+            // Create a SettingsFlyout the same dimenssions as the Popup.
+            SettingsFlyout mypane = new SettingsFlyout();
+            mypane.Width = settingsWidth;
+            mypane.Height = windowBounds.Height;
+
+            // Place the SettingsFlyout inside our Popup window.
+            settingsPopup.Child = mypane;
+
+            // Let's define the location of our Popup.
+            settingsPopup.SetValue(Canvas.LeftProperty, SettingsPane.Edge == SettingsEdgeLocation.Right ? (windowBounds.Width - settingsWidth) : 0);
+            settingsPopup.SetValue(Canvas.TopProperty, 0);
+            settingsPopup.IsOpen = true;
+        }
+
+        /// <summary>
+        /// We use the window's activated event to force closing the Popup since a user maybe interacted with
+        /// something that didn't normally trigger an obvious dismiss.
+        /// </summary>
+        /// <param name="sender">Instance that triggered the event.</param>
+        /// <param name="e">Event data describing the conditions that led to the event.</param>
+        private void OnWindowActivated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
+        {
+            if (e.WindowActivationState == Windows.UI.Core.CoreWindowActivationState.Deactivated)
+            {
+                settingsPopup.IsOpen = false;
+            }
+        }
+
+        /// <summary>
+        /// When the Popup closes we no longer need to monitor activation changes.
+        /// </summary>
+        /// <param name="sender">Instance that triggered the event.</param>
+        /// <param name="e">Event data describing the conditions that led to the event.</param>
+        private void OnPopupClosed(object sender, object e)
+        {
+            Window.Current.Activated -= OnWindowActivated;
+            SaveSettingsFlyoutChanges(sender);
+            UpdatePageContent();
+        }
+
+        private static void SaveSettingsFlyoutChanges(object sender)
+        {
+            var popup = (Popup)sender;
+            if(popup.Child is SettingsFlyout)
+            {
+                bool hasToReloadData = false;
+                var settingsFlyout = (SettingsFlyout)popup.Child;
+                var serverConfiguration = (ServerConfiguration)settingsFlyout.DataContext;
+                var localSettings = ApplicationData.Current.LocalSettings;
+
+                string oldBaseUrl = string.Empty;
+                string oldUserName = string.Empty;
+                string oldPassword = string.Empty;
+                string oldServerName = string.Empty;
+                bool oldIsServerOn = false;
+
+                var newBaseUrl = serverConfiguration.BaseUrl;
+                var newUserName = serverConfiguration.UserName;
+                var newPassword = serverConfiguration.Password;
+                var newServerName = serverConfiguration.Name;
+                var newIsServerOn = serverConfiguration.IsServerOn;
+
+                if (localSettings.Values.ContainsKey(DataService.BaseUrlKey)
+                    && localSettings.Values.ContainsKey(DataService.UserNameKey)
+                    && localSettings.Values.ContainsKey(DataService.PasswordKey)
+                    && localSettings.Values.ContainsKey(DataService.ServerNameKey)
+                    && localSettings.Values.ContainsKey(DataService.IsServerOnKey))
+                {
+                    oldBaseUrl = localSettings.Values[DataService.BaseUrlKey].ToString();
+                    oldUserName = localSettings.Values[DataService.UserNameKey].ToString();
+                    oldPassword = localSettings.Values[DataService.PasswordKey].ToString();
+                    oldServerName = localSettings.Values[DataService.ServerNameKey].ToString();
+                    oldIsServerOn = (bool)localSettings.Values[DataService.IsServerOnKey];
+                }
+
+                if (!oldBaseUrl.Equals(newBaseUrl))
+                {
+                    localSettings.Values[DataService.BaseUrlKey] = newBaseUrl;
+                    hasToReloadData = true;
+                }
+
+                if (!oldUserName.Equals(newUserName))
+                {
+                    localSettings.Values[DataService.UserNameKey] = newUserName;
+                    hasToReloadData = true;
+                }
+
+                if (!oldPassword.Equals(newPassword))
+                {
+                    localSettings.Values[DataService.PasswordKey] = newPassword;
+                    hasToReloadData = true;
+                }
+
+                if (!oldServerName.Equals(newServerName))
+                {
+                    localSettings.Values[DataService.ServerNameKey] = newServerName;
+                    hasToReloadData = true;
+                }
+
+                if (!oldIsServerOn.Equals(newIsServerOn))
+                {
+                    localSettings.Values[DataService.IsServerOnKey] = newIsServerOn;
+                    hasToReloadData = true;
+                }
+
+                if (hasToReloadData)
+                {
+                    DataService.LoadData();
+                }
+            }
+        }
+
+        private static void UpdatePageContent()
+        {
+            var rootFrame = Window.Current.Content as Frame;
+            if (rootFrame.Content is LayoutAwarePage)
+            {
+                var page = (LayoutAwarePage)rootFrame.Content;
+                page.ReloadData();
+            }
+        }
 
         /// <summary>
         /// Implementation of IObservableMap that supports reentrancy for use as a default view

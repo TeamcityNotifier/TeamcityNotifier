@@ -14,11 +14,14 @@ namespace TeamCityNotifierWindowsStore
     /// A page that displays details for a single item within a Parent while allowing gestures to
     /// flip through other items belonging to the same Parent.
     /// </summary>
-    public sealed partial class ItemDetailPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
+    public sealed partial class ProjectDetailPage : TeamCityNotifierWindowsStore.Common.LayoutAwarePage
     {
-        public ItemDetailPage()
+        private string navigationParameter;
+
+        public ProjectDetailPage()
         {
             this.InitializeComponent();
+            this.AddServerSettingsToServerPane();
         }
 
         /// <summary>
@@ -39,22 +42,50 @@ namespace TeamCityNotifierWindowsStore
             }
 
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var project = DataService.GetProject((String)navigationParameter);
+            this.navigationParameter = (String)navigationParameter;
+            var project = DataService.GetProject(this.navigationParameter);
+
+            if (project != null)
+            {
+                this.SetData(project);
+                this.flipView.SelectedItem = project;
+            }
+            else
+            {
+                this.Frame.Navigate(typeof(ServerPage), "AllServers");
+            }
+        }
+
+        private void SetData(ProjectPMod project)
+        {
             this.DefaultViewModel["Parent"] = project.Parent;
             if (project.Parent is ServerPMod)
             {
-               this.DefaultViewModel["Projects"] = ((ServerPMod)project.Parent).Projects; 
+                this.DefaultViewModel["Projects"] = ((ServerPMod)project.Parent).Projects;
             }
             else if (project.Parent is ProjectPMod)
             {
-                this.DefaultViewModel["Projects"] = ((ProjectPMod)project.Parent).Projects; 
+                this.DefaultViewModel["Projects"] = ((ProjectPMod)project.Parent).Projects;
             }
 
             this.DefaultViewModel["SubProjects"] = project.Projects;
 
             this.DefaultViewModel["BuildDefinitions"] = project.BuildDefinitions;
+        }
 
-            this.flipView.SelectedItem = project;
+        public override void ReloadData()
+        {
+            base.ReloadData();
+            var project = DataService.GetProject(this.navigationParameter);
+            if (project != null)
+            {
+                this.SetData(project);
+                this.flipView.SelectedItem = project;
+            }
+            else
+            {
+                this.Frame.Navigate(typeof(ServerPage), "AllServers");
+            }
         }
 
         /// <summary>
@@ -66,7 +97,10 @@ namespace TeamCityNotifierWindowsStore
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
             var selectedItem = (ProjectPMod)this.flipView.SelectedItem;
-            pageState["SelectedItem"] = selectedItem.UniqueId;
+            if (selectedItem != null)
+            {
+               pageState["SelectedItem"] = selectedItem.UniqueId; 
+            }
         }
 
         /// <summary>
@@ -80,32 +114,19 @@ namespace TeamCityNotifierWindowsStore
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
             var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
-            this.Frame.Navigate(typeof(ItemDetailPage), itemId);
+            this.Frame.Navigate(typeof(ProjectDetailPage), itemId);
         }
 
         private void ItemView_BuildDefinitionItemClick(object sender, ItemClickEventArgs e)
         {
             var buildRepositoryUrl = ((BuildDefinitionPMod)e.ClickedItem).BuildRepositoryUrl;
-
             this.Frame.Navigate(typeof(BuildDefinitionPage), buildRepositoryUrl);
         }
 
         private void FlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedProject = (ProjectPMod)((FlipView)sender).SelectedItem;
-
-            if (selectedProject.Parent is ServerPMod)
-            {
-                this.DefaultViewModel["Projects"] = ((ServerPMod)selectedProject.Parent).Projects; 
-            }
-            else if (selectedProject.Parent is ProjectPMod)
-            {
-                this.DefaultViewModel["Projects"] = ((ProjectPMod)selectedProject.Parent).Projects; 
-            }
-
-            this.DefaultViewModel["SubItems"] = selectedProject.Projects;
-
-            this.DefaultViewModel["BuildDefinitions"] = selectedProject.BuildDefinitions;
+            this.SetData(selectedProject);
         }
     }
 }

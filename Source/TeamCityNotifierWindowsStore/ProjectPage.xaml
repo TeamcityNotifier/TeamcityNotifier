@@ -1,6 +1,6 @@
 ﻿<common:LayoutAwarePage
     x:Name="PageRoot"
-    x:Class="TeamCityNotifierWindowsStore.ItemDetailPage"
+    x:Class="TeamCityNotifierWindowsStore.ProjectDetailPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -32,19 +32,19 @@
         <CollectionViewSource
             x:Name="itemsViewSource"
             Source="{Binding Projects}"
-            d:Source="{Binding AllGroups[0].Projects, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].Projects, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="subItemsViewSource"
             Source="{Binding SubProjects}"
-            d:Source="{Binding AllGroups[0].Projects[0].Projects, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].Projects[0].Projects, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="buildDefinitionsViewSource"
             Source="{Binding BuildDefinitions}"
-            d:Source="{Binding AllGroups[0].Projects[0].BuildDefinitions, Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].Projects[0].BuildDefinitions, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
 
     </Page.Resources>
 
@@ -56,7 +56,7 @@
     <Grid
         Style="{StaticResource LayoutRootStyle}"
         DataContext="{Binding Parent}"
-        d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:DummyData, IsDesignTimeCreatable=True}}">
+        d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>

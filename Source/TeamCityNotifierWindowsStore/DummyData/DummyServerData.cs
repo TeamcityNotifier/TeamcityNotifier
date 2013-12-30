@@ -4,14 +4,13 @@
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    using TeamCityNotifierWindowsStore.Data;
     using TeamCityNotifierWindowsStore.DataModel;
 
-    public class DummyData
+    public class DummyServerData
     {
         private readonly ObservableCollection<ServerPMod> allGroups;
 
-        public DummyData()
+        public DummyServerData()
         {
             this.allGroups = new ObservableCollection<ServerPMod> { GetDummyServerPMod() };
         }
