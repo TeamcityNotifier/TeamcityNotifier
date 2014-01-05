@@ -46,13 +46,13 @@ namespace TeamcityNotifier.Test
         [Test]
         public void Ctor_WhenProjectRepositoryIsCreated_UrlIsSet()
         {
-            Assert.That(this.testee.Url, Is.Not.Null);
+            this.testee.Url.Should().NotBeNull();
         }
 
         [Test]
         public void Ctor_WhenProjectRepositoryIsCreated_BaseTypeIsSetToProjects()
         {
-            Assert.That(this.testee.BaseType, Is.EqualTo(typeof(project)));
+            this.testee.BaseType.Should().Be(typeof(project));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace TeamcityNotifier.Test
         {
             this.testee.SetData(this.projectDto);
 
-            Assert.That(this.testee.Id, Is.EqualTo(this.projectDto.id));
+            this.testee.Id.Should().Be(this.projectDto.id);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace TeamcityNotifier.Test
         {
             this.testee.SetData(this.projectDto);
 
-            Assert.That(this.testee.Name, Is.EqualTo(this.projectDto.name));
+            this.testee.Name.Should().Be(this.projectDto.name);
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace TeamcityNotifier.Test
         {
             this.testee.SetData(this.projectDto);
 
-            Assert.That(this.testee.Description, Is.EqualTo(this.projectDto.description));
+            this.testee.Description.Should().Be(this.projectDto.description);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace TeamcityNotifier.Test
         {
             this.testee.SetData(this.projectDto);
 
-            Assert.That(this.testee.BuildDefinitions.Count(), Is.EqualTo(this.projectDto.buildTypes.Count));
+            this.testee.BuildDefinitions.Count().Should().Be(this.projectDto.buildTypes.Count);
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace TeamcityNotifier.Test
         {
             this.testee.SetData(this.projectDto);
 
-            Assert.That(this.testee.Dependencies, Is.EqualTo(this.testee.BuildDefinitions));
+            this.testee.Dependencies.Should().BeEquivalentTo(this.testee.BuildDefinitions);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace TeamcityNotifier.Test
         {
             this.testee.SetData(this.projectDto);
 
-            Assert.That(this.testee.ParentId, Is.EqualTo(projectDto.parentProject.id));
+            this.testee.ParentId.Should().Be(projectDto.parentProject.id);
         }
 
         [Test]
@@ -124,13 +124,11 @@ namespace TeamcityNotifier.Test
         [Test]
         public void ParentId_WhenParentIdChanges_PropertyChangedIsFiredWithParentIdArgumentIsRaised()
         {
-            var eventRaised = false;
-
-            this.testee.PropertyChanged += (sender, args) => eventRaised = true;
+            this.testee.MonitorEvents();
 
             this.testee.SetData(this.projectDto);
 
-            Assert.IsTrue(eventRaised);
+            this.testee.ShouldRaisePropertyChangeFor(project => project.ParentId);
         }
 
 
@@ -141,7 +139,7 @@ namespace TeamcityNotifier.Test
 
             this.testee.AddChild(childProject);
 
-            Assert.That(this.testee.ChildProjects, Contains.Item(childProject));
+            this.testee.ChildProjects.Should().Contain(childProject);
         }
 
         [Test]
@@ -153,7 +151,7 @@ namespace TeamcityNotifier.Test
 
             this.testee.RemoveChild(childProject);
 
-            Assert.That(this.testee.ChildProjects, Is.Empty);
+            this.testee.ChildProjects.Should().BeEmpty();
         }
 
     }

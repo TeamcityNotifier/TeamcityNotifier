@@ -5,6 +5,8 @@
 
     using DataAbstraction;
 
+    using FluentAssertions;
+
     using NUnit.Framework;
 
     [TestFixture]
@@ -23,13 +25,13 @@
         [Test]
         public void Ctor_WhenBuildRepositoryIsCreated_UrlIsSet()
         {
-            Assert.That(testee.Url, Is.Not.Null);
+            this.testee.Url.Should().NotBeNull();
         }
 
         [Test]
         public void Ctor_WhenBuildRepositoryIsCreated_BaseTypeIsSetToBuilds()
         {
-            Assert.That(testee.BaseType, Is.EqualTo(typeof(builds)));
+            testee.BaseType.Should().Be(typeof(builds));
         }
 
         [Test]
@@ -48,7 +50,7 @@
 
             this.testee.SetData(buildsDto);
 
-            Assert.That(testee.Builds.Count(), Is.EqualTo(2));
+            testee.Builds.Count().Should().Be(2);
         }
 
         [Test]
@@ -67,7 +69,7 @@
 
             this.testee.SetData(buildsDto);
 
-            Assert.That(testee.Dependencies.Count(), Is.EqualTo(2));
+            testee.Dependencies.Count().Should().Be(2);
         }
     }
 }

@@ -5,6 +5,8 @@
 
     using DataAbstraction;
 
+    using FluentAssertions;
+
     using NUnit.Framework;
 
     [TestFixture]
@@ -23,13 +25,13 @@
         [Test]
         public void Ctor_WhenProjectRepositoryIsCreated_UrlIsSet()
         {
-            Assert.That(testee.Url, Is.Not.Null);
+            this.testee.Url.Should().NotBeNull();
         }
 
         [Test]
         public void Ctor_WhenProjectRepositoryIsCreated_BaseTypeIsSetToProjects()
         {
-            Assert.That(testee.BaseType, Is.EqualTo(typeof(projects1)));
+            testee.BaseType.Should().Be(typeof(projects1));
         }
 
         [Test]
@@ -48,7 +50,7 @@
 
             this.testee.SetData(projects1Dto);
 
-            Assert.That(testee.Projects.Count(), Is.EqualTo(2));
+            testee.Projects.Count().Should().Be(2);
         }
 
         [Test]
@@ -67,7 +69,7 @@
 
             this.testee.SetData(projects1Dto);
 
-            Assert.That(testee.Dependencies.Count(), Is.EqualTo(2));
+            testee.Dependencies.Count().Should().Be(2);
         }
 
         [Test]
@@ -87,7 +89,7 @@
 
             this.testee.SetData(projects1Dto);
 
-            Assert.That(testee.Projects.First().Url, Is.EqualTo(project1href));
+            testee.Projects.First().Url.Should().Be(project1href);
         }
 
         [Test]
@@ -118,7 +120,7 @@
             parentProject.SetData(parentProjectDto);
             childProject.SetData(childProjectDto);
 
-            Assert.That(this.testee.Projects.First(project => project.Url == parentProject.Url).ChildProjects, Contains.Item(childProject));
+            this.testee.Projects.First(project => project.Url == parentProject.Url).ChildProjects.Should().Contain(childProject);
         }
 
         [Test]
@@ -157,7 +159,7 @@
 
             childProject.SetData(changedParentchildProjectDto);
 
-            Assert.That(this.testee.Projects.First(project => project.Url == parentProject.Url).ChildProjects, Is.Empty);
+            this.testee.Projects.First(project => project.Url == parentProject.Url).ChildProjects.Should().BeEmpty();
         }
 
     }

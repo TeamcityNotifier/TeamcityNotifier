@@ -64,8 +64,6 @@ namespace TeamcityNotifier
 
         public IRestConsumer RestConsumer { get; private set; }
 
-
-
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
             if (PropertyChanged != null)

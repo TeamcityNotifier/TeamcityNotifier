@@ -32,13 +32,13 @@
         [Test]
         public void Ctor_WhenBuildIsCreated_UrlIsSet()
         {
-            Assert.That(this.testee.Url, Is.Not.Null);
+            this.testee.Url.Should().NotBeNull();
         }
 
         [Test]
         public void Ctor_WhenBuildIsCreated_BaseTypeIsSetToBuild()
         {
-            Assert.That(this.testee.BaseType, Is.EqualTo(typeof(build)));
+            this.testee.BaseType.Should().Be(typeof(build));
         }
 
         [Test]
@@ -46,7 +46,7 @@
         {
             this.testee.SetData(this.buildDto);
 
-            Assert.That(this.testee.Id, Is.EqualTo(this.buildDto.id));
+            this.testee.Id.Should().Be(this.buildDto.id);
         }
 
         [Test]
@@ -54,7 +54,7 @@
         {
             this.testee.SetData(this.buildDto);
 
-            Assert.That(this.testee.Number, Is.EqualTo(this.buildDto.number));
+            this.testee.Number.Should().Be(this.buildDto.number);
         }
 
         [Test]
@@ -62,7 +62,7 @@
         {
             this.testee.SetData(this.buildDto);
 
-            Assert.That(this.testee.StartDate, Is.EqualTo(this.buildDto.startDate));
+            this.testee.StartDate.Should().Be(this.buildDto.startDate);
         }
 
         [Test]
@@ -70,7 +70,7 @@
         {
             this.testee.SetData(this.buildDto);
 
-            Assert.That(this.testee.FinishDate, Is.EqualTo(this.buildDto.finishDate));
+            this.testee.FinishDate.Should().Be(this.buildDto.finishDate);
         }
 
         [Test]
@@ -78,7 +78,7 @@
         {
             this.testee.SetData(this.buildDto);
 
-            Assert.That(this.testee.Dependencies, Is.Empty);
+            this.testee.Dependencies.Should().BeEmpty();
         }
 
         [Test]

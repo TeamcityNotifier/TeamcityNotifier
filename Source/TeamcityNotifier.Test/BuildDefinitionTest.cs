@@ -36,13 +36,13 @@
         [Test]
         public void Ctor_WhenBuildTypeIsCreated_UrlIsSet()
         {
-            Assert.That(this.testee.Url, Is.Not.Null);
+            this.testee.Url.Should().NotBeNull();
         }
 
         [Test]
         public void Ctor_WhenBuildTypeIsCreated_BaseTypeIsSetTobuildType()
         {
-            Assert.That(this.testee.BaseType, Is.EqualTo(typeof(buildType)));
+            this.testee.BaseType.Should().Be(typeof(buildType));
         }
 
         [Test]
@@ -50,7 +50,7 @@
         {
             this.testee.SetData(this.buildTypeDto);
 
-            Assert.That(this.testee.Id, Is.EqualTo(this.buildTypeDto.id));
+            this.testee.Id.Should().Be(this.buildTypeDto.id);
         }
 
         [Test]
@@ -58,7 +58,7 @@
         {
             this.testee.SetData(this.buildTypeDto);
 
-            Assert.That(this.testee.Name, Is.EqualTo(this.buildTypeDto.name));
+            this.testee.Name.Should().Be(this.buildTypeDto.name);
         }
 
         [Test]
@@ -66,11 +66,11 @@
         {
             this.testee.SetData(this.buildTypeDto);
 
-            Assert.That(this.testee.Description, Is.EqualTo(this.buildTypeDto.description));
+            this.testee.Description.Should().Be(this.buildTypeDto.description);
         }
 
         [Test]
-        public void SetData_WhenSettingDto_NoDependenciesAreSet()
+        public void SetData_WhenSettingDto_DependenciesAreSet()
         {
             this.testee.SetData(this.buildTypeDto);
 
