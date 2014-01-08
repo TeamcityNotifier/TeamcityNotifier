@@ -1,7 +1,6 @@
 ﻿namespace TeamcityNotifier
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     using TeamcityNotifier.Wrapper;
 
@@ -22,6 +21,10 @@
 
             foreach (var configuration in this.configurations)
             {
+                if (configuration.BaseUrl == string.Empty)
+                {
+                    continue;
+                }
                 var server = new Server(wrapperFactory, configuration);
 
                 server.Projects = this.GetProjectRepository(server).Projects;
@@ -34,14 +37,11 @@
 
         public IProjectRepository GetProjectRepository(IServer server)
         {
-            var restConsumer = server.RestConsumer;
-
             var projectRepository = new ProjectRepository(HttpRelativeUrl.PROJECT_URL);
 
-            restConsumer.Load(projectRepository);
+            server.RestConsumer.Load(projectRepository);
 
             return projectRepository;
         }
-
     }
 }

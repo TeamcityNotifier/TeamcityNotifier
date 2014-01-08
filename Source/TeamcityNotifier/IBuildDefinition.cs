@@ -9,6 +9,5 @@
         string Id { get; }
         Status Status { get; }
         IBuildRepository BuildRepository { get; }
-        IBuild LastBuild { get;  set; }
     }
 }

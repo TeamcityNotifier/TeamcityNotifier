@@ -51,6 +51,7 @@
     <Compile Include="IRestObject.cs" />
     <Compile Include="IServer.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="IUpdater.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectRepository.cs" />
     <Compile Include="Properties\Annotations.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Server.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Status.cs" />
+    <Compile Include="Updater.cs" />
     <Compile Include="Wrapper\WrapperFactory.cs" />
     <Compile Include="Wrapper\HttpClientWrapper.cs" />
     <Compile Include="Wrapper\IWrapperFactory.cs" />

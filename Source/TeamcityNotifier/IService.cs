@@ -5,5 +5,9 @@
     public interface IService
     {
         IEnumerable<IServer> GetServers();
+
+        void StartPeriodicallyUpdating(IEnumerable<IServer> servers);
+
+        void StartPeriodicallyUpdating(IServer servers);
     }
 }

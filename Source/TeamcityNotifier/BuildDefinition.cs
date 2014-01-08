@@ -10,8 +10,6 @@
     {
         private readonly string url;
 
-        private IBuild lastBuild;
-
         private IBuildRepository buildRepository;
 
         private string description;
@@ -143,26 +141,6 @@
             }
         }
 
-        IBuild IBuildDefinition.LastBuild
-        {
-            get
-            {
-                return this.lastBuild;
-            }
-            set
-            {
-
-                if (this.lastBuild == value)
-                {
-                    return;
-                }
-
-                this.lastBuild = value;
-                this.Status = value.Status;
-                this.OnPropertyChanged("LastBuild");
-            }
-        }
-
         public void SetData(object obj)
         {
             var baseObject = (buildType) obj;
@@ -171,7 +149,7 @@
             this.Name = baseObject.name;
             this.Description = baseObject.description;
             this.BuildRepository = new BuildRepository(baseObject.builds.href + "?locator=count:1");
-            
+            this.BuildRepository.PropertyChanged += BuildRepositoryOnPropertyChanged;
         }
 
         protected virtual void OnPropertyChanged(string propertyName = null)
@@ -182,5 +160,13 @@
             }
         }
 
+        private void BuildRepositoryOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == "LastBuild")
+            {
+                var lastBuild = this.buildRepository.LastBuild;
+                this.Status = lastBuild.Status;
+            }
+        }
     }
 }

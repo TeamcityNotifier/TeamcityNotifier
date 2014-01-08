@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
 
     using DataAbstraction;
 
@@ -9,7 +11,11 @@
     {
         private readonly string url;
 
-        private readonly List<IBuild> builds; 
+        private IBuild lastBuild;
+
+        private readonly List<IBuild> builds;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public BuildRepository(string url)
         {
@@ -41,6 +47,25 @@
             }
         }
 
+        public IBuild LastBuild
+        {
+            get
+            {
+                return this.lastBuild;
+            }
+            set
+            {
+
+                if (this.lastBuild == value)
+                {
+                    return;
+                }
+
+                this.lastBuild = value;
+                this.OnPropertyChanged("LastBuild");
+            }
+        }
+
         public IEnumerable<IBuild> Builds
         {
             get
@@ -53,9 +78,21 @@
         {
             var baseObject = (builds)obj;
 
+            this.builds.Clear();
+
             foreach (var build in baseObject.build)
             {
                 this.builds.Add(new Build(build.href));
+            }
+
+            this.LastBuild = this.builds.FirstOrDefault();
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

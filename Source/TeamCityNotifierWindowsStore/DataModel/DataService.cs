@@ -72,13 +72,14 @@ namespace TeamCityNotifierWindowsStore.DataModel
             AllServers = new ObservableCollection<ServerPMod>();
             var serverConfigurations = GetServerConfigurations();
 
-            var service = new Service(new RestFactory(serverConfigurations , new WrapperFactory()));
+            IService service = new Service(new RestFactory(serverConfigurations , new WrapperFactory()));
 
             IEnumerable<IServer> servers = new List<IServer>();
 
             try
             {
                 servers = service.GetServers();
+                service.StartPeriodicallyUpdating(servers);
             }
             catch (Exception)
             {
