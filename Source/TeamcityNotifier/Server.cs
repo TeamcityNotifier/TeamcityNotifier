@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace TeamcityNotifier
 {
@@ -10,6 +12,7 @@ namespace TeamcityNotifier
     internal class Server : IServer
     {
         private Status status;
+        private ObservableCollection<IProject> _projects;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -24,9 +27,26 @@ namespace TeamcityNotifier
                 this.Uri,
                 factory.CreateHttpClientHandler(this.UserName, this.Password),
                 factory);
+
+            this._projects = new ObservableCollection<IProject>();
+            this._projects.CollectionChanged += BuildDefinitionsOnCollectionChanged;
         }
 
-        public IEnumerable<IProject> Projects { get; internal set; }
+        public IEnumerable<IProject> Projects
+        {
+            get
+            {
+                return _projects;
+            }
+            internal set
+            {
+                _projects.Clear();
+                foreach (var val in value)
+                {
+                    _projects.Add(val);
+                }
+            }
+        }
 
         public IProject RootProject
         {
@@ -72,6 +92,50 @@ namespace TeamcityNotifier
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+
+
+        private void BuildDefinitionsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var item in notifyCollectionChangedEventArgs.NewItems.OfType<IProject>())
+                {
+                    item.PropertyChanged += UpdateStatus;
+                }
+            }
+            else
+            {
+                foreach (var item in notifyCollectionChangedEventArgs.NewItems.OfType<IProject>())
+                {
+                    item.PropertyChanged -= UpdateStatus;
+                }
+            }
+        }
+
+        private void UpdateStatus(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == "Status")
+            {
+                UpdateStatus();
+            }
+        }
+
+        private void UpdateStatus()
+        {
+            var status = Status.Success;
+
+            if (this.Projects.Any(x => x.Status == Status.Failure))
+            {
+                status = Status.Failure;
+            }
+            if (this.Projects.Any(x => x.Status == Status.Error))
+            {
+                status = Status.Error;
+            }
+
+            this.Status = status;
         }
     }
 }

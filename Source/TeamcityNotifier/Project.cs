@@ -1,4 +1,8 @@
-﻿namespace TeamcityNotifier
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
+
+namespace TeamcityNotifier
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +14,9 @@
     {
         private readonly string url;
 
-        private readonly List<IBuildDefinition> buildDefinitions;
+        private readonly ObservableCollection<IBuildDefinition> buildDefinitions;
 
-        private readonly HashSet<IProject> childProjects;
+        private readonly ObservableCollection<IProject> childProjects;
 
         private Status status;
 
@@ -29,8 +33,11 @@
         public Project(string url)
         {
             this.url = url;
-            this.childProjects = new HashSet<IProject>();
-            this.buildDefinitions = new List<IBuildDefinition>();
+            this.childProjects = new ObservableCollection<IProject>();
+            this.childProjects.CollectionChanged += ChildProjectsOnCollectionChanged;
+            
+            this.buildDefinitions = new ObservableCollection<IBuildDefinition>();
+            this.buildDefinitions.CollectionChanged += BuildDefinitionsOnCollectionChanged;
         }
 
         public string Url
@@ -206,6 +213,68 @@
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+        
+        private void ChildProjectsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var item in notifyCollectionChangedEventArgs.NewItems.OfType<IProject>())
+                {
+                    item.PropertyChanged += UpdateStatus;
+                }
+            }
+            else
+            {
+                foreach (var item in notifyCollectionChangedEventArgs.NewItems.OfType<IProject>())
+                {
+                    item.PropertyChanged -= UpdateStatus;
+                }
+            }
+        }
+        
+        private void BuildDefinitionsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var item in notifyCollectionChangedEventArgs.NewItems.OfType<IBuildDefinition>())
+                {
+                    item.PropertyChanged += UpdateStatus;
+                }
+            }
+            else
+            {
+                foreach (var item in notifyCollectionChangedEventArgs.NewItems.OfType<IBuildDefinition>())
+                {
+                    item.PropertyChanged -= UpdateStatus;
+                }
+            }
+        }
+
+        private void UpdateStatus(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == "Status")
+            {
+                UpdateStatus();
+            }
+        }
+
+        private void UpdateStatus()
+        {
+            var status = Status.Success;
+
+            if (this.BuildDefinitions.Any(x => x.Status == Status.Failure) ||
+                this.ChildProjects.Any(x => x.Status == Status.Failure))
+            {
+                status = Status.Failure;
+            }
+            if (this.BuildDefinitions.Any(x => x.Status == Status.Error) ||
+                this.ChildProjects.Any(x => x.Status == Status.Error))
+            {
+                status = Status.Error;
+            }
+
+            this.Status = status;
         }
     }
 }

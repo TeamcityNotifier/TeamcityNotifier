@@ -22,11 +22,14 @@
 
             foreach (var configuration in this.configurations)
             {
-                var server = new Server(wrapperFactory, configuration);
+                if (IsValid(configuration))
+                {
+                    var server = new Server(wrapperFactory, configuration);
 
-                server.Projects = this.GetProjectRepository(server).Projects;
+                    server.Projects = this.GetProjectRepository(server).Projects;
 
-                servers.Add(server);
+                    servers.Add(server);
+                }
             }
 
             return servers;
@@ -41,6 +44,13 @@
             restConsumer.Load(projectRepository);
 
             return projectRepository;
+        }
+
+        private bool IsValid(IRestConfiguration configuration)
+        {
+            return configuration.BaseUrl != string.Empty
+                && configuration.UserName != string.Empty
+                && configuration.Password != string.Empty;
         }
 
     }

@@ -143,7 +143,7 @@
             }
         }
 
-        IBuild IBuildDefinition.LastBuild
+        public IBuild LastBuild
         {
             get
             {
