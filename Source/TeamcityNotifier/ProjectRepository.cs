@@ -13,6 +13,10 @@
 
         private readonly List<IProject> projects;
 
+        private Status status;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ProjectRepository(string url)
         {
             this.url = url;
@@ -43,6 +47,24 @@
             }
         }
 
+        public Status Status
+        {
+            get
+            {
+                return this.status;
+            }
+            set
+            {
+                if (this.status == value)
+                {
+                    return;
+                }
+
+                this.status = value;
+                this.OnPropertyChanged("Status");
+            }
+        }
+
         public IEnumerable<IProject> Projects
         {
             get
@@ -53,20 +75,44 @@
 
         public void SetData(object obj)
         {
-            var baseObject = (projects1) obj;
+            var baseObject = (projects1)obj;
 
-            foreach (var projectRef in baseObject.project)
+            this.ClearProjects();
+
+            this.FillProjects(baseObject.project);
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void ClearProjects()
+        {
+            foreach (var project in this.projects)
+            {
+                project.PropertyChanged -= this.ProjectOnPropertyChanged;
+            }
+
+            this.projects.Clear();
+
+            this.OnPropertyChanged("Projects");
+        }
+
+        private void FillProjects(IEnumerable<projectref> projectRefs)
+        {
+            foreach (var projectRef in projectRefs)
             {
                 var project = new Project(projectRef.href);
-                project.PropertyChanged += ProjectOnPropertyChanged;
-
                 this.projects.Add(project);
 
-                if (!string.IsNullOrEmpty(project.ParentId))
-                {
-                    this.AddToNewParent(project);
-                }
+                project.PropertyChanged += this.ProjectOnPropertyChanged;
             }
+
+            this.OnPropertyChanged("Projects");
         }
 
         private void ProjectOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -77,6 +123,10 @@
             {
                 this.RemoveFromCurrentParent(changedProject);
                 this.AddToNewParent(changedProject);
+            }
+            else if (propertyChangedEventArgs.PropertyName == "Status")
+            {
+                this.Status = changedProject.Status;
             }
         }
 

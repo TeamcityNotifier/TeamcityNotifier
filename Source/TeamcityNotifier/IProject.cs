@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    public interface IProject : IRestObject, INotifyPropertyChanged
+    public interface IProject : IRestObject
     {
         string Id { get; }
         string Name { get; }

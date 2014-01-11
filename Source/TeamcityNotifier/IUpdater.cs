@@ -5,5 +5,7 @@
         void Register(IRestObject restObject);
 
         void Start();
+
+        void Stop();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace TeamcityNotifier
 {
-    using System.Collections.Generic;
     using System.Linq;
 
     using TeamcityNotifier.Wrapper;
@@ -10,6 +9,8 @@ namespace TeamcityNotifier
     internal class Server : IServer
     {
         private Status status;
+
+        private IProjectRepository buildRepository;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -26,15 +27,15 @@ namespace TeamcityNotifier
                 factory);
         }
 
-        public IEnumerable<IProject> Projects { get; internal set; }
+        public string Name { get; private set; }
 
-        public IProject RootProject
-        {
-            get
-            {
-                return Projects.FirstOrDefault(x => !x.HasParent);
-            }
-        }
+        public string UserName { get; private set; }
+
+        public string Password { get; private set; }
+
+        public IUri Uri { get; private set; }
+
+        public IRestConsumer RestConsumer { get; private set; }
 
         public Status Status
         {
@@ -54,21 +55,46 @@ namespace TeamcityNotifier
             }
         }
 
-        public string Name { get; private set; }
+        public IProjectRepository BuildRepository
+        {
+            get
+            {
+                return this.buildRepository;
+            }
+            internal set
+            {
+                if (this.buildRepository == value)
+                {
+                    return;
+                }
 
-        public string UserName { get; private set; }
+                this.buildRepository = value;
+                this.buildRepository.PropertyChanged += this.UpdateStatus;
+                this.OnPropertyChanged("BuildRepository");
+            }
+        }
 
-        public string Password { get; private set; }
-
-        public IUri Uri { get; private set; }
-
-        public IRestConsumer RestConsumer { get; private set; }
+        public IProject RootProject
+        {
+            get
+            {
+                return this.BuildRepository.Projects.FirstOrDefault(x => !x.HasParent);
+            }
+        }
 
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void UpdateStatus(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == "Status")
+            {
+                this.Status = BuildRepository.Status;
             }
         }
     }

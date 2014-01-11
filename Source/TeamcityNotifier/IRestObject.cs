@@ -2,8 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
 
-    public interface IRestObject
+    public interface IRestObject : INotifyPropertyChanged
     {
         string Url { get; }
 

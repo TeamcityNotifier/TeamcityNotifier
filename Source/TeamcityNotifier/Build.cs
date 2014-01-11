@@ -20,6 +20,8 @@
 
         private string startDate;
 
+        private string webUrl;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Build(string url)
@@ -66,6 +68,24 @@
 
                 this.id = value;
                 this.OnPropertyChanged("Id");
+            }
+        }
+
+        public string WebUrl
+        {
+            get
+            {
+                return this.webUrl;
+            }
+            set
+            {
+                if (this.webUrl == value)
+                {
+                    return;
+                }
+
+                this.webUrl = value;
+                this.OnPropertyChanged("WebUrl");
             }
         }
 
@@ -146,10 +166,11 @@
             var baseObject = (build)obj;
 
             this.Id = baseObject.id;
+            this.WebUrl = baseObject.webUrl;
+            this.Status = EnumParser.GetStatusFor(baseObject.status);
             this.Number = baseObject.number;
             this.StartDate = baseObject.startDate;
             this.FinishDate = baseObject.finishDate;
-            this.Status = EnumParser.GetStatusFor(baseObject.status);
         }
 
         protected virtual void OnPropertyChanged(string propertyName = null)

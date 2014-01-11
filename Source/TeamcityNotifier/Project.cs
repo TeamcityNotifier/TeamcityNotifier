@@ -1,4 +1,6 @@
-﻿namespace TeamcityNotifier
+﻿using System.Linq;
+
+namespace TeamcityNotifier
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +14,7 @@
 
         private readonly List<IBuildDefinition> buildDefinitions;
 
-        private readonly HashSet<IProject> childProjects;
+        private readonly List<IProject> childProjects;
 
         private Status status;
 
@@ -29,7 +31,7 @@
         public Project(string url)
         {
             this.url = url;
-            this.childProjects = new HashSet<IProject>();
+            this.childProjects = new List<IProject>();
             this.buildDefinitions = new List<IBuildDefinition>();
         }
 
@@ -178,11 +180,17 @@
         public void AddChild(IProject childProject)
         {
             this.childProjects.Add(childProject);
+            childProject.PropertyChanged += this.BuildDefinitionOnPropertyChanged;
+
+            this.OnPropertyChanged("ChildProjects");
         }
 
         public void RemoveChild(IProject childProject)
         {
             this.childProjects.Remove(childProject);
+            childProject.PropertyChanged -= this.BuildDefinitionOnPropertyChanged;
+
+            this.OnPropertyChanged("ChildProjects");
         }
 
         public void SetData(object obj)
@@ -194,18 +202,67 @@
             this.Description = baseObject.description;
             this.ParentId = baseObject.parentProject.id;
 
-            foreach (var buildTypeRef in baseObject.buildTypes)
-            {
-                this.buildDefinitions.Add(new BuildDefinition(buildTypeRef.href));
-            }
+            this.ClearBuildDefinitions();
+            this.FillBuildDefinitions(baseObject.buildTypes);
         }
 
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
-            if (PropertyChanged != null)
+            if (this.PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private void ClearBuildDefinitions()
+        {
+            foreach (var buildDefinition in this.buildDefinitions)
+            {
+                buildDefinition.PropertyChanged -= this.BuildDefinitionOnPropertyChanged;
+            }
+
+            this.buildDefinitions.Clear();
+
+            this.OnPropertyChanged("BuildDefinitions");
+        }
+
+        private void FillBuildDefinitions(IEnumerable<buildTyperef> buildTypeRefs)
+        {
+            foreach (var buildTypeRef in buildTypeRefs)
+            {
+                var buildDefinition = new BuildDefinition(buildTypeRef.href);
+                this.buildDefinitions.Add(buildDefinition);
+
+                buildDefinition.PropertyChanged += this.BuildDefinitionOnPropertyChanged;
+            }
+
+            this.OnPropertyChanged("BuildDefinitions");
+        }
+
+        private void BuildDefinitionOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == "Status")
+            {
+                this.BuildDefinitionOnPropertyChanged();
+            }
+        }
+
+        private void BuildDefinitionOnPropertyChanged()
+        {
+            var newStatus = Status.Success;
+
+            if (this.BuildDefinitions.Any(x => x.Status == Status.Failure) ||
+                this.ChildProjects.Any(x => x.Status == Status.Failure))
+            {
+                newStatus = Status.Failure;
+            }
+            if (this.BuildDefinitions.Any(x => x.Status == Status.Error) ||
+                this.ChildProjects.Any(x => x.Status == Status.Error))
+            {
+                newStatus = Status.Error;
+            }
+
+            this.Status = newStatus;
         }
     }
 }

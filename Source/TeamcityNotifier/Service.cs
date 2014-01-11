@@ -32,7 +32,7 @@
             var updater = new Updater(server.RestConsumer);
             this.updaters.Add(updater);
 
-            foreach (var project in server.Projects)
+            foreach (var project in server.BuildRepository.Projects)
             {
                 foreach (var buildDefinition in project.BuildDefinitions)
                 {

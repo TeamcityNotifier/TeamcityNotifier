@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    public interface IBuildRepository : IRestObject, INotifyPropertyChanged
+    public interface IBuildRepository : IRestObject
     {
         IEnumerable<IBuild> Builds { get; }
 

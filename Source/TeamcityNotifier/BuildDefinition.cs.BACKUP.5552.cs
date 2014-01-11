@@ -141,6 +141,29 @@
             }
         }
 
+<<<<<<< HEAD
+=======
+        public IBuild LastBuild
+        {
+            get
+            {
+                return this.lastBuild;
+            }
+            set
+            {
+
+                if (this.lastBuild == value)
+                {
+                    return;
+                }
+
+                this.lastBuild = value;
+                this.Status = value.Status;
+                this.OnPropertyChanged("LastBuild");
+            }
+        }
+
+>>>>>>> 9770f962e4e1f7f9f0866ccf4207e506cbdad67d
         public void SetData(object obj)
         {
             var baseObject = (buildType) obj;
@@ -164,7 +187,8 @@
         {
             if (propertyChangedEventArgs.PropertyName == "LastBuild")
             {
-                this.Status = this.buildRepository.LastBuild.Status;
+                var lastBuild = this.buildRepository.LastBuild;
+                this.Status = lastBuild.Status;
             }
         }
     }

@@ -21,15 +21,14 @@
 
             foreach (var configuration in this.configurations)
             {
-                if (configuration.BaseUrl == string.Empty)
+                if (IsValid(configuration))
                 {
-                    continue;
+                    var server = new Server(wrapperFactory, configuration);
+
+                    server.BuildRepository = this.GetProjectRepository(server);
+
+                    servers.Add(server);
                 }
-                var server = new Server(wrapperFactory, configuration);
-
-                server.Projects = this.GetProjectRepository(server).Projects;
-
-                servers.Add(server);
             }
 
             return servers;
@@ -43,5 +42,13 @@
 
             return projectRepository;
         }
+
+        private bool IsValid(IRestConfiguration configuration)
+        {
+            return configuration.BaseUrl != string.Empty
+                && configuration.UserName != string.Empty
+                && configuration.Password != string.Empty;
+        }
+
     }
 }

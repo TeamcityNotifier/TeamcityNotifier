@@ -61,7 +61,7 @@
         {
             var servers = service.GetServers();
             servers.Count().Should().BeGreaterOrEqualTo(1, "No server retrned!");
-            var projects = servers.FirstOrDefault().Projects;
+            var projects = servers.FirstOrDefault().BuildRepository.Projects;
             projects.Count().Should().Be(2, "Wrong count of projects ist returned");
             
             var project = projects.FirstOrDefault();

@@ -2,7 +2,7 @@
 {
     using System.ComponentModel;
 
-    public interface IBuildDefinition : IRestObject, INotifyPropertyChanged
+    public interface IBuildDefinition : IRestObject
     {
         string Name { get; }
         string Description { get; }
