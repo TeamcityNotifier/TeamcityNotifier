@@ -4,34 +4,25 @@ namespace TeamcityNotifier
 {
     using System.Linq;
 
+    using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
 
     internal class Server : IServer
     {
         private Status status;
 
-        private IProjectRepository buildRepository;
+        private IProjectRepository projectRepository;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Server(IWrapperFactory factory, IRestConfiguration configuration)
+        public Server(string name, IUri uri, IRestConsumer restConsumer)
         {
-            this.UserName = configuration.UserName;
-            this.Password = configuration.Password;
-            this.Name = configuration.Name;
-            this.Uri = factory.CreateUri(configuration.BaseUrl);
-
-            this.RestConsumer = new RestConsumer(
-                this.Uri,
-                factory.CreateHttpClientHandler(this.UserName, this.Password),
-                factory);
+            this.Name = name;
+            this.Uri = uri;
+            this.RestConsumer = restConsumer;
         }
 
         public string Name { get; private set; }
-
-        public string UserName { get; private set; }
-
-        public string Password { get; private set; }
 
         public IUri Uri { get; private set; }
 
@@ -55,22 +46,23 @@ namespace TeamcityNotifier
             }
         }
 
-        public IProjectRepository BuildRepository
+        public IProjectRepository ProjectRepository
         {
             get
             {
-                return this.buildRepository;
+                return this.projectRepository;
             }
-            internal set
+
+            set
             {
-                if (this.buildRepository == value)
+                if (this.projectRepository == value)
                 {
                     return;
                 }
 
-                this.buildRepository = value;
-                this.buildRepository.PropertyChanged += this.UpdateStatus;
-                this.OnPropertyChanged("BuildRepository");
+                this.projectRepository = value;
+                this.projectRepository.PropertyChanged += this.UpdateStatus;
+                this.OnPropertyChanged("ProjectRepository");
             }
         }
 
@@ -78,7 +70,7 @@ namespace TeamcityNotifier
         {
             get
             {
-                return this.BuildRepository.Projects.FirstOrDefault(x => !x.HasParent);
+                return this.ProjectRepository.Projects.FirstOrDefault(x => !x.HasParent);
             }
         }
 
@@ -94,7 +86,7 @@ namespace TeamcityNotifier
         {
             if (propertyChangedEventArgs.PropertyName == "Status")
             {
-                this.Status = BuildRepository.Status;
+                this.Status = this.ProjectRepository.Status;
             }
         }
     }

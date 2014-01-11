@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
 
+    using TeamcityNotifier.RestObject;
+
     public interface IRestFactory
     {
         IEnumerable<IServer> CreateServers();

@@ -4,9 +4,11 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using TeamcityNotifier.RestObject;
+
     public class Updater : IUpdater
     {
-        private const int TimeIntervalInMilliseconds = 10000;
+        private const int TimeIntervalInMilliseconds = 60000;
 
         private readonly List<IRestObject> restObjectsToUpdate;
 

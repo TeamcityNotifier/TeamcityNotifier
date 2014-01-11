@@ -1,12 +1,13 @@
-﻿using System.Linq;
-
-namespace TeamcityNotifier
+﻿namespace TeamcityNotifier.RestObject
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
 
     using DataAbstraction;
+
+    using TeamcityNotifier.RestObject;
 
     internal class Project : IProject
     {
@@ -138,7 +139,7 @@ namespace TeamcityNotifier
         {
             get
             {
-                return !string.IsNullOrEmpty(ParentId);
+                return !string.IsNullOrEmpty(this.ParentId);
             }
         }
 
@@ -180,7 +181,7 @@ namespace TeamcityNotifier
         public void AddChild(IProject childProject)
         {
             this.childProjects.Add(childProject);
-            childProject.PropertyChanged += this.BuildDefinitionOnPropertyChanged;
+            childProject.PropertyChanged += this.UpdateStatus;
 
             this.OnPropertyChanged("ChildProjects");
         }
@@ -188,7 +189,7 @@ namespace TeamcityNotifier
         public void RemoveChild(IProject childProject)
         {
             this.childProjects.Remove(childProject);
-            childProject.PropertyChanged -= this.BuildDefinitionOnPropertyChanged;
+            childProject.PropertyChanged -= this.UpdateStatus;
 
             this.OnPropertyChanged("ChildProjects");
         }
@@ -218,7 +219,7 @@ namespace TeamcityNotifier
         {
             foreach (var buildDefinition in this.buildDefinitions)
             {
-                buildDefinition.PropertyChanged -= this.BuildDefinitionOnPropertyChanged;
+                buildDefinition.PropertyChanged -= this.UpdateStatus;
             }
 
             this.buildDefinitions.Clear();
@@ -233,21 +234,21 @@ namespace TeamcityNotifier
                 var buildDefinition = new BuildDefinition(buildTypeRef.href);
                 this.buildDefinitions.Add(buildDefinition);
 
-                buildDefinition.PropertyChanged += this.BuildDefinitionOnPropertyChanged;
+                buildDefinition.PropertyChanged += this.UpdateStatus;
             }
 
             this.OnPropertyChanged("BuildDefinitions");
         }
 
-        private void BuildDefinitionOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void UpdateStatus(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             if (propertyChangedEventArgs.PropertyName == "Status")
             {
-                this.BuildDefinitionOnPropertyChanged();
+                this.UpdateStatus();
             }
         }
 
-        private void BuildDefinitionOnPropertyChanged()
+        private void UpdateStatus()
         {
             var newStatus = Status.Success;
 

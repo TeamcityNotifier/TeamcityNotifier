@@ -6,11 +6,14 @@
     {
         private readonly IRestFactory restFactory;
 
+        private readonly INetworkFactory networkFactory;
+
         private readonly List<IUpdater> updaters;
 
-        public Service(IRestFactory restFactory)
+        public Service(IRestFactory restFactory, INetworkFactory networkFactory)
         {
             this.restFactory = restFactory;
+            this.networkFactory = networkFactory;
             this.updaters = new List<IUpdater>();
         }
 
@@ -29,10 +32,10 @@
 
         public void StartPeriodicallyUpdating(IServer server)
         {
-            var updater = new Updater(server.RestConsumer);
+            var updater = networkFactory.CreateUpdater(server.RestConsumer);
             this.updaters.Add(updater);
 
-            foreach (var project in server.BuildRepository.Projects)
+            foreach (var project in server.ProjectRepository.Projects)
             {
                 foreach (var buildDefinition in project.BuildDefinitions)
                 {

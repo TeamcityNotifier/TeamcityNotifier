@@ -1,13 +1,18 @@
 ﻿namespace TeamcityNotifier.Test
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
 
     using DataAbstraction;
 
+    using FakeItEasy;
+
     using FluentAssertions;
 
     using NUnit.Framework;
+
+    using TeamcityNotifier.RestObject;
 
     [TestFixture]
     public class ProjectRepositoryTest
@@ -162,5 +167,16 @@
             this.testee.Projects.First(project => project.Url == parentProject.Url).ChildProjects.Should().BeEmpty();
         }
 
+        [Test]
+        public void StatusChangedEvent_WhenProjectStatusChanged_ProjectRepositoryStatusIsUpdated()
+        {
+            
+        }
+
+        [Test]
+        public void StatusChangedEvent_WhenProjectStatusChanged_TheNotifyPropertyChangedOfStatusIsFired()
+        {
+            
+        } 
     }
 }

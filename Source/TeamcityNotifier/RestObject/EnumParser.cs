@@ -1,4 +1,4 @@
-﻿namespace TeamcityNotifier
+﻿namespace TeamcityNotifier.RestObject
 {
     internal class EnumParser
     {

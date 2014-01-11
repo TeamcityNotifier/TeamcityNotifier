@@ -1,7 +1,5 @@
-﻿namespace TeamcityNotifier
+﻿namespace TeamcityNotifier.RestObject
 {
-    using System.ComponentModel;
-
     public interface IBuildDefinition : IRestObject
     {
         string Name { get; }

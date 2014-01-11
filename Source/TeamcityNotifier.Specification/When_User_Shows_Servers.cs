@@ -54,9 +54,11 @@
                 A.CallTo(() => configuration.Name).Returns("serverName2");
                 restConfigurations.Add(configuration);
 
-                var factory = new RestFactory(restConfigurations, mockWrapperFactory);
+                var networkFactory = new NetworkFactory();
 
-                service = new Service(factory);
+                var factory = new RestFactory(restConfigurations, mockWrapperFactory, networkFactory);
+
+                service = new Service(factory, networkFactory);
             };
 
         private It should_returne_the_configured_servers = () =>
@@ -64,8 +66,6 @@
         var servers = service.GetServers();
         servers.Count().Should().Be(2, "Wrong count of servers is returned!");
         var server = servers.FirstOrDefault();
-        server.UserName.Should().Be("user1", "Wrong username is configured");
-        server.Password.Should().Be("password1", "Wrong password is configured");
         server.Name.Should().Be("serverName1", "Wrong server name is configured");
     };
     }

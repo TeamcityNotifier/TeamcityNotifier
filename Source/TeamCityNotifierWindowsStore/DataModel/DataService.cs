@@ -12,6 +12,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
     using System.Linq;
 
     using TeamcityNotifier;
+    using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
 
     /// <summary>
@@ -71,8 +72,9 @@ namespace TeamCityNotifierWindowsStore.DataModel
         {
             AllServers = new ObservableCollection<ServerPMod>();
             var serverConfigurations = GetServerConfigurations();
+            var networkFactory = new NetworkFactory();
 
-            IService service = new Service(new RestFactory(serverConfigurations , new WrapperFactory()));
+            IService service = new Service(new RestFactory(serverConfigurations, new WrapperFactory(), networkFactory), networkFactory);
 
             IEnumerable<IServer> servers = new List<IServer>();
 

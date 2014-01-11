@@ -8,6 +8,8 @@
 
     using NUnit.Framework;
 
+    using TeamcityNotifier.RestObject;
+
     [TestFixture]
     public class BuildDefinitionTest
     {

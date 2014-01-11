@@ -1,4 +1,4 @@
-﻿namespace TeamcityNotifier
+﻿namespace TeamcityNotifier.RestObject
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +27,7 @@
         {
             get
             {
-                return url;
+                return this.url;
             }
         }
 
@@ -84,9 +84,9 @@
 
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
-            if (PropertyChanged != null)
+            if (this.PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -126,7 +126,7 @@
             }
             else if (propertyChangedEventArgs.PropertyName == "Status")
             {
-                this.Status = changedProject.Status;
+                this.UpdateStatus();
             }
         }
 
@@ -144,6 +144,22 @@
         {
             var parentProject = this.Projects.FirstOrDefault(project => project.Id == changedProject.ParentId);
             parentProject.AddChild(changedProject);
+        }
+
+        private void UpdateStatus()
+        {
+            var newStatus = Status.Success;
+
+            if (this.Projects.Any(x => x.Status == Status.Failure))
+            {
+                newStatus = Status.Failure;
+            }
+            if (this.Projects.Any(x => x.Status == Status.Error))
+            {
+                newStatus = Status.Error;
+            }
+
+            this.Status = newStatus;
         }
     }
 }

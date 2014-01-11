@@ -1,10 +1,12 @@
-﻿namespace TeamcityNotifier
+﻿namespace TeamcityNotifier.RestObject
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
 
     using DataAbstraction;
+
+    using TeamcityNotifier.RestObject;
 
     internal class BuildDefinition : IBuildDefinition
     {
@@ -137,7 +139,7 @@
                 }
 
                 this.buildRepository = value;
-                this.OnPropertyChanged("BuildRepository");
+                this.OnPropertyChanged("ProjectRepository");
             }
         }
 
@@ -149,14 +151,14 @@
             this.Name = baseObject.name;
             this.Description = baseObject.description;
             this.BuildRepository = new BuildRepository(baseObject.builds.href + "?locator=count:1");
-            this.BuildRepository.PropertyChanged += BuildRepositoryOnPropertyChanged;
+            this.BuildRepository.PropertyChanged += this.BuildRepositoryOnPropertyChanged;
         }
 
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
-            if (PropertyChanged != null)
+            if (this.PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

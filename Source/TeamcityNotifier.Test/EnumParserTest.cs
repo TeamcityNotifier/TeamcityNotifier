@@ -2,7 +2,9 @@
 {
     using NUnit.Framework;
     using FluentAssertions;
-    
+
+    using TeamcityNotifier.RestObject;
+
     [TestFixture]
     public class EnumParserTest
     {

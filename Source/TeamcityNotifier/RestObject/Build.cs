@@ -1,11 +1,13 @@
-﻿namespace TeamcityNotifier
+﻿namespace TeamcityNotifier.RestObject
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
 
     using DataAbstraction;
-    
+
+    using TeamcityNotifier.RestObject;
+
     internal class Build : IBuild
     {
         private readonly string url;
@@ -175,9 +177,9 @@
 
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
-            if (PropertyChanged != null)
+            if (this.PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

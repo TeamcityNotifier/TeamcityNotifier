@@ -2,17 +2,20 @@
 {
     using System.Collections.Generic;
 
+    using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
 
     public class RestFactory : IRestFactory
     {
         private readonly IEnumerable<IRestConfiguration> configurations;
         private readonly IWrapperFactory wrapperFactory;
+        private readonly INetworkFactory networkFactory;
 
-        public RestFactory(IEnumerable<IRestConfiguration> configurations, IWrapperFactory wrapperFactory)
+        public RestFactory(IEnumerable<IRestConfiguration> configurations, IWrapperFactory wrapperFactory, INetworkFactory networkFactory)
         {
             this.configurations = configurations;
             this.wrapperFactory = wrapperFactory;
+            this.networkFactory = networkFactory;
         }
 
         public IEnumerable<IServer> CreateServers()
@@ -23,9 +26,16 @@
             {
                 if (IsValid(configuration))
                 {
-                    var server = new Server(wrapperFactory, configuration);
+                    var serverBaseUri = wrapperFactory.CreateUri(configuration.BaseUrl);
 
-                    server.BuildRepository = this.GetProjectRepository(server);
+                    var restConsumer = networkFactory.CreateRestConsumer(
+                        serverBaseUri,
+                        wrapperFactory.CreateHttpClientHandler(configuration.UserName, configuration.Password), 
+                        wrapperFactory);
+
+                    var server = new Server(configuration.Name, serverBaseUri, restConsumer);
+
+                    server.ProjectRepository = this.GetProjectRepository(server);
 
                     servers.Add(server);
                 }

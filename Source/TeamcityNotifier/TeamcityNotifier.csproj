@@ -35,25 +35,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Build.cs" />
-    <Compile Include="BuildDefinition.cs" />
-    <Compile Include="BuildRepository.cs" />
-    <Compile Include="EnumParser.cs" />
+    <Compile Include="RestObject\Build.cs" />
+    <Compile Include="RestObject\BuildDefinition.cs" />
+    <Compile Include="RestObject\BuildRepository.cs" />
+    <Compile Include="RestObject\EnumParser.cs" />
     <Compile Include="HttpRelativeUrl.cs" />
-    <Compile Include="IBuild.cs" />
-    <Compile Include="IBuildDefinition.cs" />
-    <Compile Include="IBuildRepository.cs" />
-    <Compile Include="IProject.cs" />
-    <Compile Include="IProjectRepository.cs" />
+    <Compile Include="RestObject\IBuild.cs" />
+    <Compile Include="RestObject\IBuildDefinition.cs" />
+    <Compile Include="RestObject\IBuildRepository.cs" />
+    <Compile Include="INetworkFactory.cs" />
+    <Compile Include="RestObject\IProject.cs" />
+    <Compile Include="RestObject\IProjectRepository.cs" />
     <Compile Include="IRestConfiguration.cs" />
     <Compile Include="IRestFactory.cs" />
     <Compile Include="IRestConsumer.cs" />
-    <Compile Include="IRestObject.cs" />
+    <Compile Include="RestObject\IRestObject.cs" />
     <Compile Include="IServer.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IUpdater.cs" />
-    <Compile Include="Project.cs" />
-    <Compile Include="ProjectRepository.cs" />
+    <Compile Include="NetworkFactory.cs" />
+    <Compile Include="RestObject\Project.cs" />
+    <Compile Include="RestObject\ProjectRepository.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestConsumer.cs" />

@@ -11,6 +11,7 @@
     using NUnit.Framework;
 
     using TeamcityNotifier;
+    using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
 
     using DataAbstraction;
@@ -66,7 +67,9 @@
             A.CallTo(() => this.configuration2.Password).Returns("password2");
             restConfigurations.Add(this.configuration2);
 
-            this.testee = new RestFactory(this.restConfigurations, this.mockWrapperFactory);
+            var networkFactory = new NetworkFactory();
+
+            this.testee = new RestFactory(this.restConfigurations, this.mockWrapperFactory, networkFactory);
         }
 
         [Test]
@@ -92,8 +95,6 @@
 
             server.Should().NotBeNull("No server returned");
             server.Uri.Should().Be(mockUri, "Wrong uri is configured");
-            server.UserName.Should().Be("user1", "Wrong username is configured");
-            server.Password.Should().Be("password1", "Wrong password is configured");
         }
 
         [Test]

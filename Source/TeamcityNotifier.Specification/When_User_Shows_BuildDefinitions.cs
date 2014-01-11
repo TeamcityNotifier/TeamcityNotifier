@@ -67,9 +67,11 @@
             A.CallTo(() => configuration.Password).Returns("password2");
             restConfigurations.Add(configuration);
 
-            var factory = new RestFactory(restConfigurations, mockWrapperFactory);
+            var networkFactory = new NetworkFactory();
 
-            service = new Service(factory);
+            var factory = new RestFactory(restConfigurations, mockWrapperFactory, networkFactory);
+
+            service = new Service(factory, networkFactory);
         };
 
         private It should_returne_the_available_builddefinitions = () =>
@@ -77,7 +79,7 @@
             var servers = service.GetServers();
             servers.Count().Should().BeGreaterOrEqualTo(1, "No server retrned!");
             
-            var projects = servers.FirstOrDefault().BuildRepository.Projects;
+            var projects = servers.FirstOrDefault().ProjectRepository.Projects;
             projects.Count().Should().Be(2, "Wrong count of projects ist returned");
 
 

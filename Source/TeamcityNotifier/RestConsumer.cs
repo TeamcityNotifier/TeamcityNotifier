@@ -2,6 +2,7 @@
 {
     using System;
 
+    using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
 
     internal class RestConsumer : IRestConsumer

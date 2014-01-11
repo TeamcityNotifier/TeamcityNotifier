@@ -10,6 +10,7 @@
 
     using NUnit.Framework;
 
+    using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
 
     [TestFixture]

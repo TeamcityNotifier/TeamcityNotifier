@@ -2,15 +2,12 @@
 
 namespace TeamcityNotifier
 {
+    using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
 
     public interface IServer : INotifyPropertyChanged
     {
         string Name { get; }
-
-        string UserName { get; }
-
-        string Password { get; }
 
         IUri Uri { get; }
 
@@ -18,7 +15,7 @@ namespace TeamcityNotifier
 
         Status Status { get; }
 
-        IProjectRepository BuildRepository { get; }
+        IProjectRepository ProjectRepository { get; }
 
         IProject RootProject { get; }
     }
