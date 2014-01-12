@@ -2,6 +2,7 @@
 
 namespace TeamcityNotifier
 {
+    using System;
     using System.Linq;
 
     using TeamcityNotifier.RestObject;
@@ -13,14 +14,19 @@ namespace TeamcityNotifier
 
         private IProjectRepository projectRepository;
 
+        private bool isServerOn;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Server(string name, IUri uri, IRestConsumer restConsumer)
         {
+            this.UniqueId = Guid.NewGuid();
             this.Name = name;
             this.Uri = uri;
             this.RestConsumer = restConsumer;
         }
+
+        public Guid UniqueId { get; private set; }
 
         public string Name { get; private set; }
 
@@ -70,7 +76,27 @@ namespace TeamcityNotifier
         {
             get
             {
-                return this.ProjectRepository.Projects.FirstOrDefault(x => !x.HasParent);
+                var rootProject = this.ProjectRepository.Projects.FirstOrDefault(x => !x.HasParent);
+                rootProject.Parent = this;
+                return rootProject;
+            }
+        }
+
+        public bool IsServerOn
+        {
+            get
+            {
+                return this.isServerOn;
+            }
+            private set
+            {
+                if (this.isServerOn == value)
+                {
+                    return;
+                }
+
+                this.isServerOn = value;
+                this.OnPropertyChanged("IsServerOn");
             }
         }
 

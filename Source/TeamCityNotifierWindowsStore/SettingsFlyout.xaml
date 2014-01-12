@@ -132,7 +132,7 @@
             <!-- Settings Panel Content -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" 
                           Grid.Row="1"
-                          d:DataContext="{Binding ServerConfigurationPMods, Source={d:DesignInstance Type=data:DummyServerConfigurationData, IsDesignTimeCreatable=True}}">
+                          d:DataContext="{Binding ServerConfigurations, Source={d:DesignInstance Type=data:DummyServerConfigurationData, IsDesignTimeCreatable=True}}">
                 <ListView
                     Name="ListView"
                     ItemsSource="{Binding}">

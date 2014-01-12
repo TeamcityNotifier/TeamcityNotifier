@@ -1,12 +1,12 @@
 ﻿namespace TeamcityNotifier
 {
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     public interface IService
     {
-        IEnumerable<IServer> GetServers();
+        ObservableCollection<IServer> GetServers();
 
-        void StartPeriodicallyUpdating(IEnumerable<IServer> servers);
+        void StartPeriodicallyUpdating(ObservableCollection<IServer> servers);
 
         void StartPeriodicallyUpdating(IServer servers);
     }

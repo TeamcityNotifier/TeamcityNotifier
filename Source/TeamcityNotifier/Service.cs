@@ -1,6 +1,7 @@
 ﻿namespace TeamcityNotifier
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     public class Service : IService
     {
@@ -17,12 +18,12 @@
             this.updaters = new List<IUpdater>();
         }
 
-        public IEnumerable<IServer> GetServers()
+        public ObservableCollection<IServer> GetServers()
         {
             return this.restFactory.CreateServers();
         }
 
-        public void StartPeriodicallyUpdating(IEnumerable<IServer> servers)
+        public void StartPeriodicallyUpdating(ObservableCollection<IServer> servers)
         {
             foreach (var server in servers)
             {

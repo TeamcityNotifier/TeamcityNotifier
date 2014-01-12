@@ -9,5 +9,7 @@
         string Password { get; }
 
         string Name { get; }
+
+        bool IsServerOn { get; }
     }
 }

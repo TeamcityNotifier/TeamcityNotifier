@@ -6,15 +6,15 @@
 
     public class DummyServerConfigurationData
     {
-        private readonly ObservableCollection<ServerConfigurationPMod> serverConfigurationPMods;
+        private readonly ObservableCollection<ServerConfiguration> serverConfigurations;
 
         public DummyServerConfigurationData()
         {
-            this.serverConfigurationPMods = new ObservableCollection<ServerConfigurationPMod>();
+            this.serverConfigurations = new ObservableCollection<ServerConfiguration>();
 
             for (int i = 0; i < 3; i++)
             {
-                this.serverConfigurationPMods.Add(new ServerConfigurationPMod(
+                this.serverConfigurations.Add(new ServerConfiguration(
                     "https://teamcity.bbv.ch/",
                     "teamcitynotifier_test",
                     "j9nufrE6",
@@ -23,11 +23,11 @@
             }
         }
 
-        public ObservableCollection<ServerConfigurationPMod> ServerConfigurationPMods
+        public ObservableCollection<ServerConfiguration> ServerConfigurations
         {
             get
             {
-                return this.serverConfigurationPMods;
+                return this.serverConfigurations;
             }
         }
     }

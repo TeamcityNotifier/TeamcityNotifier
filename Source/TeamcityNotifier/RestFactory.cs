@@ -1,6 +1,8 @@
 ﻿namespace TeamcityNotifier
 {
+    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
@@ -18,26 +20,32 @@
             this.networkFactory = networkFactory;
         }
 
-        public IEnumerable<IServer> CreateServers()
+        public ObservableCollection<IServer> CreateServers()
         {
-            var servers = new List<IServer>();
+            var servers = new ObservableCollection<IServer>();
 
             foreach (var configuration in this.configurations)
             {
-                if (IsValid(configuration))
+                try
                 {
-                    var serverBaseUri = wrapperFactory.CreateUri(configuration.BaseUrl);
+                    if (IsValid(configuration) && configuration.IsServerOn)
+                    {
+                        var serverBaseUri = wrapperFactory.CreateUri(configuration.BaseUrl);
 
-                    var restConsumer = networkFactory.CreateRestConsumer(
-                        serverBaseUri,
-                        wrapperFactory.CreateHttpClientHandler(configuration.UserName, configuration.Password), 
-                        wrapperFactory);
+                        var restConsumer = networkFactory.CreateRestConsumer(
+                            serverBaseUri,
+                            wrapperFactory.CreateHttpClientHandler(configuration.UserName, configuration.Password),
+                            wrapperFactory);
 
-                    var server = new Server(configuration.Name, serverBaseUri, restConsumer);
+                        var server = new Server(configuration.Name, serverBaseUri, restConsumer);
 
-                    server.ProjectRepository = this.GetProjectRepository(server);
+                        server.ProjectRepository = this.GetProjectRepository(server);
 
-                    servers.Add(server);
+                        servers.Add(server);
+                    }
+                }
+                catch
+                {
                 }
             }
 

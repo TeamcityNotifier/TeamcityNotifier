@@ -2,20 +2,19 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
 
     using DataAbstraction;
 
-    using TeamcityNotifier.RestObject;
-
     internal class Project : IProject
     {
         private readonly string url;
 
-        private readonly List<IBuildDefinition> buildDefinitions;
+        private readonly ObservableCollection<IBuildDefinition> buildDefinitions;
 
-        private readonly List<IProject> childProjects;
+        private readonly ObservableCollection<IProject> childProjects;
 
         private Status status;
 
@@ -27,13 +26,16 @@
 
         private string parentId;
 
+        private object parent;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Project(string url)
         {
+            this.UniqueId = Guid.NewGuid();
             this.url = url;
-            this.childProjects = new List<IProject>();
-            this.buildDefinitions = new List<IBuildDefinition>();
+            this.childProjects = new ObservableCollection<IProject>();
+            this.buildDefinitions = new ObservableCollection<IBuildDefinition>();
         }
 
         public string Url
@@ -77,6 +79,8 @@
                 return this.buildDefinitions;
             }
         }
+
+        public Guid UniqueId { get; private set; }
 
         public string Id
         {
@@ -143,6 +147,25 @@
             }
         }
 
+        public object Parent 
+        { 
+            get
+            {
+                return this.parent;
+            }
+
+            set
+            {
+                if (this.parent == value)
+                {
+                    return;
+                }
+
+                this.parent = value;
+                this.OnPropertyChanged("Parent");
+            } 
+        }
+
         public string ParentId
         {
             get
@@ -162,7 +185,7 @@
             }
         }
 
-        public IEnumerable<IProject> ChildProjects
+        public ObservableCollection<IProject> ChildProjects
         {
             get
             {
@@ -170,7 +193,7 @@
             }
         }
 
-        public IEnumerable<IBuildDefinition> BuildDefinitions
+        public ObservableCollection<IBuildDefinition> BuildDefinitions
         {
             get
             {

@@ -1,12 +1,12 @@
 ﻿namespace TeamcityNotifier
 {
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     using TeamcityNotifier.RestObject;
 
     public interface IRestFactory
     {
-        IEnumerable<IServer> CreateServers();
+        ObservableCollection<IServer> CreateServers();
 
         IProjectRepository GetProjectRepository(IServer server);
     }

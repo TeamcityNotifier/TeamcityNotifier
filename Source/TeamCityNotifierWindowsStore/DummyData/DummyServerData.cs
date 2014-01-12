@@ -3,21 +3,25 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Net.Http;
 
     using TeamcityNotifier;
 
     using TeamCityNotifierWindowsStore.DataModel;
 
+    using TeamcityNotifier.RestObject;
+    using TeamcityNotifier.Wrapper;
+
     public class DummyServerData
     {
-        private readonly ObservableCollection<ServerPMod> allGroups;
+        private readonly ObservableCollection<IServer> allGroups;
 
         public DummyServerData()
         {
-            this.allGroups = new ObservableCollection<ServerPMod> { GetDummyServerPMod() };
+            this.allGroups = new ObservableCollection<IServer> {  };
         }
 
-        public ObservableCollection<ServerPMod> AllGroups
+        public ObservableCollection<IServer> AllGroups
         {
             get
             {
@@ -25,47 +29,33 @@
             }
         }
 
-        public static BuildDefinitionPMod GetDummyBuildDefinitionPMod()
-        {
-            return new BuildDefinitionPMod(
-                Guid.NewGuid().ToString(),
-                "title build definition",
-                "description build definition",
-                "url build defintion", 
-                Status.Success);
-        }
+//        public static IBuildDefinition GetDummyBuildDefinition()
+//        {
+//            return new BuildDefinition("buildDefinitionUrl");
+//        }
 
-        public static ProjectPMod GetDummyProjectPMod(ServerEntityBase serverServerEntity)
-        {
-            var projectPMod = new ProjectPMod(
-                Guid.NewGuid().ToString(),
-                "title project",
-                "description project",
-                "url project",
-                serverServerEntity, 
-                Status.Success);
-            
-            projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
-            projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
-            projectPMod.BuildDefinitions.Add(GetDummyBuildDefinitionPMod());
+//        public static IProject GetDummyProject()
+//        {
+//            var project = new Project("projectUrl", n);
+//            
+//            project.BuildDefinitions.Add(GetDummyBuildDefinition());
+//            project.BuildDefinitions.Add(GetDummyBuildDefinition());
+//            project.BuildDefinitions.Add(GetDummyBuildDefinition());
+//
+//            return project;
+//        }
 
-            return projectPMod;
-        }
-
-        public static ServerPMod GetDummyServerPMod()
-        {
-            var serverPMod  = new ServerPMod(
-                Guid.NewGuid().ToString(), 
-                "title server", 
-                "description server", 
-                Status.Success);
-
-            serverPMod.Projects.Add(GetDummyProjectPMod(serverPMod));
-            serverPMod.Projects.Add(GetDummyProjectPMod(serverPMod));
-            serverPMod.Projects.Add(GetDummyProjectPMod(serverPMod));
-            serverPMod.Projects.First().Projects.Add(GetDummyProjectPMod(serverPMod.Projects.First()));
-
-            return serverPMod;
-        }
+//        public static IServer GetDummyServer()
+//        {
+//            var server  = new Server("serverName", new UriWrapper("serverUrl"), 
+//                new RestConsumer(new UriWrapper("uri"), new HttpClient(), new WrapperFactory()));
+//
+//            server.RootProject.ChildProjects.Add(GetDummyProject());
+//            server.RootProject.ChildProjects.Add(GetDummyProject());
+//            server.RootProject.ChildProjects.Add(GetDummyProject());
+//            server.RootProject.ChildProjects.First().ChildProjects.Add(GetDummyProject());
+//
+//            return server;
+//        }
     }
 }

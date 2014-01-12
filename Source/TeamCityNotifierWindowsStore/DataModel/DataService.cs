@@ -35,9 +35,9 @@ namespace TeamCityNotifierWindowsStore.DataModel
 
         public static string ServerContainerKeyPrefix = "Server ";
 
-        public static ObservableCollection<ServerPMod> AllServers { get; private set; }
+        public static ObservableCollection<IServer> AllServers { get; private set; }
 
-        public static IEnumerable<ServerPMod> GetServers(string uniqueId)
+        public static ObservableCollection<IServer> GetServers(string uniqueId)
         {
             if (!uniqueId.Equals("AllServers"))
             {
@@ -47,16 +47,16 @@ namespace TeamCityNotifierWindowsStore.DataModel
             return AllServers;
         }
 
-        public static ServerPMod GetServer(string uniqueId)
+        public static IServer GetServer(string uniqueId)
         {
-            return AllServers.SingleOrDefault(server => server.UniqueId.Equals(uniqueId));
+            return AllServers.SingleOrDefault(server => server.UniqueId.ToString().Equals(uniqueId));
         }
 
-        public static ProjectPMod GetProject(string uniqueId)
+        public static IProject GetProject(string uniqueId)
         {
-            var allProjects = new List<ProjectPMod>();
+            var allProjects = new List<IProject>();
 
-            var firstLevelProjects = AllServers.SelectMany(group => group.Projects).ToList();
+            var firstLevelProjects = AllServers.SelectMany(server => server.RootProject.ChildProjects).ToList();
             allProjects.AddRange(firstLevelProjects);
 
             var allSubProjects = GetSubProjects(firstLevelProjects);
@@ -65,50 +65,41 @@ namespace TeamCityNotifierWindowsStore.DataModel
                 allProjects.AddRange(allSubProjects);
             }
 
-            return allProjects.SingleOrDefault((item) => item.UniqueId.Equals(uniqueId));
+            return allProjects.SingleOrDefault((item) => item.UniqueId.ToString().Equals(uniqueId));
         }
 
         public static void LoadData()
         {
-            AllServers = new ObservableCollection<ServerPMod>();
+            AllServers = new ObservableCollection<IServer>();
             var serverConfigurations = GetServerConfigurations();
             var networkFactory = new NetworkFactory();
 
             IService service = new Service(new RestFactory(serverConfigurations, new WrapperFactory(), networkFactory), networkFactory);
 
-            IEnumerable<IServer> servers = new List<IServer>();
-
-            try
-            {
-                servers = service.GetServers();
-                service.StartPeriodicallyUpdating(servers);
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            for (int i = 0; i < servers.Count(); i++)
-            {
-                var server = servers.ToList()[i];
-
-                if (serverConfigurations[i].IsServerOn)
-                {
-                    var serverPMod = new ServerPMod(Guid.NewGuid().ToString(), server.Name, string.Empty, server.Status);
-
-                    foreach (var project in server.RootProject.ChildProjects)
-                    {
-                        serverPMod.Projects.Add(CreateProjectPMod(project, serverPMod));
-                    }
-
-                    AllServers.Add(serverPMod);
-                }
-            }
+            AllServers = service.GetServers();
+            service.StartPeriodicallyUpdating(AllServers);
         }
 
-        public static ObservableCollection<ServerConfigurationPMod> GetServerConfigurations()
+        private static IEnumerable<IProject> GetSubProjects(IEnumerable<IProject> projects)
         {
-            var serverConfigurations = new ObservableCollection<ServerConfigurationPMod>();
+            var subProjects = new List<IProject>();
+
+            foreach (var project in projects.Where(project => project.ChildProjects != null))
+            {
+                subProjects.AddRange(project.ChildProjects);
+                var subSubProjects = GetSubProjects(project.ChildProjects);
+                if (subSubProjects != null)
+                {
+                    subProjects.AddRange(subSubProjects);
+                }
+            }
+
+            return subProjects;
+        }
+
+        public static ObservableCollection<ServerConfiguration> GetServerConfigurations()
+        {
+            var serverConfigurations = new ObservableCollection<ServerConfiguration>();
 
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
@@ -153,7 +144,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
                     }
                         
                     serverConfigurations.Add(
-                        new ServerConfigurationPMod(baseUrl, userName, password, serverName, isServerOn));
+                        new ServerConfiguration(baseUrl, userName, password, serverName, isServerOn));
                 }
             }
 
@@ -162,24 +153,7 @@ namespace TeamCityNotifierWindowsStore.DataModel
             return serverConfigurations;
         }
 
-        private static IEnumerable<ProjectPMod> GetSubProjects(IEnumerable<ProjectPMod> projects)
-        {
-            var subProjects = new List<ProjectPMod>();
-
-            foreach (var project in projects.Where(project => project.Projects != null))
-            {
-                subProjects.AddRange(project.Projects);
-                var subSubProjects = GetSubProjects(project.Projects);
-                if (subSubProjects != null)
-                {
-                    subProjects.AddRange(subSubProjects);
-                }
-            }
-
-            return subProjects;
-        }
-
-        private static void FillUpWithEmptyServersIfLessThenThree(ObservableCollection<ServerConfigurationPMod> serverConfigurations)
+        private static void FillUpWithEmptyServersIfLessThenThree(ObservableCollection<ServerConfiguration> serverConfigurations)
         {
             if (serverConfigurations.Count < 3)
             {
@@ -188,39 +162,9 @@ namespace TeamCityNotifierWindowsStore.DataModel
                 for (int i = 0; i < emptyServerConfigurations; i++)
                 {
                     serverConfigurations.Add(
-                        new ServerConfigurationPMod(string.Empty, string.Empty, string.Empty, string.Empty, false));
+                        new ServerConfiguration(string.Empty, string.Empty, string.Empty, string.Empty, false));
                 }
             }
-        }
-
-        private static ProjectPMod CreateProjectPMod(IProject project, ServerEntityBase serverEntity)
-        {
-            var projectPMod = new ProjectPMod(
-                Guid.NewGuid().ToString(),
-                project.Name,
-                project.Description,
-                string.Empty,
-                serverEntity, 
-                project.Status);
-
-                foreach (var buildDefinition in project.BuildDefinitions)
-                {
-                    var buildDefinitionPMod = new BuildDefinitionPMod(
-                        buildDefinition.Id,
-                        buildDefinition.Name,
-                        buildDefinition.Description,
-                        buildDefinition.Url,
-                        buildDefinition.Status);
-
-                    projectPMod.BuildDefinitions.Add(buildDefinitionPMod);
-                }
-
-            foreach (var childProject in project.ChildProjects)
-            {
-                projectPMod.Projects.Add(CreateProjectPMod(childProject, projectPMod));
-            }
-
-            return projectPMod;
         }
     }
 }

@@ -528,7 +528,7 @@ namespace TeamCityNotifierWindowsStore.Common
             {
                 bool valueChanged = false;
                 var settingsFlyout = (SettingsFlyout)popup.Child;
-                var serverConfigurations = (ObservableCollection<ServerConfigurationPMod>)settingsFlyout.DataContext;
+                var serverConfigurations = (ObservableCollection<ServerConfiguration>)settingsFlyout.DataContext;
                 var localSettings = ApplicationData.Current.LocalSettings;
 
                 for (int i = 0; i < serverConfigurations.Count; i++)

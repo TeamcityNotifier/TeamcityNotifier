@@ -8,9 +8,28 @@
     xmlns:common="using:TeamCityNotifierWindowsStore.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:teamCityNotifierWindowsStore="using:TeamCityNotifierWindowsStore"
     mc:Ignorable="d">
 
     <Page.Resources>
+        <teamCityNotifierWindowsStore:StatusToImageConverter x:Key="statusToImageConverter" />
+
+        <!-- Grid-appropriate 500 by 130 pixel item template as seen in the GroupDetailPage -->
+        <DataTemplate x:Key="Standard500x130ServerTemplate">
+            <Grid Height="110" Width="480" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="110" Height="110">
+                    <Image Source="{Binding Status, Converter={StaticResource statusToImageConverter}}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
+                    <TextBlock Text="{Binding Name}" Style="{StaticResource TitleTextStyle}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" MaxHeight="60"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
 
         <DataTemplate x:Key="ItemTemplate">
             <Grid Margin="6">
@@ -19,11 +38,10 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="60" Height="60">
-                    <Image Source="{Binding Image}" Stretch="UniformToFill"/>
+                    <Image Source="{Binding Status, Converter={StaticResource statusToImageConverter}}" Stretch="UniformToFill"/>
                 </Border>
                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                    <TextBlock Text="{Binding Title}" Style="{StaticResource ItemTextStyle}" MaxHeight="40"/>
-                    <TextBlock Text="{Binding Subtitle}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Name}" Style="{StaticResource ItemTextStyle}" MaxHeight="40"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -76,7 +94,7 @@
             Grid.ColumnSpan="2"
             Padding="120,15,120,50"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
+            ItemTemplate="{StaticResource Standard500x130ServerTemplate}"
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"
@@ -84,7 +102,7 @@
 
             <GridView.Header>
                 <StackPanel Width="480" Margin="0,4,14,0">
-                    <Image Source="{Binding Image}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+                    <Image Source="{Binding Status, Converter={StaticResource statusToImageConverter}}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
                     <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
                 </StackPanel>
             </GridView.Header>
@@ -113,7 +131,7 @@
 
             <ListView.Header>
                 <StackPanel>
-                    <Image Source="{Binding Image}" Margin="10,0,18,0" MaxHeight="160" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+                    <Image Source="{Binding Status, Converter={StaticResource statusToImageConverter}}" Margin="10,0,18,0" MaxHeight="160" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
                     <TextBlock Margin="10,20,18,30" Text="{Binding Description}" Style="{StaticResource BodyTextStyle}"/>
                 </StackPanel>
             </ListView.Header>
@@ -126,7 +144,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
+            <TextBlock x:Name="pageTitle" Text="{Binding Name}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>

@@ -2,6 +2,10 @@
 
 namespace TeamCityNotifierWindowsStore
 {
+    using System;
+
+    using TeamCityNotifierWindowsStore.DataModel;
+
     using Windows.UI.Xaml.Navigation;
 
     /// <summary>
@@ -26,7 +30,7 @@ namespace TeamCityNotifierWindowsStore
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            this.WebView.NavigateToString((string)e.Parameter);
+            this.WebView.Source = new Uri(e.Parameter.ToString());
             base.OnNavigatedTo(e);
         }
     }

@@ -2,7 +2,7 @@
 {
     using TeamcityNotifier;
 
-    public class ServerConfigurationPMod : Common.BindableBase, IRestConfiguration
+    public class ServerConfiguration : Common.BindableBase, IRestConfiguration
     {
         private string baseUrl;
 
@@ -14,7 +14,7 @@
 
         private bool isServerOn;
 
-        public ServerConfigurationPMod(string baseUrl, string userName, string password, string serverName, bool isServerOn)
+        public ServerConfiguration(string baseUrl, string userName, string password, string serverName, bool isServerOn)
         {
             this.BaseUrl = baseUrl;
             this.UserName = userName;

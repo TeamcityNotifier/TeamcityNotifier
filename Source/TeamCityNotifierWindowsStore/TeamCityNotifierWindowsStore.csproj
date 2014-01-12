@@ -115,11 +115,7 @@
     <Compile Include="BuildDefinitionPage.xaml.cs">
       <DependentUpon>BuildDefinitionPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataModel\BuildDefinitionPMod.cs" />
-    <Compile Include="DataModel\ServerConfigurationPMod.cs" />
-    <Compile Include="DataModel\ServerEntityBase.cs" />
-    <Compile Include="DataModel\ServerPMod.cs" />
-    <Compile Include="DataModel\ProjectPMod.cs" />
+    <Compile Include="DataModel\ServerConfiguration.cs" />
     <Compile Include="DummyData\DummyServerConfigurationData.cs" />
     <Compile Include="DummyData\DummyServerData.cs" />
     <Compile Include="ServerPage.xaml.cs">
@@ -142,6 +138,7 @@
     <Compile Include="SettingsFlyout.xaml.cs">
       <DependentUpon>SettingsFlyout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StatusToImageConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

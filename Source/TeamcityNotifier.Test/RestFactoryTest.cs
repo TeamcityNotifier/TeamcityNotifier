@@ -58,6 +58,7 @@
             A.CallTo(() => this.configuration1.BaseUrl).Returns("url1");
             A.CallTo(() => this.configuration1.UserName).Returns("user1");
             A.CallTo(() => this.configuration1.Password).Returns("password1");
+            A.CallTo(() => this.configuration1.IsServerOn).Returns(true);
             restConfigurations.Add(this.configuration1);
 
 
@@ -65,6 +66,7 @@
             A.CallTo(() => this.configuration2.BaseUrl).Returns("url2");
             A.CallTo(() => this.configuration2.UserName).Returns("user2");
             A.CallTo(() => this.configuration2.Password).Returns("password2");
+            A.CallTo(() => this.configuration2.IsServerOn).Returns(true);
             restConfigurations.Add(this.configuration2);
 
             var networkFactory = new NetworkFactory();

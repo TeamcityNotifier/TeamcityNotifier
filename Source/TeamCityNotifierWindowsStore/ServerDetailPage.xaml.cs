@@ -7,6 +7,8 @@ namespace TeamCityNotifierWindowsStore
 
     using TeamCityNotifierWindowsStore.DataModel;
 
+    using TeamcityNotifier.RestObject;
+
     using Windows.UI.Xaml.Controls;
 
     /// <summary>
@@ -38,7 +40,7 @@ namespace TeamCityNotifierWindowsStore
             this.navigationParameter = navigationParameter.ToString();
             var server = DataService.GetServer(this.navigationParameter);
             this.DefaultViewModel["Server"] = server;
-            this.DefaultViewModel["Projects"] = server.Projects;
+            this.DefaultViewModel["Projects"] = server.RootProject.ChildProjects;
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace TeamCityNotifierWindowsStore
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
+            var itemId = ((IProject)e.ClickedItem).UniqueId;
             this.Frame.Navigate(typeof(ProjectPage), itemId);
         }
 
@@ -62,7 +64,7 @@ namespace TeamCityNotifierWindowsStore
             if (server != null)
             {
                 this.DefaultViewModel["Server"] = server;
-                this.DefaultViewModel["Projects"] = server.Projects;
+                this.DefaultViewModel["Projects"] = server.RootProject.ChildProjects;
             }
             else
             {

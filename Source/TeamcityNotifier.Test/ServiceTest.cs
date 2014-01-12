@@ -1,6 +1,8 @@
 ﻿namespace TeamcityNotifier.Test
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
 
     using FakeItEasy;
 
@@ -61,7 +63,7 @@
             var mockBuildDefinition2 = A.Fake<IBuildDefinition>();
             A.CallTo(() => mockBuildDefinition2.BuildRepository).Returns(mockBuildRepository2);
 
-            var mockBuildDefinitions = new List<IBuildDefinition> { mockBuildDefinition1, mockBuildDefinition2 };
+            var mockBuildDefinitions = new ObservableCollection<IBuildDefinition> { mockBuildDefinition1, mockBuildDefinition2 };
 
             var mockProject = A.Fake<IProject>();
             A.CallTo(() => mockProject.BuildDefinitions).Returns(mockBuildDefinitions);
@@ -98,7 +100,7 @@
             var mockBuildDefinition2 = A.Fake<IBuildDefinition>();
             A.CallTo(() => mockBuildDefinition2.BuildRepository).Returns(mockBuildRepository2);
 
-            var mockBuildDefinitions = new List<IBuildDefinition> { mockBuildDefinition1, mockBuildDefinition2 };
+            var mockBuildDefinitions = new ObservableCollection<IBuildDefinition> { mockBuildDefinition1, mockBuildDefinition2 };
 
             var mockProject = A.Fake<IProject>();
             A.CallTo(() => mockProject.BuildDefinitions).Returns(mockBuildDefinitions);
@@ -115,7 +117,7 @@
             var mockUpdater = A.Fake<IUpdater>();
             A.CallTo(() => this.mockNetworkFactory.CreateUpdater(mockRestConsumer)).Returns(mockUpdater);
 
-            this.testee.StartPeriodicallyUpdating(new List<IServer> { mockServer1, mockServer1 });
+            this.testee.StartPeriodicallyUpdating(new ObservableCollection<IServer> { mockServer1, mockServer1 });
 
             A.CallTo(() => mockUpdater.Register(mockBuildRepository1)).MustHaveHappened(Repeated.Exactly.Twice);
             A.CallTo(() => mockUpdater.Register(mockBuildRepository2)).MustHaveHappened(Repeated.Exactly.Twice);

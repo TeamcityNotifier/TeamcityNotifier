@@ -8,6 +8,9 @@ namespace TeamCityNotifierWindowsStore
     using TeamCityNotifierWindowsStore.Common;
     using TeamCityNotifierWindowsStore.DataModel;
 
+    using TeamcityNotifier;
+    using TeamcityNotifier.RestObject;
+
     using Windows.UI.Xaml.Controls;
 
     /// <summary>
@@ -56,7 +59,7 @@ namespace TeamCityNotifierWindowsStore
                 navigationParameter = pageState["SelectedItem"];
             }
 
-            this.navigationParameter = (String)navigationParameter;
+            this.navigationParameter = navigationParameter.ToString();
             var project = DataService.GetProject(this.navigationParameter);
 
             if (project != null)
@@ -78,26 +81,29 @@ namespace TeamCityNotifierWindowsStore
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
-            var selectedItem = (ProjectPMod)this.flipView.SelectedItem;
+            var selectedItem = (IProject)this.flipView.SelectedItem;
             if (selectedItem != null)
             {
                pageState["SelectedItem"] = selectedItem.UniqueId; 
             }
         }
 
-        private void SetData(ProjectPMod project)
+        private void SetData(IProject project)
         {
-            this.DefaultViewModel["Parent"] = project.Parent;
-            if (project.Parent is ServerPMod)
+            var parent = (IProject)project.Parent;
+
+            if (parent.HasParent)
             {
-                this.DefaultViewModel["Projects"] = ((ServerPMod)project.Parent).Projects;
+                this.DefaultViewModel["Parent"] = parent;
+                this.DefaultViewModel["Projects"] = parent.ChildProjects;
             }
-            else if (project.Parent is ProjectPMod)
+            else
             {
-                this.DefaultViewModel["Projects"] = ((ProjectPMod)project.Parent).Projects;
+                this.DefaultViewModel["Parent"] = parent.Parent;
+                this.DefaultViewModel["Projects"] = parent.ChildProjects;
             }
 
-            this.DefaultViewModel["SubProjects"] = project.Projects;
+            this.DefaultViewModel["SubProjects"] = project.ChildProjects;
 
             this.DefaultViewModel["BuildDefinitions"] = project.BuildDefinitions;
         }
@@ -112,19 +118,45 @@ namespace TeamCityNotifierWindowsStore
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            var itemId = ((ProjectPMod)e.ClickedItem).UniqueId;
+            var itemId = ((IProject)e.ClickedItem).UniqueId;
             this.Frame.Navigate(typeof(ProjectPage), itemId);
         }
 
         private void ItemView_BuildDefinitionItemClick(object sender, ItemClickEventArgs e)
         {
-            var buildRepositoryUrl = ((BuildDefinitionPMod)e.ClickedItem).BuildRepositoryUrl;
-            this.Frame.Navigate(typeof(BuildDefinitionPage), buildRepositoryUrl);
+            var serverFromProject = this.GetServerFromCurrentProject();
+            var baseUri = serverFromProject.Uri.ToUri();
+
+            var buildDefinition = ((IBuildDefinition)e.ClickedItem);
+            var urlPostfixCurrentBuildDefinition = buildDefinition.Url;
+
+            this.Frame.Navigate(typeof(BuildDefinitionPage), baseUri + urlPostfixCurrentBuildDefinition);
+        }
+
+        private IServer GetServerFromCurrentProject()
+        {
+            var selectedProject = (IProject)flipView.SelectedItem;
+            return this.GetParentProject(selectedProject);
+        }
+
+        private IServer GetParentProject(object project)
+        {
+            if (project is IProject)
+            {
+                return this.GetParentProject(((IProject)project).Parent);
+            }
+
+            if (project is IServer)
+            {
+                return (IServer)project;
+            }
+
+            return null;
         }
 
         private void FlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedProject = (ProjectPMod)((FlipView)sender).SelectedItem;
+            var selectedProject = (IProject)((FlipView)sender).SelectedItem;
             this.SetData(selectedProject);
         }
     }

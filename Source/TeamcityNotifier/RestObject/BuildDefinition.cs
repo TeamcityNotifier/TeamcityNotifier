@@ -2,11 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
 
     using DataAbstraction;
-
-    using TeamcityNotifier.RestObject;
 
     internal class BuildDefinition : IBuildDefinition
     {
@@ -26,8 +25,11 @@
 
         public BuildDefinition(string url)
         {
+            this.UniqueId = Guid.NewGuid();
             this.url = url;
         }
+
+
 
         public string Url
         {
@@ -67,7 +69,7 @@
         {
             get
             {
-                return new List<IRestObject> { this.BuildRepository };
+                return new ObservableCollection<IRestObject> { this.BuildRepository };
             }
         }
 
@@ -88,6 +90,8 @@
                 this.OnPropertyChanged("Id");
             }
         }
+
+        public Guid UniqueId { get; private set; }
 
         public string Name
         {

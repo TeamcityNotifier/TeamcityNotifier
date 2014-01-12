@@ -5,7 +5,7 @@
     using TeamcityNotifier.RestObject;
     using TeamcityNotifier.Wrapper;
 
-    internal class RestConsumer : IRestConsumer
+    public class RestConsumer : IRestConsumer
     {
         private readonly IUri baseUrl;
         private readonly IHttpClient httpClient;

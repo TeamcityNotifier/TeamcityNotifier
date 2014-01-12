@@ -8,6 +8,9 @@ namespace TeamCityNotifierWindowsStore
 
     using TeamCityNotifierWindowsStore.DataModel;
 
+    using TeamcityNotifier;
+    using TeamcityNotifier.RestObject;
+
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
 
@@ -46,7 +49,6 @@ namespace TeamCityNotifierWindowsStore
             {
                 this.backButton.IsEnabled = false;
             }
-            
         }
 
         public override void ReloadData()
@@ -68,7 +70,7 @@ namespace TeamCityNotifierWindowsStore
 
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            this.Frame.Navigate(typeof(ServerDetailPage), ((ServerPMod)server).UniqueId);
+            this.Frame.Navigate(typeof(ServerDetailPage), ((IServer)server).UniqueId);
         }
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace TeamCityNotifierWindowsStore
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            var projectId = ((ProjectPMod)e.ClickedItem).UniqueId;
+            var projectId = ((IProject)e.ClickedItem).UniqueId;
             this.Frame.Navigate(typeof(ProjectPage), projectId);
         }
     }

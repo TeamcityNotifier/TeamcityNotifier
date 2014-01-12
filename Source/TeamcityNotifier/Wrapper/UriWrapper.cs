@@ -2,7 +2,7 @@
 {
     using System;
 
-    internal class UriWrapper : IUri
+    public class UriWrapper : IUri
     {
         private readonly Uri uri;
 

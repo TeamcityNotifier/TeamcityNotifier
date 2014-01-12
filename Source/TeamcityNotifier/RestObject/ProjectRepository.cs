@@ -144,6 +144,7 @@
         {
             var parentProject = this.Projects.FirstOrDefault(project => project.Id == changedProject.ParentId);
             parentProject.AddChild(changedProject);
+            changedProject.Parent = parentProject;
         }
 
         private void UpdateStatus()
