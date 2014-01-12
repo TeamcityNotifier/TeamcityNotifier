@@ -170,6 +170,20 @@
         {
             if (propertyChangedEventArgs.PropertyName == "LastBuild")
             {
+                var lastBuild = this.buildRepository.LastBuild;
+
+                if (this.buildRepository.LastBuild != null)
+                {
+                    lastBuild.PropertyChanged -= this.UpdateStatus;
+                    lastBuild.PropertyChanged += this.UpdateStatus;
+                }
+            }
+        }
+
+        private void UpdateStatus(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == "Status")
+            {
                 this.Status = this.buildRepository.LastBuild.Status;
             }
         }
