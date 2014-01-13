@@ -124,34 +124,9 @@ namespace TeamCityNotifierWindowsStore
 
         private void ItemView_BuildDefinitionItemClick(object sender, ItemClickEventArgs e)
         {
-            var serverFromProject = this.GetServerFromCurrentProject();
-            var baseUri = serverFromProject.Uri.ToUri();
-
             var buildDefinition = ((IBuildDefinition)e.ClickedItem);
-            var urlPostfixCurrentBuildDefinition = buildDefinition.Url;
-
-            this.Frame.Navigate(typeof(BuildDefinitionPage), baseUri + urlPostfixCurrentBuildDefinition);
-        }
-
-        private IServer GetServerFromCurrentProject()
-        {
-            var selectedProject = (IProject)flipView.SelectedItem;
-            return this.GetParentProject(selectedProject);
-        }
-
-        private IServer GetParentProject(object project)
-        {
-            if (project is IProject)
-            {
-                return this.GetParentProject(((IProject)project).Parent);
-            }
-
-            if (project is IServer)
-            {
-                return (IServer)project;
-            }
-
-            return null;
+            var webUrl = buildDefinition.BuildRepository.LastBuild.WebUrl;
+            this.Frame.Navigate(typeof(BuildDefinitionPage), webUrl);
         }
 
         private void FlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

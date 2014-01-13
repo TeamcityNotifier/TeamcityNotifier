@@ -41,7 +41,7 @@ namespace TeamCityNotifierWindowsStore
             this.navigationParameter = (String)navigationParameter;
             var servers = DataService.GetServers(this.navigationParameter);
 
-            if (servers.Any())
+            if (servers != null && servers.Any())
             {
                this.DefaultViewModel["Servers"] = servers; 
             }
