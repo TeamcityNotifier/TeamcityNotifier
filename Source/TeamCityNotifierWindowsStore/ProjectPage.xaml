@@ -51,19 +51,19 @@
         <CollectionViewSource
             x:Name="itemsViewSource"
             Source="{Binding Projects}"
-            d:Source="{Binding AllGroups[0].Projects, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].RootProject.ChildProjects, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="subItemsViewSource"
             Source="{Binding SubProjects}"
-            d:Source="{Binding AllGroups[0].Projects[0].Projects, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].RootProject.ChildProjects[0].ChildProjects, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="buildDefinitionsViewSource"
             Source="{Binding BuildDefinitions}"
-            d:Source="{Binding AllGroups[0].Projects[0].BuildDefinitions, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].RootProject.ChildProjects[0].BuildDefinitions, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
 
         
     </Page.Resources>
@@ -95,7 +95,7 @@
             TabIndex="1"
             Grid.RowSpan="2"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            SelectionChanged="FlipView_OnSelectionChanged">
+            SelectionChanged="FlipView_OnSelectionChanged" Margin="250,79,-250,-79">
 
             <FlipView.ItemContainerStyle>
                 <Style TargetType="FlipViewItem">

@@ -79,7 +79,7 @@
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"
-            ItemClick="ItemView_ProjectClick">
+            ItemClick="ItemView_ProjectClick" SelectionChanged="projectGridView_SelectionChanged">
 
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>                        

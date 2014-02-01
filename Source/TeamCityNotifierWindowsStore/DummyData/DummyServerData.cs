@@ -1,24 +1,25 @@
 ﻿namespace TeamCityNotifierWindowsStore.DummyData
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Net.Http;
 
     using TeamcityNotifier;
-
-    using TeamCityNotifierWindowsStore.DataModel;
-
     using TeamcityNotifier.RestObject;
-    using TeamcityNotifier.Wrapper;
 
     public class DummyServerData
     {
         private readonly ObservableCollection<IServer> allGroups;
 
+        private readonly ObservableCollection<IProject> allProjects; 
+
         public DummyServerData()
         {
-            this.allGroups = new ObservableCollection<IServer> {  };
+            var dummyServer = GetDummyServer();
+            this.allGroups = new ObservableCollection<IServer> { dummyServer, dummyServer };
+
+            var dummyProject = GetDummyProject();
+            this.allProjects = new ObservableCollection<IProject> { dummyProject, dummyProject };
+
         }
 
         public ObservableCollection<IServer> AllGroups
@@ -29,33 +30,30 @@
             }
         }
 
-//        public static IBuildDefinition GetDummyBuildDefinition()
-//        {
-//            return new BuildDefinition("buildDefinitionUrl");
-//        }
+        public static IServer GetDummyServer()
+        {
+            var server = new DummyServer { Name = "serverName", Status = Status.Success };
+            server.RootProject = GetDummyProject();
+            server.RootProject.AddChild(GetDummyProject());
+            server.RootProject.AddChild(GetDummyProject());
+            server.RootProject.AddChild(GetDummyProject());
+            server.RootProject.ChildProjects.First().AddChild(GetDummyProject());
+            return server;
+        }
 
-//        public static IProject GetDummyProject()
-//        {
-//            var project = new Project("projectUrl", n);
-//            
-//            project.BuildDefinitions.Add(GetDummyBuildDefinition());
-//            project.BuildDefinitions.Add(GetDummyBuildDefinition());
-//            project.BuildDefinitions.Add(GetDummyBuildDefinition());
-//
-//            return project;
-//        }
+        public static IProject GetDummyProject()
+        {
+            var project = new DummyProject { Name = "projectName", Status = Status.Success, Description = "projectDescription" };
+            project.BuildDefinitions.Add(GetDummyBuildDefinition());
+            project.BuildDefinitions.Add(GetDummyBuildDefinition());
+            project.BuildDefinitions.Add(GetDummyBuildDefinition());
 
-//        public static IServer GetDummyServer()
-//        {
-//            var server  = new Server("serverName", new UriWrapper("serverUrl"), 
-//                new RestConsumer(new UriWrapper("uri"), new HttpClient(), new WrapperFactory()));
-//
-//            server.RootProject.ChildProjects.Add(GetDummyProject());
-//            server.RootProject.ChildProjects.Add(GetDummyProject());
-//            server.RootProject.ChildProjects.Add(GetDummyProject());
-//            server.RootProject.ChildProjects.First().ChildProjects.Add(GetDummyProject());
-//
-//            return server;
-//        }
+            return project;
+        }
+
+        public static IBuildDefinition GetDummyBuildDefinition()
+        {
+            return new DummyBuildDefinition { Name = "buildDefinitionName", Description = "buildDefinitionDescription", Status = Status.Error };
+        }
     }
 }

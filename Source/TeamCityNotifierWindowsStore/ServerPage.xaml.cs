@@ -86,5 +86,10 @@ namespace TeamCityNotifierWindowsStore
             var projectId = ((IProject)e.ClickedItem).UniqueId;
             this.Frame.Navigate(typeof(ProjectPage), projectId);
         }
+
+        private void projectGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

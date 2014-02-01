@@ -116,8 +116,12 @@
       <DependentUpon>BuildDefinitionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataModel\ServerConfiguration.cs" />
+    <Compile Include="DummyData\DummyBuildDefinition.cs" />
+    <Compile Include="DummyData\DummyProject.cs" />
+    <Compile Include="DummyData\DummyServer.cs" />
     <Compile Include="DummyData\DummyServerConfigurationData.cs" />
     <Compile Include="DummyData\DummyServerData.cs" />
+    <Compile Include="DummyData\DummyServerDataTest.cs" />
     <Compile Include="ServerPage.xaml.cs">
       <DependentUpon>ServerPage.xaml</DependentUpon>
     </Compile>
@@ -188,6 +192,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Extensions">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.15\lib\win8\System.Net.Http.Extensions.dll</HintPath>
     </Reference>
