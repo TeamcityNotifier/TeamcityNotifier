@@ -94,6 +94,7 @@
             Grid.ColumnSpan="2"
             Padding="120,15,120,50"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+            ItemTemplate="{StaticResource Standard500x130ServerTemplate}"
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"

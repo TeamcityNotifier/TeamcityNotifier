@@ -63,7 +63,8 @@
         <CollectionViewSource
             x:Name="buildDefinitionsViewSource"
             Source="{Binding BuildDefinitions}"
-            d:Source="{Binding AllGroups[0].RootProject.ChildProjects[0].BuildDefinitions, Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].RootProject.ChildProjects[0].BuildDefinitions, 
+            Source={d:DesignInstance Type=data:DummyServerData, IsDesignTimeCreatable=True}}"/>
 
         
     </Page.Resources>
@@ -95,7 +96,7 @@
             TabIndex="1"
             Grid.RowSpan="2"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            SelectionChanged="FlipView_OnSelectionChanged" Margin="250,79,-250,-79">
+            SelectionChanged="FlipView_OnSelectionChanged">
 
             <FlipView.ItemContainerStyle>
                 <Style TargetType="FlipViewItem">
